@@ -16,7 +16,7 @@ function Page() {
         <div className="grid gap-10 lg:grid-cols-2">
           <div className="space-y-4 text-lg leading-relaxed text-muted-foreground">
             <p><strong className="text-burgundy-dark">Manfaat Mengalir</strong> adalah inisiatif sosial-keagamaan yang berfokus pada program kebaikan berkelanjutan.</p>
-            <p>Banyak keluarga ingin berkurban, namun terkendala harga yang harus dibayar sekaligus. QURBANITY membantu mewujudkan niat itu melalui komitmen bertahap dengan harga yang dikunci sejak awal.</p>
+            <p>Banyak keluarga ingin berkurban, namun terkendala harga yang harus dibayar sekaligus. qurbanity membantu mewujudkan niat itu melalui komitmen bertahap dengan harga yang dikunci sejak awal.</p>
             <p>Kami menjaga amanah dengan pencatatan yang rapi, verifikasi setiap pembayaran, dan laporan pelaksanaan yang dapat diakses peserta.</p>
           </div>
           <div className="grid gap-4">

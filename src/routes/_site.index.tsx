@@ -40,7 +40,7 @@ function Home() {
             Kunci harga hewan kurban sejak akad, bayar sedikit demi sedikit sesuai kemampuan, dan ikuti perjalanannya hingga sampai ke penerima.
           </p>
           <div className="animate-rise mt-8 flex flex-col gap-3 sm:flex-row">
-            <Button variant="gold" size="lg" asChild><Link to="/simulasi">Mulai Kurban <ArrowRight /></Link></Button>
+            <Button variant="ivory" size="lg" asChild><Link to="/simulasi">Mulai Kurban <ArrowRight /></Link></Button>
             <Button variant="light" size="lg" asChild><Link to="/simulasi"><Calculator /> Simulasikan Kurban</Link></Button>
           </div>
           <ul className="mt-10 flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold text-cream/90">
@@ -110,7 +110,7 @@ function Home() {
               { icon: ShieldCheck, t: "Dokumen terverifikasi", d: "Keaslian sertifikat dapat dicek publik." },
             ].map((x) => (
               <div key={x.t} className="flex gap-4 rounded-2xl border border-border p-5">
-                <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-gold/20 text-burgundy"><x.icon className="size-5" /></span>
+                <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-beige/60 text-burgundy"><x.icon className="size-5" /></span>
                 <div><p className="font-bold text-burgundy-dark">{x.t}</p><p className="mt-1 text-sm text-muted-foreground">{x.d}</p></div>
               </div>
             ))}
@@ -126,7 +126,7 @@ function Home() {
             <ol className="space-y-3">
               {journey.map((j, i) => (
                 <li key={j.label} className="flex items-center gap-4 rounded-xl bg-ivory/5 p-3">
-                  <span className="grid size-10 place-items-center rounded-full bg-gold text-burgundy-dark"><j.icon className="size-5" /></span>
+                  <span className="grid size-10 place-items-center rounded-full bg-ivory text-burgundy"><j.icon className="size-5" /></span>
                   <span className="font-semibold">{i + 1}. {j.label}</span>
                 </li>
               ))}
@@ -158,7 +158,7 @@ function Home() {
             <h2 className="mx-auto max-w-2xl text-3xl font-extrabold leading-tight md:text-4xl">Mulailah dari langkah kecil. Tunaikan dengan sempurna.</h2>
             <p className="mx-auto mt-3 max-w-xl text-cream/85">Kunci harga hewan kurban kamu hari ini dan cicil dengan tenang.</p>
             <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
-              <Button variant="gold" size="lg" asChild><Link to="/simulasi">Mulai Kurban <ArrowRight /></Link></Button>
+              <Button variant="ivory" size="lg" asChild><Link to="/simulasi">Mulai Kurban <ArrowRight /></Link></Button>
               <Button variant="light" size="lg" asChild><Link to="/kontak">Hubungi Kami</Link></Button>
             </div>
           </div>

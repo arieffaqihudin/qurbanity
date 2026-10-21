@@ -62,9 +62,9 @@ export function Notice({ kind, children, className }: { kind: NoteKind; children
 
 export function StatusPill({ kind }: { kind: "sample" | "pending" | "demo" | "soon" }) {
   const map = {
-    sample: ["Contoh", "bg-gold/20 text-burgundy-dark"],
+    sample: ["Contoh", "bg-beige/60 text-burgundy-dark"],
     pending: ["Draf", "bg-burgundy/10 text-burgundy"],
-    demo: ["Demo", "bg-gold/20 text-burgundy-dark"],
+    demo: ["Demo", "bg-beige/60 text-burgundy-dark"],
     soon: ["Segera", "bg-muted text-muted-foreground"],
   } as const;
   const [label, cls] = map[kind];

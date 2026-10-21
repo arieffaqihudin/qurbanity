@@ -108,7 +108,7 @@ export function Simulator({ compact }: { compact?: boolean }) {
           )}
         </div>
         <div className="relative space-y-3">
-          <Button variant="gold" size="lg" className="w-full" asChild>
+          <Button variant="ivory" size="lg" className="w-full" asChild>
             <Link to="/portal">Lanjut ke Portal Peserta <ArrowRight /></Link>
           </Button>
           <p className="text-xs text-cream/70">Nominal setoran tetap fleksibel. Estimasi ini hanya panduan. Pendaftaran & akad dibuka pada tahap berikutnya.</p>

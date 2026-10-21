@@ -4,7 +4,7 @@ import { PageHeader, Section, SectionHeading, Notice, Placeholder } from "@/comp
 import { seo } from "@/lib/seo";
 
 export const Route = createFileRoute("/_site/akad-program")({
-  head: () => seo("Akad Program", "Struktur akad dan prinsip transparansi keuangan program kurban bertahap QURBANITY."),
+  head: () => seo("Akad Program", "Struktur akad dan prinsip transparansi keuangan program kurban bertahap qurbanity."),
   component: Page,
 });
 
