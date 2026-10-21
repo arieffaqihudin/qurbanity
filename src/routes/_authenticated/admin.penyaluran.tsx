@@ -18,7 +18,7 @@ export const Route = createFileRoute("/_authenticated/admin/penyaluran")({
   component: () => <Guard perms={["journey.view", "docs.upload"]}><Page /></Guard>,
 });
 
-export const DOC_RULES = { maxBytes: 10 * 1024 * 1024, types: ["image/jpeg", "image/png", "image/webp", "application/pdf"] } as const;
+const DOC_RULES = { maxBytes: 10 * 1024 * 1024, types: ["image/jpeg", "image/png", "image/webp", "application/pdf"] } as const;
 
 function Page() {
   const { can } = useAdmin();
