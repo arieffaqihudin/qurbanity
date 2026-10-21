@@ -82,7 +82,7 @@ function Page() {
                     <div className="ml-auto flex gap-2">
                       <button type="button" className="text-xs font-semibold text-primary underline" onClick={async () => {
                         const { data, error } = await supabase.storage.from("documentation").createSignedUrl(d.storage_path, 300);
-                        if (error || !data) return toast.error("Pratinjau tidak dapat dibuka");
+                        if (error || !data) { toast.error("Pratinjau tidak dapat dibuka"); return; }
                         window.open(data.signedUrl, "_blank", "noopener");
                       }}>Pratinjau</button>
                       {can("docs.publish") && (
