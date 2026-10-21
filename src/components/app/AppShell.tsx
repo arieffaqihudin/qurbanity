@@ -12,7 +12,7 @@ interface Props {
   items: ShellItem[];
 }
 
-function NavList({ base, items, onNavigate }: Omit<Props, "title"> & { onNavigate?: () => void }) {
+function NavList({ base, items, onNavigate }: Omit<Props, "title"> & { onNavigate?: (() => void) | undefined }) {
   return (
     <ul className="space-y-0.5">
       {items.map((it) => {
