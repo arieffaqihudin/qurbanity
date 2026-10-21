@@ -67,9 +67,9 @@ export function Unauthorized() {
   );
 }
 
-export function Panel({ title, action, children, className, dense }: { title?: ReactNode; action?: ReactNode; children: ReactNode; className?: string; dense?: boolean }) {
+export function Panel({ title, action, children, className, dense, id }: { title?: ReactNode; action?: ReactNode; children: ReactNode; className?: string; dense?: boolean; id?: string }) {
   return (
-    <section className={cn("rounded-xl border border-border bg-card", dense ? "p-3" : "p-4", className)}>
+    <section id={id} className={cn("rounded-xl border border-border bg-card", dense ? "p-3" : "p-4", className)}>
       {(title || action) && (
         <div className="mb-3 flex flex-wrap items-center gap-2">
           {title && <h2 className="text-sm font-extrabold text-burgundy-dark md:text-base">{title}</h2>}

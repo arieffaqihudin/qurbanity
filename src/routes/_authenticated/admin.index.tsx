@@ -89,7 +89,7 @@ function Dashboard() {
                 </div>
               ) : <Empty title="Belum ada komitmen" />}
             </Panel>
-            <Panel title="Komitmen yang Memerlukan Perhatian" className="scroll-mt-20">
+            <Panel title="Komitmen yang Memerlukan Perhatian" id="perhatian" className="scroll-mt-20">
               {d.attention.length ? (
                 <ul className="divide-y divide-border text-sm">{d.attention.map((a) => (
                   <li key={a.id} className="flex flex-wrap items-center gap-2 py-1.5"><span className="font-semibold">{a.code}</span><span className="text-muted-foreground">{a.full_name ?? "—"} · {a.category_name_snapshot}</span>

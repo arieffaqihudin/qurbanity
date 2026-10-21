@@ -1,11 +1,14 @@
-import { useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { z } from "zod";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { PageHead, Panel, Guard, Loading, Failure, SearchBox, NativeSelect, ProgramFilter, Pager, DataTable, Tag, Empty } from "@/components/admin/ui";
 import { rpc } from "@/lib/admin";
 import { formatRupiah, formatDate } from "@/lib/format";
 
+const searchSchema = z.object({ q: z.string().optional(), status: z.string().optional(), program: z.string().optional(), page: z.coerce.number().int().min(0).optional() });
+
 export const Route = createFileRoute("/_authenticated/admin/peserta/")({
+  validateSearch: searchSchema,
   head: () => ({ meta: [{ title: "Peserta | Admin qurbanity" }, { name: "robots", content: "noindex" }] }),
   component: () => <Guard perms="participants.view"><Page /></Guard>,
 });
@@ -18,26 +21,28 @@ const STATUS: Record<string, { label: string; tone: "muted" | "primary" | "succe
 const PAGE = 20;
 
 function Page() {
-  const [search, setSearch] = useState("");
-  const [status, setStatus] = useState("");
-  const [program, setProgram] = useState("");
-  const [page, setPage] = useState(0);
+  // Filters live in the URL so returning from a participant detail keeps the same list.
+  const sp = Route.useSearch();
+  const nav = useNavigate({ from: Route.fullPath });
+  const search = sp.q ?? "", status = sp.status ?? "", program = sp.program ?? "", page = sp.page ?? 0;
+  const set = (patch: z.infer<typeof searchSchema>) => nav({ search: (prev) => ({ ...prev, ...patch }), replace: true });
+  const setPage = (p: number) => set({ page: p || undefined });
   const q = useQuery({
     queryKey: ["admin", "participants", search, status, program, page],
     queryFn: () => rpc<{ total: number; rows: Row[] }>("admin_participants", { p_search: search || null, p_status: status || null, p_program_id: program || null, p_limit: PAGE, p_offset: page * PAGE }),
     placeholderData: keepPreviousData,
   });
-  const reset = (fn: () => void) => { fn(); setPage(0); };
+
   return (
     <div className="mx-auto max-w-7xl">
       <PageHead to="/admin/peserta" />
       <Panel>
         <div className="mb-3 flex flex-wrap gap-2">
-          <SearchBox value={search} onChange={(v) => reset(() => setSearch(v))} placeholder="Cari nama, email, WhatsApp" />
-          <NativeSelect label="Status komitmen" value={status} onChange={(v) => reset(() => setStatus(v))}>
+          <SearchBox value={search} onChange={(v) => set({ q: v || undefined, page: undefined })} placeholder="Cari nama, email, WhatsApp" />
+          <NativeSelect label="Status komitmen" value={status} onChange={(v) => set({ status: v || undefined, page: undefined })}>
             <option value="">Semua status</option>{Object.entries(STATUS).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
           </NativeSelect>
-          <ProgramFilter value={program} onChange={(v) => reset(() => setProgram(v))} />
+          <ProgramFilter value={program} onChange={(v) => set({ program: v || undefined, page: undefined })} />
         </div>
         {q.isPending ? <Loading /> : q.isError ? <Failure error={q.error} onRetry={() => q.refetch()} /> : (
           <>
