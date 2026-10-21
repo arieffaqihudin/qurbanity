@@ -77,9 +77,9 @@ function ProgramForm({ program, onClose, onSaved }: { program: Program | null; o
     registration_opens_at: toLocal(program?.registration_opens_at ?? null), payment_deadline: toLocal(program?.payment_deadline ?? null),
     minimum_payment: String(program?.minimum_payment ?? 10000), announcement_days: String(program?.announcement_days ?? 7),
   });
-  const [err, setErr] = useState<Record<string, string>>({});
+  const [err, setErr] = useState<Partial<Record<keyof typeof f, string>>>({});
   const validate = () => {
-    const e: Record<string, string> = {};
+    const e: Partial<Record<keyof typeof f, string>> = {};
     if (!program && !/^1[4-5]\d\d$/.test(f.hijri_year)) e.hijri_year = "Tahun Hijriah 4 digit, mis. 1449";
     if (f.name.trim().length < 5) e.name = "Nama minimal 5 karakter";
     if (!f.iduladha_date) e.iduladha_date = "Wajib diisi";

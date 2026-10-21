@@ -48,7 +48,7 @@ function Page() {
               { label: "Komitmen", className: "text-right", cell: (r) => r.commitments },
               { label: "Nilai Komitmen", className: "text-right tabular-nums", cell: (r) => formatRupiah(r.total) },
               { label: "Terverifikasi", className: "text-right tabular-nums", cell: (r) => formatRupiah(r.paid) },
-              { label: "Status", cell: (r) => <Tag tone={STATUS[r.status]?.tone}>{STATUS[r.status]?.label ?? r.status}</Tag> },
+              { label: "Status", cell: (r) => <Tag tone={STATUS[r.status]?.tone ?? "muted"}>{STATUS[r.status]?.label ?? r.status}</Tag> },
               { label: "Bergabung", cell: (r) => formatDate(new Date(r.created_at), { dateStyle: "medium" }) },
               { label: "Aksi", cell: (r) => <Link to="/admin/peserta/$id" params={{ id: r.id }} className="text-xs font-semibold text-primary underline">Detail</Link> },
             ]} />
