@@ -7,10 +7,10 @@ import { cn } from "@/lib/utils";
 export function CategoryCard({ c, featured }: { c: AnimalCategory; featured?: boolean }) {
   const avail = isAvailable(c);
   return (
-    <article className={cn("group flex flex-col rounded-2xl border bg-card p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lift", featured ? "border-gold ring-2 ring-gold/40" : "border-border")}>
+    <article className={cn("group flex flex-col rounded-2xl border bg-card p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lift", featured ? "border-primary ring-2 ring-primary/20" : "border-border")}>
       <div className="mb-4 flex items-start justify-between gap-2">
         <h3 className="text-lg font-extrabold text-burgundy-dark">{c.name}</h3>
-        {featured && <span className="rounded-full bg-gold px-2.5 py-0.5 text-xs font-bold text-gold-foreground">Populer</span>}
+        {featured && <span className="rounded-full bg-primary px-2.5 py-0.5 text-xs font-bold text-burgundy-dark">Populer</span>}
         {!avail && <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-bold text-muted-foreground">Segera</span>}
       </div>
       <p className="flex items-center gap-1.5 text-sm text-muted-foreground"><Scale className="size-4" /> {c.weightRange}</p>

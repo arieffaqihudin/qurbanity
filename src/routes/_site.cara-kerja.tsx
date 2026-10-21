@@ -6,16 +6,16 @@ import { STEPS } from "@/components/site/Steps";
 import { seo } from "@/lib/seo";
 
 export const Route = createFileRoute("/_site/cara-kerja")({
-  head: () => seo("Cara Kerja", "Perjalanan lengkap peserta QURBANITY: dari simulasi, akad, pembayaran bertahap, hingga laporan pelaksanaan kurban."),
+  head: () => seo("Cara Kerja", "Perjalanan lengkap peserta qurbanity: dari simulasi, akad, pembayaran bertahap, hingga laporan pelaksanaan kurban."),
   component: Page,
 });
 
 const details = [
   "Buka halaman Simulasi, pilih kategori hewan dan jumlah bagian, lalu bandingkan estimasi cicilan harian, mingguan, atau bulanan.",
   "Daftar akun, lengkapi data shahibul, dan setujui akad. Harga hewan dikunci pada saat ini dan tidak berubah untuk komitmen tersebut.",
-  "Lakukan pembayaran kapan pun dengan nominal yang Anda tentukan. Anda boleh memiliki lebih dari satu komitmen.",
+  "Lakukan pembayaran kapan pun dengan nominal yang kamu tentukan. Kamu boleh memiliki lebih dari satu komitmen.",
   "Tim kami memverifikasi setiap pembayaran. Progres di dashboard hanya bertambah dari pembayaran yang berhasil dan terverifikasi.",
-  "Setelah lunas, Anda dialokasikan ke hewan tertentu. Sekitar H-7 Iduladha Anda menerima pengumuman resmi alokasi.",
+  "Setelah lunas, kamu dialokasikan ke hewan tertentu. Sekitar H-7 Iduladha kamu menerima pengumuman resmi alokasi.",
   "Penyembelihan dilakukan pada Iduladha dan hari tasyrik. Dokumentasi dan laporan distribusi tersedia di portal peserta.",
 ];
 
@@ -24,7 +24,7 @@ function Page() {
     <>
       <PageHeader eyebrow="Cara kerja" title="Dari niat hingga daging sampai ke penerima" intro="Enam langkah sederhana yang dirancang agar mudah diikuti siapa saja." />
       <Section>
-        <ol className="relative space-y-6 border-l-2 border-gold/50 pl-8 md:pl-10">
+        <ol className="relative space-y-6 border-l-2 border-beige pl-8 md:pl-10">
           {STEPS.map((s, i) => (
             <li key={s.title} className="relative">
               <span className="absolute -left-[3.05rem] grid size-10 place-items-center rounded-full bg-primary text-primary-foreground shadow-soft md:-left-[3.55rem]"><s.icon className="size-5" /></span>
@@ -41,8 +41,8 @@ function Page() {
         <SectionHeading title="Penting untuk dipahami" />
         <div className="grid gap-3 md:grid-cols-3">
           <Notice kind="info">Lunas pembayaran tidak berarti kurban sudah dilaksanakan. Pelaksanaan mengikuti jadwal Iduladha.</Notice>
-          <Notice kind="info">QURBANITY bukan produk perbankan atau tabungan, melainkan komitmen pembelian hewan kurban.</Notice>
-          <Notice kind="info">Nama Anda hanya ditampilkan di laporan publik jika Anda memberikan persetujuan.</Notice>
+          <Notice kind="info">qurbanity bukan produk perbankan atau tabungan, melainkan komitmen pembelian hewan kurban.</Notice>
+          <Notice kind="info">Nama kamu hanya ditampilkan di laporan publik jika kamu memberikan persetujuan.</Notice>
         </div>
         <Button size="lg" className="mt-8" asChild><Link to="/simulasi">Mulai simulasi <ArrowRight /></Link></Button>
       </Section>

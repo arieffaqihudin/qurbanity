@@ -25,7 +25,7 @@ export function Countdown() {
         {(["Hari", "Jam", "Menit", "Detik"] as const).map((k) => (
           <div key={k} className="rounded-2xl border border-ivory/15 bg-ivory/10 p-3 text-center backdrop-blur md:p-5">
             <p className="text-3xl font-extrabold tabular-nums text-ivory md:text-5xl">{t ? String(t[k]).padStart(2, "0") : "--"}</p>
-            <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-gold md:text-sm">{k}</p>
+            <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-rose md:text-sm">{k}</p>
           </div>
         ))}
       </div>

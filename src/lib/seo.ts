@@ -1,5 +1,5 @@
 export function seo(title: string, description: string) {
-  const full = `${title} | QURBANITY`;
+  const full = `${title} | qurbanity`;
   return {
     meta: [
       { title: full },

@@ -44,6 +44,8 @@
   --color-ivory: var(--ivory);
   --color-cream: var(--cream);
   --color-gold: var(--gold);
+  --color-rose: var(--rose);
+  --color-beige: var(--beige);
   --color-gold-foreground: var(--gold-foreground);
   --color-charcoal: var(--charcoal);
   --color-success: var(--success);
@@ -70,7 +72,9 @@
   --burgundy-soft: oklch(0.41 0.16 20);
   --ivory: oklch(0.97 0.01 85);
   --cream: oklch(0.93 0.03 82);
-  --gold: oklch(0.78 0.13 75);
+  --gold: oklch(0.78 0.13 75); /* illustration only */
+  --rose: oklch(0.68 0.08 12);
+  --beige: oklch(0.85 0.04 75);
   --gold-foreground: oklch(0.25 0.04 40);
   --charcoal: oklch(0.25 0.012 0);
   --success: oklch(0.55 0.12 150);
@@ -88,26 +92,26 @@
   --secondary-foreground: var(--burgundy-dark);
   --muted: oklch(0.94 0.015 82);
   --muted-foreground: oklch(0.45 0.02 20);
-  --accent: var(--gold);
-  --accent-foreground: var(--gold-foreground);
+  --accent: var(--cream);
+  --accent-foreground: var(--burgundy-dark);
   --destructive: oklch(0.55 0.2 27);
   --destructive-foreground: var(--ivory);
   --border: oklch(0.88 0.025 80);
   --input: oklch(0.86 0.025 80);
   --ring: var(--burgundy-soft);
   --chart-1: var(--burgundy);
-  --chart-2: var(--gold);
+  --chart-2: var(--rose);
   --chart-3: var(--burgundy-soft);
   --chart-4: oklch(0.6 0.08 60);
   --chart-5: var(--charcoal);
   --sidebar: var(--burgundy-dark);
   --sidebar-foreground: var(--cream);
-  --sidebar-primary: var(--gold);
-  --sidebar-primary-foreground: var(--gold-foreground);
+  --sidebar-primary: var(--rose);
+  --sidebar-primary-foreground: var(--burgundy-dark);
   --sidebar-accent: oklch(0.33 0.11 17);
   --sidebar-accent-foreground: var(--ivory);
   --sidebar-border: oklch(0.36 0.1 17);
-  --sidebar-ring: var(--gold);
+  --sidebar-ring: var(--rose);
 
   --gradient-hero: linear-gradient(110deg, oklch(0.27 0.1 15 / 0.95) 0%, oklch(0.36 0.14 18 / 0.85) 45%, oklch(0.36 0.14 18 / 0.25) 100%);
   --gradient-burgundy: linear-gradient(135deg, var(--burgundy-dark), var(--burgundy-soft));
@@ -175,9 +179,9 @@
   color: var(--burgundy-soft);
 }
 
+/* Brand motif: "busur mangkuk" — concentric bowl arcs derived from the q symbol */
 @utility pattern-dots {
-  background-image: radial-gradient(oklch(0.78 0.13 75 / 0.25) 1px, transparent 1px);
-  background-size: 18px 18px;
+  background-image: repeating-radial-gradient(circle at 100% 50%, transparent 0 46px, oklch(0.68 0.08 12 / 0.22) 46px 52px);
 }
 
 @keyframes rise {

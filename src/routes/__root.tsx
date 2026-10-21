@@ -20,7 +20,7 @@ function NotFoundComponent() {
         <h1 className="text-7xl font-extrabold text-primary">404</h1>
         <h2 className="mt-4 text-xl font-semibold text-foreground">Halaman tidak ditemukan</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          Halaman yang Anda cari tidak tersedia atau telah dipindahkan.
+          Halaman yang kamu cari tidak tersedia atau telah dipindahkan.
         </p>
         <div className="mt-6">
           <Link
@@ -78,8 +78,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "QURBANITY by Manfaat Mengalir" },
-      { name: "description", content: "Komitmen kurban bertahap dengan harga terkunci dan laporan transparan." },
+      { title: "qurbanity by Manfaat Mengalir" },
+      { name: "description", content: "Kurban gak harus dadakan. Cicil kurbanmu dengan harga terkunci dan laporan transparan." },
       { name: "author", content: "Manfaat Mengalir" },
       { name: "theme-color", content: "#750314" },
     ],
@@ -88,7 +88,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", type: "image/png", href: "/favicon.png" },
+      { rel: "apple-touch-icon", href: "/icon-512.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" },
