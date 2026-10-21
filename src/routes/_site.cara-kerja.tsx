@@ -42,7 +42,7 @@ function Page() {
         <div className="grid gap-3 md:grid-cols-3">
           <Notice kind="info">Lunas pembayaran tidak berarti kurban sudah dilaksanakan. Pelaksanaan mengikuti jadwal Iduladha.</Notice>
           <Notice kind="info">qurbanity bukan produk perbankan atau tabungan, melainkan komitmen pembelian hewan kurban.</Notice>
-          <Notice kind="info">Nama kamu hanya ditampilkan di laporan publik jika kamu memberikan persetujuan.</Notice>
+          <Notice kind="info">Namamu hanya ditampilkan di laporan publik jika kamu memberikan persetujuan.</Notice>
         </div>
         <Button size="lg" className="mt-8" asChild><Link to="/simulasi">Mulai simulasi <ArrowRight /></Link></Button>
       </Section>

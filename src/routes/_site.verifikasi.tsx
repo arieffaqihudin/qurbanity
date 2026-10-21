@@ -26,7 +26,7 @@ function Page() {
 
   return (
     <>
-      <PageHeader eyebrow="Verifikasi" title="Periksa keaslian dokumen" intro="Masukkan kode verifikasi yang tertera pada sertifikat atau laporan kurban kamu." />
+      <PageHeader eyebrow="Verifikasi" title="Periksa keaslian dokumen" intro="Masukkan kode verifikasi yang tertera pada sertifikat atau laporan kurbanmu." />
       <Section>
         <div className="mx-auto max-w-xl">
           <form onSubmit={submit} className="rounded-2xl border border-border bg-card p-5 shadow-soft md:p-7" noValidate>
@@ -36,7 +36,7 @@ function Page() {
               <Button type="submit" size="lg" disabled={!code.trim()}><Search /> Periksa</Button>
             </div>
             <p id="code-help" className="mt-2 text-sm text-muted-foreground">Format: QBN-XXXX-XXXX</p>
-            {state === "invalid" && <p role="alert" className="mt-3 text-sm font-semibold text-destructive">Format kode tidak sesuai. Periksa kembali kode pada dokumen kamu.</p>}
+            {state === "invalid" && <p role="alert" className="mt-3 text-sm font-semibold text-destructive">Format kode tidak sesuai. Periksa kembali kode pada dokumenmu.</p>}
             {state === "pending" && (
               <div role="status" className="mt-4 flex gap-3 rounded-xl bg-muted p-4 text-sm">
                 <ShieldQuestion className="size-5 shrink-0 text-primary" />

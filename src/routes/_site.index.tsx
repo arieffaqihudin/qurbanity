@@ -12,7 +12,7 @@ import { CATEGORIES } from "@/lib/pricing";
 import { seo } from "@/lib/seo";
 
 export const Route = createFileRoute("/_site/")({
-  head: () => seo("Kurban Bertahap, Harga Terkunci", "Wujudkan niat kurban dengan cicilan fleksibel, harga terkunci saat akad, dan laporan pelaksanaan yang transparan."),
+  head: () => seo("Kurban Gak Harus Dadakan", "Cicil kurbanmu dengan nominal fleksibel, harga terkunci saat akad, dan laporan pelaksanaan yang transparan."),
   component: Home,
 });
 
@@ -32,12 +32,12 @@ function Home() {
         <img src={heroImg} alt="Sapi merumput di padang hijau saat senja" width={1600} height={1008} className="absolute inset-0 -z-10 h-full w-full object-cover" />
         <div className="bg-hero-overlay absolute inset-0 -z-10" aria-hidden />
         <div className="container-q py-20 text-ivory md:py-28 lg:py-32">
-          <p className="eyebrow animate-rise mb-4 text-rose">Kurban bertahap · amanah · transparan</p>
+          <p className="eyebrow animate-rise mb-4 text-rose">Mulai dikit, jadi kurban</p>
           <h1 className="animate-rise max-w-2xl text-4xl font-extrabold leading-[1.1] tracking-tight md:text-6xl">
-            Niat kurban hari ini, tunaikan dengan tenang di Iduladha.
+            Kurban gak harus dadakan.
           </h1>
           <p className="animate-rise mt-5 max-w-xl text-lg leading-relaxed text-cream/90">
-            Kunci harga hewan kurban sejak akad, bayar sedikit demi sedikit sesuai kemampuan, dan ikuti perjalanannya hingga sampai ke penerima.
+            Kunci harga hewan kurbanmu sejak akad, cicil sedikit demi sedikit sesuai kemampuan, lalu pantau perjalanannya sampai ke penerima.
           </p>
           <div className="animate-rise mt-8 flex flex-col gap-3 sm:flex-row">
             <Button variant="ivory" size="lg" asChild><Link to="/simulasi">Mulai Kurban <ArrowRight /></Link></Button>
@@ -54,7 +54,7 @@ function Home() {
       {/* Categories */}
       <Section>
         <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
-          <SectionHeading eyebrow="Pilihan hewan" title="Pilih hewan kurban kamu" intro="Patungan sapi hingga 7 bagian, atau satu ekor kambing untuk satu shahibul." />
+          <SectionHeading eyebrow="Pilihan hewan" title="Pilih hewan kurbanmu" intro="Patungan sapi hingga 7 bagian, atau satu ekor kambing untuk satu shahibul." />
           <Button variant="outline" asChild className="mb-8 self-start md:mb-10 md:self-auto"><Link to="/pilihan-sapi">Bandingkan kategori <ArrowRight /></Link></Button>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -66,7 +66,7 @@ function Home() {
       {/* Flexible installments */}
       <Section tone="cream">
         <div className="grid items-center gap-10 lg:grid-cols-2">
-          <SectionHeading eyebrow="Cicilan fleksibel" title="Bayar sesuai ritme rezeki kamu" intro="Tidak ada jadwal kaku. Setor harian, mingguan, atau bulanan, dengan nominal yang kamu tentukan sendiri, selama lunas sebelum batas pelunasan." />
+          <SectionHeading eyebrow="Cicilan fleksibel" title="Bayar sesuai ritme rezekimu" intro="Tidak ada jadwal kaku. Setor harian, mingguan, atau bulanan, dengan nominal yang kamu tentukan sendiri, selama lunas sebelum batas pelunasan." />
           <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
             {[
               { icon: Lock, t: "Harga terkunci", d: "Tidak terpengaruh kenaikan harga setelah akad." },
@@ -85,7 +85,7 @@ function Home() {
 
       {/* Simulator */}
       <Section id="simulasi">
-        <SectionHeading eyebrow="Simulasi" title="Hitung cicilan kurban kamu" intro="Coba berbagai pilihan dan lihat perkiraan setoran hingga batas pelunasan." />
+        <SectionHeading eyebrow="Simulasi" title="Hitung cicilan kurbanmu" intro="Coba berbagai pilihan dan lihat perkiraan setoran hingga batas pelunasan." />
         <Simulator />
       </Section>
 
@@ -101,12 +101,12 @@ function Home() {
       {/* Trust */}
       <Section>
         <div className="grid gap-10 lg:grid-cols-[1fr_1.2fr]">
-          <SectionHeading eyebrow="Amanah & transparansi" title="Setiap rupiah tercatat, setiap langkah terlihat" intro="Kepercayaan kamu kami jaga dengan prinsip yang tegas dan terdokumentasi." />
+          <SectionHeading eyebrow="Amanah & transparansi" title="Setiap rupiah tercatat, setiap langkah terlihat" intro="Kepercayaanmu kami jaga dengan prinsip yang tegas dan terdokumentasi." />
           <div className="grid gap-4 sm:grid-cols-2">
             {[
               { icon: FileCheck2, t: "Pencatatan berbasis ledger", d: "Setiap transaksi tercatat permanen dan dapat diaudit." },
-              { icon: Lock, t: "Harga dikunci saat akad", d: "Komitmen kamu terlindungi dari perubahan harga." },
-              { icon: Eye, t: "Privasi dihormati", d: "Nama kamu hanya dipublikasikan dengan persetujuan." },
+              { icon: Lock, t: "Harga dikunci saat akad", d: "Komitmenmu terlindungi dari perubahan harga." },
+              { icon: Eye, t: "Privasi dihormati", d: "Namamu hanya dipublikasikan dengan persetujuan." },
               { icon: ShieldCheck, t: "Dokumen terverifikasi", d: "Keaslian sertifikat dapat dicek publik." },
             ].map((x) => (
               <div key={x.t} className="flex gap-4 rounded-2xl border border-border p-5">
@@ -122,7 +122,7 @@ function Home() {
       <Section tone="dark">
         <div className="grid gap-12 lg:grid-cols-2">
           <div>
-            <SectionHeading light eyebrow="Perjalanan kurban" title="Ikuti hewan kurban kamu sampai tujuan" intro="Lunas pembayaran bukan akhir. Kamu akan menerima kabar di setiap tahap pelaksanaan." />
+            <SectionHeading light eyebrow="Perjalanan kurban" title="Ikuti hewan kurbanmu sampai tujuan" intro="Lunas pembayaran bukan akhir. Kamu akan menerima kabar di setiap tahap pelaksanaan." />
             <ol className="space-y-3">
               {journey.map((j, i) => (
                 <li key={j.label} className="flex items-center gap-4 rounded-xl bg-ivory/5 p-3">
@@ -155,8 +155,8 @@ function Home() {
         <div className="relative overflow-hidden rounded-3xl bg-burgundy-gradient p-8 text-center text-ivory md:p-14">
           <div className="pattern-dots absolute inset-0 opacity-30" aria-hidden />
           <div className="relative">
-            <h2 className="mx-auto max-w-2xl text-3xl font-extrabold leading-tight md:text-4xl">Mulailah dari langkah kecil. Tunaikan dengan sempurna.</h2>
-            <p className="mx-auto mt-3 max-w-xl text-cream/85">Kunci harga hewan kurban kamu hari ini dan cicil dengan tenang.</p>
+            <h2 className="mx-auto max-w-2xl text-3xl font-extrabold leading-tight md:text-4xl">Yuk, mulai hari ini.</h2>
+            <p className="mx-auto mt-3 max-w-xl text-cream/85">Sedikit demi sedikit, sampai Iduladha.</p>
             <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
               <Button variant="ivory" size="lg" asChild><Link to="/simulasi">Mulai Kurban <ArrowRight /></Link></Button>
               <Button variant="light" size="lg" asChild><Link to="/kontak">Hubungi Kami</Link></Button>

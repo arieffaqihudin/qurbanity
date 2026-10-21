@@ -6,7 +6,7 @@ export const STEPS = [
   { icon: Wallet, title: "Bayar bertahap", text: "Setor kapan saja dengan nominal fleksibel hingga lunas sebelum batas waktu." },
   { icon: BadgeCheck, title: "Verifikasi pembayaran", text: "Setiap pembayaran diverifikasi. Progres hanya dihitung dari yang berhasil." },
   { icon: Truck, title: "Alokasi & pengumuman H-7", text: "Kamu dialokasikan ke hewan tertentu dan menerima pengumuman resmi." },
-  { icon: HeartHandshake, title: "Pelaksanaan & laporan", text: "Penyembelihan dan distribusi didokumentasikan untuk kamu." },
+  { icon: HeartHandshake, title: "Pelaksanaan & laporan", text: "Penyembelihan dan distribusi didokumentasikan untukmu." },
 ];
 
 export function Steps() {
