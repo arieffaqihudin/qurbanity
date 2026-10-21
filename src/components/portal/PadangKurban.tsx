@@ -1,3 +1,5 @@
+import { useParallax } from "@/components/site/motion";
+
 /**
  * Symbolic farm scene. Purely visual: driven by verified progress (0–100),
  * never writes data and never implies the animal has been slaughtered.
@@ -11,6 +13,10 @@ export function PadangKurban({ kind, pct, name, code }: { kind: "sapi" | "kambin
     : pct > 0 ? "Langkah kecil yang konsisten akan sampai."
     : "Padangmu siap. Mulai setoran pertama untuk menumbuhkan rumputnya.";
 
+  // Layered depth: far layers drift with the page, near layers against it. Visual only.
+  const clouds = useParallax<SVGGElement>(0.05);
+  const far = useParallax<SVGGElement>(0.025);
+  const near = useParallax<SVGGElement>(-0.03);
   return (
     <figure className="overflow-hidden rounded-2xl border border-border bg-card">
       <div className="relative aspect-[16/9] w-full">
@@ -20,9 +26,13 @@ export function PadangKurban({ kind, pct, name, code }: { kind: "sapi" | "kambin
           </defs>
           <rect width="320" height="180" fill="url(#pk-sky)" />
           <circle cx="262" cy="38" r="16" fill="var(--color-rose)" opacity="0.55" className="pk-sun" />
-          <path d="M0 110 Q60 80 120 100 T240 92 T320 98 V180 H0Z" fill="var(--color-beige)" opacity="0.7" />
+          <g ref={clouds} opacity="0.9">
+            <g className="pk-cloud"><ellipse cx="70" cy="34" rx="22" ry="7" fill="var(--color-ivory)" /><ellipse cx="84" cy="29" rx="13" ry="7" fill="var(--color-ivory)" /></g>
+            <g className="pk-cloud pk-cloud-2"><ellipse cx="190" cy="22" rx="18" ry="5" fill="var(--color-ivory)" /><ellipse cx="200" cy="18" rx="10" ry="5" fill="var(--color-ivory)" /></g>
+          </g>
+          <g ref={far}><path d="M0 110 Q60 80 120 100 T240 92 T320 98 V200 H0Z" fill="var(--color-beige)" opacity="0.7" /></g>
           <path d="M0 128 Q80 110 160 124 T320 120 V180 H0Z" fill="oklch(0.7 0.09 135)" />
-          <path d="M0 150 Q100 138 200 148 T320 146 V180 H0Z" fill="oklch(0.62 0.1 140)" />
+          <g ref={near}><path d="M0 150 Q100 138 200 148 T320 146 V200 H0Z" fill="oklch(0.62 0.1 140)" /></g>
           {/* fence */}
           {Array.from({ length: 9 }).map((_, i) => <rect key={i} x={14 + i * 36} y="112" width="3" height="18" rx="1" fill="var(--color-burgundy-dark)" opacity="0.35" />)}
           <rect x="10" y="117" width="300" height="2" fill="var(--color-burgundy-dark)" opacity="0.3" />
@@ -46,11 +56,14 @@ export function PadangKurban({ kind, pct, name, code }: { kind: "sapi" | "kambin
       <style>{`
         @keyframes pk-bob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-2px) } }
         @keyframes pk-tail { 0%,100% { transform: rotate(0) } 50% { transform: rotate(14deg) } }
+        @keyframes pk-drift { 0%,100% { transform: translateX(0) } 50% { transform: translateX(8px) } }
+        .pk-cloud { animation: pk-drift 14s ease-in-out infinite; }
+        .pk-cloud-2 { animation-duration: 19s; animation-direction: reverse; }
         @keyframes pk-glow { 0%,100% { opacity: .45 } 50% { opacity: .7 } }
         .pk-animal > g { animation: pk-bob 2.6s ease-in-out infinite; transform-box: fill-box; }
         .pk-tail { animation: pk-tail 1.4s ease-in-out infinite; transform-origin: 0 0; transform-box: fill-box; }
         .pk-sun { animation: pk-glow 5s ease-in-out infinite; }
-        @media (prefers-reduced-motion: reduce) { .pk-animal > g, .pk-tail, .pk-sun { animation: none } }
+        @media (prefers-reduced-motion: reduce) { .pk-animal > g, .pk-tail, .pk-sun, .pk-cloud { animation: none } }
       `}</style>
     </figure>
   );

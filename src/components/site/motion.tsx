@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
  * - prefers-reduced-motion disables both; intensity is scaled down on tablet and phone.
  */
 
-type Layer = { el: HTMLElement; speed: number };
+type Layer = { el: HTMLElement | SVGElement; speed: number };
 const layers = new Set<Layer>();
 let ticking = false;
 let listening = false;
@@ -51,7 +51,7 @@ function register(layer: Layer) {
 }
 
 /** Moves the element vertically relative to its parent while scrolling. Negative speed = moves against the scroll. */
-export function useParallax<T extends HTMLElement>(speed: number) {
+export function useParallax<T extends HTMLElement | SVGElement>(speed: number) {
   const ref = useRef<T>(null);
   useEffect(() => {
     const el = ref.current;
