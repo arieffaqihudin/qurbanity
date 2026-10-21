@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { PageHeader, Section, SectionHeading, Notice } from "@/components/site/primitives";
 import { STEPS } from "@/components/site/Steps";
 import { seo } from "@/lib/seo";
+import { ParallaxLayer, Reveal } from "@/components/site/motion";
 
 export const Route = createFileRoute("/_site/cara-kerja")({
   head: () => seo("Cara Kerja", "Perjalanan lengkap peserta qurbanity: dari simulasi, akad, pembayaran bertahap, hingga laporan pelaksanaan kurban."),
@@ -23,17 +24,19 @@ function Page() {
   return (
     <>
       <PageHeader eyebrow="Cara kerja" title="Dari niat hingga daging sampai ke penerima" intro="Enam langkah sederhana yang dirancang agar mudah diikuti siapa saja." />
-      <Section>
+      <Section className="relative isolate overflow-hidden">
+        <ParallaxLayer speed={-0.15} className="absolute -right-24 top-10 -z-10 hidden size-80 rounded-full bg-beige/50 md:block" />
+        <ParallaxLayer speed={0.1} className="absolute -left-20 bottom-20 -z-10 hidden size-64 rounded-full bg-rose/15 md:block" />
         <ol className="relative space-y-6 border-l-2 border-beige pl-8 md:pl-10">
           {STEPS.map((s, i) => (
-            <li key={s.title} className="relative">
+            <Reveal as="li" key={s.title} className="relative">
               <span className="absolute -left-[3.05rem] grid size-10 place-items-center rounded-full bg-primary text-primary-foreground shadow-soft md:-left-[3.55rem]"><s.icon className="size-5" /></span>
               <div className="rounded-2xl border border-border bg-card p-5 md:p-6">
                 <p className="eyebrow">Langkah {i + 1}</p>
                 <h2 className="mt-1 text-xl font-extrabold text-burgundy-dark">{s.title}</h2>
                 <p className="mt-2 leading-relaxed text-muted-foreground">{details[i]}</p>
               </div>
-            </li>
+            </Reveal>
           ))}
         </ol>
       </Section>

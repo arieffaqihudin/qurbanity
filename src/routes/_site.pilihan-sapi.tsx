@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import farmImg from "@/assets/farm-landscape.jpg";
+import { ParallaxImage, Reveal } from "@/components/site/motion";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Check, Minus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -23,9 +25,13 @@ function Page() {
         <Notice kind="sample" className="mb-8">Seluruh harga di halaman ini adalah contoh dari PRD dan belum final. Harga resmi akan dikunci pada saat akad.</Notice>
         <h2 className="sr-only">Kategori hewan</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {CATEGORIES.map((c) => <CategoryCard key={c.id} c={c} featured={c.id === "sapi-reguler"} />)}
+          {CATEGORIES.map((c, i) => <Reveal key={c.id} delay={i * 90} className="h-full"><CategoryCard c={c} featured={c.id === "sapi-reguler"} /></Reveal>)}
         </div>
       </Section>
+      <div className="relative isolate h-40 overflow-hidden md:h-56" aria-hidden>
+        <ParallaxImage src={farmImg} speed={0.2} />
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-cream" />
+      </div>
       <Section tone="cream">
         <SectionHeading eyebrow="Perbandingan" title="Rincian biaya per kategori" />
         <div className="overflow-x-auto rounded-2xl border border-border bg-card shadow-soft">

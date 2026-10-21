@@ -1,6 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Calculator, Lock, Coins, ShieldCheck, Eye, FileCheck2, Camera, Sprout, Scissors, PackageCheck, CheckCircle2 } from "lucide-react";
 import heroImg from "@/assets/hero-pasture.jpg";
+import distributionImg from "@/assets/distribution.jpg";
+import farmImg from "@/assets/farm-landscape.jpg";
+import { ParallaxImage, ParallaxLayer, Reveal } from "@/components/site/motion";
 import { Button } from "@/components/ui/button";
 import { Section, SectionHeading } from "@/components/site/primitives";
 import { CategoryCard } from "@/components/site/CategoryCard";
@@ -29,9 +32,16 @@ function Home() {
     <>
       {/* Hero */}
       <section className="relative isolate overflow-hidden">
-        <img src={heroImg} alt="Sapi merumput di padang hijau saat senja" width={1600} height={1008} className="absolute inset-0 -z-10 h-full w-full object-cover" />
+        <ParallaxImage src={heroImg} alt="Sapi merumput di padang hijau saat senja" speed={0.22} eager />
         <div className="bg-hero-overlay absolute inset-0 -z-10" aria-hidden />
-        <div className="container-q py-20 text-ivory md:py-28 lg:py-32">
+        {/* Depth: photo and clouds drift slower than the page; the foreground hill and text stay anchored. */}
+        <ParallaxLayer speed={0.08} className="absolute inset-x-0 top-6 -z-10 hidden md:block">
+          <svg viewBox="0 0 1200 120" className="h-24 w-full fill-ivory opacity-15"><ellipse cx="180" cy="60" rx="120" ry="22" /><ellipse cx="260" cy="48" rx="70" ry="20" /><ellipse cx="900" cy="40" rx="140" ry="18" /><ellipse cx="990" cy="30" rx="70" ry="16" /></svg>
+        </ParallaxLayer>
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 -bottom-px z-0">
+          <svg viewBox="0 0 1440 80" preserveAspectRatio="none" className="block h-10 w-full fill-background md:h-16"><path d="M0 60 Q240 20 480 44 T960 38 T1440 30 V80 H0Z" /></svg>
+        </div>
+        <div className="container-q relative z-10 pb-24 pt-20 text-ivory md:pb-36 md:pt-28 lg:pt-32">
           <p className="eyebrow animate-rise mb-4 text-cream">Mulai dikit, jadi kurban</p>
           <h1 className="animate-rise max-w-2xl text-4xl font-extrabold leading-[1.1] tracking-tight md:text-6xl">
             Kurban gak harus dadakan.
@@ -58,7 +68,7 @@ function Home() {
           <Button variant="outline" asChild className="mb-8 self-start md:mb-10 md:self-auto"><Link to="/pilihan-sapi">Bandingkan kategori <ArrowRight /></Link></Button>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {CATEGORIES.map((c) => <CategoryCard key={c.id} c={c} featured={c.id === "sapi-reguler"} />)}
+          {CATEGORIES.map((c, i) => <Reveal key={c.id} delay={i * 90} className="h-full"><CategoryCard c={c} featured={c.id === "sapi-reguler"} /></Reveal>)}
         </div>
         <p className="mt-4 text-sm text-muted-foreground">* Harga merupakan contoh dari PRD dan belum final.</p>
       </Section>
@@ -139,6 +149,22 @@ function Home() {
         </div>
       </Section>
 
+      {/* Impact — photographic fixed-background parallax */}
+      <section aria-labelledby="impact-title" className="bg-fixed-parallax relative isolate overflow-hidden text-ivory" style={{ backgroundImage: `url(${distributionImg})` }}>
+        <div className="absolute inset-0 -z-10 bg-burgundy-dark/80" aria-hidden />
+        <div className="container-q grid gap-8 py-20 md:py-28 lg:grid-cols-[1.2fr_1fr] lg:items-end">
+          <Reveal>
+            <p className="eyebrow mb-3 text-cream">Dampak</p>
+            <h2 id="impact-title" className="max-w-xl text-3xl font-extrabold leading-tight md:text-4xl">Dari kandang sampai ke tangan penerima.</h2>
+            <p className="mt-4 max-w-lg text-cream/90">Setiap tahap pelaksanaan akan dilaporkan dengan dokumentasi yang sudah diverifikasi, termasuk distribusi daging kepada penerima manfaat.</p>
+          </Reveal>
+          <Reveal delay={150} className="flex flex-col items-start gap-3 lg:items-end">
+            <Button variant="ivory" size="lg" asChild><Link to="/dampak">Lihat laporan dampak <ArrowRight /></Link></Button>
+            <p className="text-xs text-cream/75">Foto ilustrasi, bukan dokumentasi program qurbanity.</p>
+          </Reveal>
+        </div>
+      </section>
+
       {/* FAQ */}
       <Section>
         <div className="grid gap-10 lg:grid-cols-[1fr_1.5fr]">
@@ -152,16 +178,17 @@ function Home() {
 
       {/* Final CTA */}
       <Section className="pt-0">
-        <div className="relative overflow-hidden rounded-3xl bg-burgundy-gradient p-8 text-center text-ivory md:p-14">
-          <div className="pattern-dots absolute inset-0 opacity-30" aria-hidden />
-          <div className="relative">
+        <div className="relative isolate overflow-hidden rounded-3xl p-8 text-center text-ivory md:p-14">
+          <ParallaxImage src={farmImg} speed={0.15} className="rounded-3xl" />
+          <div className="absolute inset-0 -z-10 bg-gradient-to-t from-burgundy-dark/90 via-burgundy-dark/70 to-burgundy-dark/45" aria-hidden />
+          <Reveal variant="scale" className="relative">
             <h2 className="mx-auto max-w-2xl text-3xl font-extrabold leading-tight md:text-4xl">Yuk, mulai hari ini.</h2>
-            <p className="mx-auto mt-3 max-w-xl text-cream/85">Sedikit demi sedikit, sampai Iduladha.</p>
+            <p className="mx-auto mt-3 max-w-xl text-cream/90">Sedikit demi sedikit, sampai Iduladha.</p>
             <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
               <Button variant="ivory" size="lg" asChild><Link to="/simulasi">Mulai Kurban <ArrowRight /></Link></Button>
               <Button variant="light" size="lg" asChild><Link to="/kontak">Hubungi Kami</Link></Button>
             </div>
-          </div>
+          </Reveal>
         </div>
       </Section>
     </>
