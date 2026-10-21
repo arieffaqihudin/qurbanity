@@ -81,8 +81,8 @@ export function ParallaxImage({ src, alt = "", speed = 0.18, className, imgClass
 let io: IntersectionObserver | null = null;
 function observer() {
   io ??= new IntersectionObserver((entries) => {
-    entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("is-visible"); io!.unobserve(e.target); } });
-  }, { rootMargin: "0px 0px -8% 0px", threshold: 0.12 });
+    entries.forEach((e) => { if (e.isIntersecting || e.boundingClientRect.top < 0) { e.target.classList.add("is-visible"); io!.unobserve(e.target); } });
+  }, { rootMargin: "0px 0px -5% 0px", threshold: 0.05 });
   return io;
 }
 
