@@ -10,6 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SiteRouteImport } from './routes/_site'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as PortalRouteImport } from './routes/portal'
 import { Route as SiteIndexRouteImport } from './routes/_site.index'
 import { Route as SiteAkadProgramRouteImport } from './routes/_site.akad-program'
 import { Route as SiteCaraKerjaRouteImport } from './routes/_site.cara-kerja'
@@ -22,9 +24,23 @@ import { Route as SiteSimulasiRouteImport } from './routes/_site.simulasi'
 import { Route as SiteSyaratKetentuanRouteImport } from './routes/_site.syarat-ketentuan'
 import { Route as SiteTentangRouteImport } from './routes/_site.tentang'
 import { Route as SiteVerifikasiRouteImport } from './routes/_site.verifikasi'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminSectionRouteImport } from './routes/admin.$section'
+import { Route as PortalIndexRouteImport } from './routes/portal.index'
+import { Route as PortalSectionRouteImport } from './routes/portal.$section'
 
 const SiteRoute = SiteRouteImport.update({
   id: '/_site',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortalRoute = PortalRouteImport.update({
+  id: '/portal',
+  path: '/portal',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SiteIndexRoute = SiteIndexRouteImport.update({
@@ -87,9 +103,31 @@ const SiteVerifikasiRoute = SiteVerifikasiRouteImport.update({
   path: '/verifikasi',
   getParentRoute: () => SiteRoute,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSectionRoute = AdminSectionRouteImport.update({
+  id: '/$section',
+  path: '/$section',
+  getParentRoute: () => AdminRoute,
+} as any)
+const PortalIndexRoute = PortalIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalSectionRoute = PortalSectionRouteImport.update({
+  id: '/$section',
+  path: '/$section',
+  getParentRoute: () => PortalRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof SiteIndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/portal': typeof PortalRouteWithChildren
   '/akad-program': typeof SiteAkadProgramRoute
   '/cara-kerja': typeof SiteCaraKerjaRoute
   '/dampak': typeof SiteDampakRoute
@@ -101,6 +139,10 @@ export interface FileRoutesByFullPath {
   '/syarat-ketentuan': typeof SiteSyaratKetentuanRoute
   '/tentang': typeof SiteTentangRoute
   '/verifikasi': typeof SiteVerifikasiRoute
+  '/admin/$section': typeof AdminSectionRoute
+  '/portal/$section': typeof PortalSectionRoute
+  '/admin/': typeof AdminIndexRoute
+  '/portal/': typeof PortalIndexRoute
 }
 export interface FileRoutesByTo {
   '/akad-program': typeof SiteAkadProgramRoute
@@ -114,11 +156,17 @@ export interface FileRoutesByTo {
   '/syarat-ketentuan': typeof SiteSyaratKetentuanRoute
   '/tentang': typeof SiteTentangRoute
   '/verifikasi': typeof SiteVerifikasiRoute
+  '/admin/$section': typeof AdminSectionRoute
+  '/portal/$section': typeof PortalSectionRoute
   '/': typeof SiteIndexRoute
+  '/admin': typeof AdminIndexRoute
+  '/portal': typeof PortalIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_site': typeof SiteRouteWithChildren
+  '/admin': typeof AdminRouteWithChildren
+  '/portal': typeof PortalRouteWithChildren
   '/_site/akad-program': typeof SiteAkadProgramRoute
   '/_site/cara-kerja': typeof SiteCaraKerjaRoute
   '/_site/dampak': typeof SiteDampakRoute
@@ -130,12 +178,18 @@ export interface FileRoutesById {
   '/_site/syarat-ketentuan': typeof SiteSyaratKetentuanRoute
   '/_site/tentang': typeof SiteTentangRoute
   '/_site/verifikasi': typeof SiteVerifikasiRoute
+  '/admin/$section': typeof AdminSectionRoute
+  '/portal/$section': typeof PortalSectionRoute
   '/_site/': typeof SiteIndexRoute
+  '/admin/': typeof AdminIndexRoute
+  '/portal/': typeof PortalIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
+    | '/portal'
     | '/akad-program'
     | '/cara-kerja'
     | '/dampak'
@@ -147,6 +201,10 @@ export interface FileRouteTypes {
     | '/syarat-ketentuan'
     | '/tentang'
     | '/verifikasi'
+    | '/admin/$section'
+    | '/portal/$section'
+    | '/admin/'
+    | '/portal/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/akad-program'
@@ -160,10 +218,16 @@ export interface FileRouteTypes {
     | '/syarat-ketentuan'
     | '/tentang'
     | '/verifikasi'
+    | '/admin/$section'
+    | '/portal/$section'
     | '/'
+    | '/admin'
+    | '/portal'
   id:
     | '__root__'
     | '/_site'
+    | '/admin'
+    | '/portal'
     | '/_site/akad-program'
     | '/_site/cara-kerja'
     | '/_site/dampak'
@@ -175,11 +239,17 @@ export interface FileRouteTypes {
     | '/_site/syarat-ketentuan'
     | '/_site/tentang'
     | '/_site/verifikasi'
+    | '/admin/$section'
+    | '/portal/$section'
     | '/_site/'
+    | '/admin/'
+    | '/portal/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   SiteRoute: typeof SiteRouteWithChildren
+  AdminRoute: typeof AdminRouteWithChildren
+  PortalRoute: typeof PortalRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -189,6 +259,20 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof SiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portal': {
+      id: '/portal'
+      path: '/portal'
+      fullPath: '/portal'
+      preLoaderRoute: typeof PortalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_site/': {
@@ -275,6 +359,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SiteVerifikasiRouteImport
       parentRoute: typeof SiteRoute
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/$section': {
+      id: '/admin/$section'
+      path: '/$section'
+      fullPath: '/admin/$section'
+      preLoaderRoute: typeof AdminSectionRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/portal/': {
+      id: '/portal/'
+      path: '/'
+      fullPath: '/portal/'
+      preLoaderRoute: typeof PortalIndexRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/$section': {
+      id: '/portal/$section'
+      path: '/$section'
+      fullPath: '/portal/$section'
+      preLoaderRoute: typeof PortalSectionRouteImport
+      parentRoute: typeof PortalRoute
+    }
   }
 }
 
@@ -310,8 +422,35 @@ const SiteRouteChildren: SiteRouteChildren = {
 
 const SiteRouteWithChildren = SiteRoute._addFileChildren(SiteRouteChildren)
 
+interface AdminRouteChildren {
+  AdminSectionRoute: typeof AdminSectionRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminSectionRoute: AdminSectionRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
+interface PortalRouteChildren {
+  PortalSectionRoute: typeof PortalSectionRoute
+  PortalIndexRoute: typeof PortalIndexRoute
+}
+
+const PortalRouteChildren: PortalRouteChildren = {
+  PortalSectionRoute: PortalSectionRoute,
+  PortalIndexRoute: PortalIndexRoute,
+}
+
+const PortalRouteWithChildren =
+  PortalRoute._addFileChildren(PortalRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   SiteRoute: SiteRouteWithChildren,
+  AdminRoute: AdminRouteWithChildren,
+  PortalRoute: PortalRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
