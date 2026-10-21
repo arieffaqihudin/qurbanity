@@ -22,3 +22,14 @@ describe("pricing rules", () => {
     expect(countPeriods("mingguan", from, to)).toBe(3);
   });
 });
+
+describe("simulator edge cases", () => {
+  it("after the deadline there are no installment periods left", () => {
+    const r = simulate(getCategory("sapi-reguler"), 1, "harian", new Date("2027-05-01T00:00:00+07:00"));
+    expect(r!.daysLeft).toBe(0);
+    expect(r!.periods).toBe(0);
+  });
+  it("shares below 1 count as 1", () => {
+    expect(simulate(getCategory("sapi-reguler"), 0, "bulanan")!.total).toBe(3_000_000);
+  });
+});

@@ -8,6 +8,9 @@ export const Route = createFileRoute("/admin/$section")({
     if (!item) throw notFound();
     return { slug: item.slug };
   },
+  head: ({ loaderData }) => ({
+    meta: [{ title: `${ADMIN_NAV.find((n) => n.slug === loaderData?.slug)?.label ?? "Halaman"} | Admin QURBANITY` }, { name: "robots", content: "noindex" }],
+  }),
   component: Page,
 });
 
