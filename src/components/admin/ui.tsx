@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2, ShieldAlert, AlertTriangle, Search, Plug, ChevronLeft, ChevronRight, Inbox } from "lucide-react";
+import { ArrowUp, ArrowDown, ArrowUpDown, Loader2, ShieldAlert, AlertTriangle, Search, Plug, ChevronLeft, ChevronRight, Inbox } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -183,28 +183,57 @@ export function Pager({ page, pageSize, total, onPage }: { page: number; pageSiz
 }
 
 /** Responsive table: real table on md+, stacked cards on phones (no sideways scrolling). */
-export function DataTable<T>({ rows, cols, rowKey, empty }: {
-  rows: T[]; rowKey: (r: T) => string; empty?: ReactNode;
-  cols: { label: string; cell: (r: T) => ReactNode; className?: string; primary?: boolean }[];
+export function DataTable<T>({ rows, cols, rowKey, empty, onRowClick }: {
+  rows: T[]; rowKey: (r: T) => string; empty?: ReactNode; onRowClick?: (r: T) => void;
+  cols: { label: string; cell: (r: T) => ReactNode; className?: string; primary?: boolean; sort?: (r: T) => string | number; hideOnMobile?: boolean }[];
 }) {
+  const [sort, setSort] = useState<{ i: number; dir: 1 | -1 } | null>(null);
   if (!rows.length) return <>{empty ?? <Empty title="Belum ada data" />}</>;
+  const sorter = sort ? cols[sort.i]?.sort : undefined;
+  const view = sorter && sort ? [...rows].sort((a, b) => { const x = sorter(a), y = sorter(b); return (x < y ? -1 : x > y ? 1 : 0) * sort.dir; }) : rows;
+  const toggle = (i: number) => setSort((s) => (s?.i === i ? (s.dir === 1 ? { i, dir: -1 } : null) : { i, dir: 1 }));
   return (
     <>
       <div className="hidden md:block">
         <table className="w-full text-sm">
-          <thead><tr className="border-b border-border text-left text-xs text-muted-foreground">{cols.map((c) => <th key={c.label} scope="col" className={cn("px-2 py-2 font-semibold", c.className)}>{c.label}</th>)}</tr></thead>
-          <tbody>{rows.map((r) => <tr key={rowKey(r)} className="border-b border-border/60 last:border-0 hover:bg-muted/40">{cols.map((c) => <td key={c.label} className={cn("px-2 py-2 align-top", c.className)}>{c.cell(r)}</td>)}</tr>)}</tbody>
+          <thead><tr className="border-b border-border text-left text-xs text-muted-foreground">{cols.map((c, i) => (
+            <th key={c.label} scope="col" aria-sort={sort?.i === i ? (sort.dir === 1 ? "ascending" : "descending") : undefined} className={cn("px-2 py-2 font-semibold", c.className)}>
+              {c.sort ? (
+                <button type="button" onClick={() => toggle(i)} className="inline-flex items-center gap-1 hover:text-foreground">
+                  {c.label}{sort?.i === i ? (sort.dir === 1 ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />) : <ArrowUpDown className="size-3 opacity-40" />}
+                </button>
+              ) : c.label}
+            </th>
+          ))}</tr></thead>
+          <tbody>{view.map((r) => (
+            <tr key={rowKey(r)} onClick={onRowClick ? (e) => { if (!(e.target as HTMLElement).closest("a,button,input,select")) onRowClick(r); } : undefined}
+              className={cn("border-b border-border/60 last:border-0 hover:bg-muted/40", onRowClick && "cursor-pointer")}>
+              {cols.map((c) => <td key={c.label} className={cn("px-2 py-2 align-top", c.className)}>{c.cell(r)}</td>)}
+            </tr>
+          ))}</tbody>
         </table>
       </div>
-      <ul className="space-y-2 md:hidden">
-        {rows.map((r) => (
-          <li key={rowKey(r)} className="rounded-lg border border-border p-3 text-sm">
-            {cols.map((c) => c.primary
-              ? <div key={c.label} className="mb-1 font-bold text-burgundy-dark">{c.cell(r)}</div>
-              : <div key={c.label} className="flex justify-between gap-3 py-0.5"><span className="text-xs text-muted-foreground">{c.label}</span><span className="text-right">{c.cell(r)}</span></div>)}
-          </li>
-        ))}
-      </ul>
+      <div className="md:hidden">
+        {cols.some((c) => c.sort) && (
+          <label className="mb-2 flex items-center gap-2 text-xs font-semibold text-muted-foreground">Urutkan
+            <select className="h-9 rounded-md border border-input bg-card px-2 text-sm text-foreground" value={sort ? `${sort.i}:${sort.dir}` : ""}
+              onChange={(e) => { const [i, d] = e.target.value.split(":"); setSort(e.target.value ? { i: Number(i), dir: Number(d) as 1 | -1 } : null); }}>
+              <option value="">Bawaan</option>
+              {cols.map((c, i) => c.sort && [<option key={`${i}a`} value={`${i}:1`}>{c.label} ↑</option>, <option key={`${i}d`} value={`${i}:-1`}>{c.label} ↓</option>])}
+            </select>
+          </label>
+        )}
+        <ul className="space-y-2">
+          {view.map((r) => (
+            <li key={rowKey(r)} onClick={onRowClick ? (e) => { if (!(e.target as HTMLElement).closest("a,button")) onRowClick(r); } : undefined}
+              className={cn("rounded-lg border border-border bg-card p-3 text-sm", onRowClick && "cursor-pointer active:bg-muted/40")}>
+              {cols.filter((c) => !c.hideOnMobile).map((c) => c.primary
+                ? <div key={c.label} className="mb-1 font-bold text-burgundy-dark">{c.cell(r)}</div>
+                : <div key={c.label} className="flex justify-between gap-3 py-0.5"><span className="text-xs text-muted-foreground">{c.label}</span><span className="min-w-0 text-right">{c.cell(r)}</span></div>)}
+            </li>
+          ))}
+        </ul>
+      </div>
     </>
   );
 }
