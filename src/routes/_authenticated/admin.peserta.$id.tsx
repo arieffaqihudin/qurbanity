@@ -116,7 +116,7 @@ function CorrectProfile({ profile, onDone }: { profile: { id: string; full_name:
   const [err, setErr] = useState<string | null>(null);
   if (!open) return <Button size="sm" variant="outline" className="mt-3" onClick={() => setOpen(true)}><Pencil className="size-3.5" /> Koreksi data</Button>;
   const changes = () => {
-    const out: Record<string, string> = {};
+    const out: Partial<Record<"full_name" | "whatsapp" | "address" | "birth_date", string>> = {};
     if (f.full_name.trim() !== profile.full_name) out.full_name = f.full_name.trim();
     if (f.address.trim() !== profile.address) out.address = f.address.trim();
     if (f.birth_date !== profile.birth_date) out.birth_date = f.birth_date;

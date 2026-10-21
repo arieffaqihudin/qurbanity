@@ -138,8 +138,8 @@ function UploadDoc({ programId, onDone }: { programId: string; onDone: () => voi
   const pick = (f: File | null) => {
     setErr(null); setFile(null); if (previewUrl) URL.revokeObjectURL(previewUrl); setPreviewUrl(null);
     if (!f) return;
-    if (!(DOC_RULES.types as readonly string[]).includes(f.type)) return setErr("Format harus JPEG, PNG, WebP, atau PDF");
-    if (f.size > DOC_RULES.maxBytes) return setErr("Ukuran maksimal 10 MB");
+    if (!(DOC_RULES.types as readonly string[]).includes(f.type)) { setErr("Format harus JPEG, PNG, WebP, atau PDF"); return; }
+    if (f.size > DOC_RULES.maxBytes) { setErr("Ukuran maksimal 10 MB"); return; }
     setFile(f); if (f.type.startsWith("image/")) setPreviewUrl(URL.createObjectURL(f));
     if (!title) setTitle(f.name.replace(/\.[^.]+$/, ""));
   };

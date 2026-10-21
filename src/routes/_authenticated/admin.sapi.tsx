@@ -54,9 +54,9 @@ function Page() {
 
 function CategoryForm({ program, cat, onClose, onSaved }: { program: string; cat: Cat | null; onClose: () => void; onSaved: () => void }) {
   const [f, setF] = useState({ name: cat?.name ?? "", code: cat?.code ?? "", kind: cat?.kind ?? "sapi", weight_range: cat?.weight_range ?? "", description: cat?.description ?? "", is_available: cat?.is_available ?? true, sort_order: String(cat?.sort_order ?? 10) });
-  const [err, setErr] = useState<Record<string, string>>({});
+  const [err, setErr] = useState<Partial<Record<keyof typeof f, string>>>({});
   const validate = () => {
-    const e: Record<string, string> = {};
+    const e: Partial<Record<keyof typeof f, string>> = {};
     if (f.name.trim().length < 3) e.name = "Nama minimal 3 karakter";
     if (!cat && !/^[a-z0-9-]{3,40}$/.test(f.code)) e.code = "Kode 3–40 huruf kecil, angka, atau tanda -";
     setErr(e); return !Object.keys(e).length;
