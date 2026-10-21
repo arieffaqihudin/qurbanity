@@ -11,6 +11,7 @@
 
 ## Architecture rules
 - Public pages live under the `_site` pathless layout; participant portal under `/portal`, admin under `/admin`, each driven by nav config in `src/lib/navigation.ts` — one source of truth for menus.
+- Admin sidebar entries are "hubs": related pages keep their own routes but appear as tabs (rendered by `PageHead`) under one sidebar entry, so consolidating menus never breaks existing URLs.
 - Pricing/installment math lives only in `src/lib/pricing.ts` (covered by `src/test/pricing.test.ts`); public values are sample data until replaced by DB prices locked per commitment.
 - Clearly label sample, demo and pending-approval content with the shared `Notice`/`StatusPill`/`Placeholder` components — never present drafts as final.
 - Portal and admin routes live under `src/routes/_authenticated/` (client-only gate, redirects to `/auth`). Admin RBAC = `admin_members` + `role_permissions` (deny by default, superadmin `*`); UI filters via `my_admin_access()`/`ADMIN_GROUPS.perms`, but enforcement is RLS `has_permission()` and `require_perm()` inside every `admin_*` SECURITY DEFINER function.
