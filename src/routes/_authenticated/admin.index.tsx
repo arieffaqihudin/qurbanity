@@ -39,6 +39,7 @@ function Dashboard() {
     }
   }, [allowed]); // eslint-disable-line react-hooks/exhaustive-deps
   const [program, setProgram] = useState("");
+  const [period, setPeriod] = useState<"harian" | "bulanan">("harian");
   const q = useQuery({ queryKey: ["admin", "dashboard", program], queryFn: () => rpc<Dash>("admin_dashboard", { p_program_id: program || null }), enabled: allowed });
   if (!allowed) return <Loading label="Membuka modul yang diizinkan…" />;
   const d = q.data;
@@ -49,15 +50,19 @@ function Dashboard() {
       <PageHead to="/admin" actions={<ProgramFilter value={program} onChange={setProgram} />} />
       {q.isPending ? <Loading /> : q.isError ? <Failure error={q.error} onRetry={() => q.refetch()} /> : d && (
         <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 xl:grid-cols-7">
-            <Kpi label="Total Peserta" value={formatNumber(d.participants)} hint="peserta dengan komitmen" />
-            <Kpi label="Komitmen Aktif" value={formatNumber(d.commitments)} />
-            <Kpi label="Dana Terverifikasi" value={formatRupiah(d.verified_total)} hint={`dari ${formatRupiah(d.committed_total)}`} />
-            <Kpi label="Komitmen Lunas" value={formatNumber(d.paid_off)} />
-            <Kpi label="Belum Lunas" value={formatNumber(d.not_paid_off)} />
-            <Kpi label="Hewan Dialokasikan" value={formatNumber(d.allocated_units)} hint="unit terkunci" />
-            <Kpi label="Pelunasan" value={`${pct}%`} hint="dana terverifikasi ÷ nilai komitmen" />
+          <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
+            <Kpi label="Peserta berkomitmen" value={formatNumber(d.participants)} hint={`${formatNumber(d.commitments)} komitmen aktif`} to="/admin/peserta" />
+            <Kpi label="Dana terverifikasi" value={formatRupiah(d.verified_total)} hint={`${pct}% dari ${formatRupiah(d.committed_total)}`} to="/admin/keuangan" />
+            <Kpi label="Komitmen lunas" value={`${formatNumber(d.paid_off)} / ${formatNumber(d.paid_off + d.not_paid_off)}`} hint={`${formatNumber(d.not_paid_off)} belum lunas`} to="/admin/peserta" />
+            <Kpi label="Unit hewan terkunci" value={formatNumber(d.units.locked)} hint={`${d.units.draft} draf · ${d.units.final} final`} to="/admin/alokasi" />
           </div>
+          {(d.attention.length > 0 || d.units.final > 0) && (
+            <div role="status" className="flex flex-wrap items-center gap-x-4 gap-y-1 rounded-xl border border-warning/50 bg-warning/5 px-3 py-2 text-sm">
+              <span className="font-bold text-burgundy-dark">Perlu tindak lanjut:</span>
+              {d.attention.length > 0 && <a href="#perhatian" className="font-semibold text-primary underline">{d.attention.length} komitmen progres rendah</a>}
+              {d.units.final > 0 && <Link to="/admin/alokasi" className="font-semibold text-primary underline">{d.units.final} unit final menunggu dikunci</Link>}
+            </div>
+          )}
           {d.verified_total === 0 && (
             <PendingIntegration title="Belum ada pembayaran terverifikasi">Grafik penerimaan akan terisi setelah pembayaran terverifikasi masuk ke ledger. Integrasi pembayaran belum aktif.</PendingIntegration>
           )}
@@ -68,11 +73,13 @@ function Dashboard() {
             <Panel title="Distribusi Progres Pembayaran">
               {d.commitments ? <ChartBar data={["0-24", "25-49", "50-74", "75-99", "lunas"].map((k) => ({ x: k === "lunas" ? "Lunas" : `${k.replace("-", "–")}%`, y: d.progress[k] ?? 0 }))} /> : <Empty title="Belum ada komitmen" />}
             </Panel>
-            <Panel title="Penerimaan Harian (30 Hari)">
-              {d.daily.length ? <ChartBar money data={d.daily.map((r) => ({ x: r.day.slice(5), y: r.amount }))} /> : <Empty title="Belum ada penerimaan" text="Hanya pembayaran terverifikasi yang dihitung." />}
-            </Panel>
-            <Panel title="Penerimaan Bulanan">
-              {d.monthly.length ? <ChartBar money data={d.monthly.map((r) => ({ x: r.month, y: r.amount }))} /> : <Empty title="Belum ada penerimaan" />}
+            <Panel title="Penerimaan Terverifikasi" action={
+              <div role="group" aria-label="Periode" className="flex rounded-lg border border-border p-0.5 text-xs font-semibold">
+                {(["harian", "bulanan"] as const).map((k) => <button key={k} type="button" aria-pressed={period === k} onClick={() => setPeriod(k)} className={period === k ? "rounded-md bg-primary px-2.5 py-1 text-primary-foreground" : "px-2.5 py-1 text-muted-foreground hover:text-foreground"}>{k === "harian" ? "30 hari" : "Bulanan"}</button>)}
+              </div>}>
+              {period === "harian"
+                ? (d.daily.length ? <ChartBar money data={d.daily.map((r) => ({ x: r.day.slice(5), y: r.amount }))} /> : <Empty title="Belum ada penerimaan" text="Hanya pembayaran terverifikasi yang dihitung." />)
+                : (d.monthly.length ? <ChartBar money data={d.monthly.map((r) => ({ x: r.month, y: r.amount }))} /> : <Empty title="Belum ada penerimaan" text="Hanya pembayaran terverifikasi yang dihitung." />)}
             </Panel>
             <Panel title="Komposisi Jenis Hewan">
               {d.composition.length ? (
@@ -82,7 +89,7 @@ function Dashboard() {
                 </div>
               ) : <Empty title="Belum ada komitmen" />}
             </Panel>
-            <Panel title="Komitmen yang Memerlukan Perhatian">
+            <Panel title="Komitmen yang Memerlukan Perhatian" className="scroll-mt-20">
               {d.attention.length ? (
                 <ul className="divide-y divide-border text-sm">{d.attention.map((a) => (
                   <li key={a.id} className="flex flex-wrap items-center gap-2 py-1.5"><span className="font-semibold">{a.code}</span><span className="text-muted-foreground">{a.full_name ?? "—"} · {a.category_name_snapshot}</span>
