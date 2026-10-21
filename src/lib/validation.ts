@@ -59,6 +59,7 @@ export function authErrorMessage(msg: string): string {
   if (m.includes("email not confirmed")) return "Email belum diverifikasi. Cek kotak masuk email kamu.";
   if (m.includes("already registered") || m.includes("already been registered")) return "Email sudah terdaftar. Silakan masuk.";
   if (m.includes("usia minimal")) return "Usia minimal peserta adalah 17 tahun.";
+  if (m.includes("email address is not allowed") || m.includes("invalid format")) return "Alamat email tidak dapat digunakan. Periksa kembali penulisannya.";
   if (m.includes("database error")) return "Pendaftaran gagal diproses. Periksa kembali data kamu.";
   if (m.includes("rate limit")) return "Terlalu banyak percobaan. Coba lagi beberapa saat.";
   if (m.includes("pwned") || m.includes("weak")) return "Kata sandi terlalu lemah atau pernah bocor. Gunakan kata sandi lain.";
