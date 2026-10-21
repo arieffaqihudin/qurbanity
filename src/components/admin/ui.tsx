@@ -7,21 +7,44 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { adminItem } from "@/lib/navigation";
+import { adminItem, adminHubOf } from "@/lib/navigation";
 import { programsQuery, PROGRAM_STATUS_LABEL, useAdmin } from "@/lib/admin";
 import { cn } from "@/lib/utils";
 
 export function PageHead({ to, actions, children }: { to: string; actions?: ReactNode; children?: ReactNode }) {
   const it = adminItem(to);
+  const found = adminHubOf(to);
+  const { can } = useAdmin();
+  const tabs = found ? found.hub.tabs.filter((t) => can(t.perms)) : [];
+  const isHub = tabs.length > 1;
+  const title = isHub ? found!.hub.label : it.label;
   return (
-    <div className="mb-4 flex flex-wrap items-start gap-3">
-      <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary"><it.icon className="size-4" /></span>
-      <div className="min-w-0 flex-1">
-        <h1 className="text-xl font-extrabold text-burgundy-dark md:text-2xl">{it.label}</h1>
-        <p className="text-sm text-muted-foreground">{it.description}</p>
-        {children}
+    <div className="mb-4">
+      {found && found.group !== "Dashboard" && (
+        <nav aria-label="Breadcrumb" className="mb-1 text-xs font-semibold text-muted-foreground">
+          <Link to="/admin" className="hover:text-primary">Admin</Link> <span aria-hidden>›</span> {found.group}
+          {isHub && <> <span aria-hidden>›</span> {title}</>}
+        </nav>
+      )}
+      <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-3 sm:flex sm:flex-wrap">
+        <div className="min-w-0 flex-1">
+          <h1 className="text-xl font-extrabold text-burgundy-dark md:text-2xl">{title}</h1>
+          <p className="text-sm text-muted-foreground">{it.description}</p>
+          {children}
+        </div>
+        {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
       </div>
-      {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
+      {isHub && (
+        <nav aria-label={`Bagian ${title}`} className="-mx-1 mt-3 flex gap-1 overflow-x-auto border-b border-border px-1">
+          {tabs.map((t) => (
+            <Link key={t.to} to={t.to} aria-current={t.to === to ? "page" : undefined}
+              className={cn("-mb-px flex shrink-0 items-center gap-1.5 border-b-2 px-3 py-2 text-sm font-semibold transition-colors",
+                t.to === to ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground")}>
+              <t.icon className="size-4" />{t.label}
+            </Link>
+          ))}
+        </nav>
+      )}
     </div>
   );
 }
@@ -44,9 +67,9 @@ export function Unauthorized() {
   );
 }
 
-export function Panel({ title, action, children, className, dense }: { title?: ReactNode; action?: ReactNode; children: ReactNode; className?: string; dense?: boolean }) {
+export function Panel({ title, action, children, className, dense, id }: { title?: ReactNode; action?: ReactNode; children: ReactNode; className?: string; dense?: boolean; id?: string }) {
   return (
-    <section className={cn("rounded-xl border border-border bg-card", dense ? "p-3" : "p-4", className)}>
+    <section id={id} className={cn("rounded-xl border border-border bg-card", dense ? "p-3" : "p-4", className)}>
       {(title || action) && (
         <div className="mb-3 flex flex-wrap items-center gap-2">
           {title && <h2 className="text-sm font-extrabold text-burgundy-dark md:text-base">{title}</h2>}
@@ -58,18 +81,34 @@ export function Panel({ title, action, children, className, dense }: { title?: R
   );
 }
 
-export function Kpi({ label, value, hint }: { label: string; value: ReactNode; hint?: string }) {
-  return (
-    <div className="rounded-xl border border-border bg-card p-3">
+export function Kpi({ label, value, hint, to, tone }: { label: string; value: ReactNode; hint?: string; to?: string; tone?: "attention" }) {
+  const body = (
+    <>
       <p className="text-xs font-semibold text-muted-foreground">{label}</p>
       <p className="mt-1 text-lg font-extrabold tabular-nums text-burgundy-dark md:text-xl">{value}</p>
-      {hint && <p className="text-[11px] text-muted-foreground">{hint}</p>}
+      {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
+    </>
+  );
+  const cls = cn("block rounded-xl border bg-card p-3", tone === "attention" ? "border-warning/50 bg-warning/5" : "border-border");
+  if (to) return <Link to={to} className={cn(cls, "transition-colors hover:border-primary/40 focus-visible:outline-2 focus-visible:outline-ring")}>{body}<span className="mt-1 block text-xs font-semibold text-primary">Lihat detail ›</span></Link>;
+  return <div className={cls}>{body}</div>;
+}
+
+export function Skeleton({ rows = 4 }: { rows?: number }) {
+  return (
+    <div role="status" aria-label="Memuat data" className="space-y-2 p-1">
+      {Array.from({ length: rows }).map((_, i) => <div key={i} className="h-9 animate-pulse rounded-md bg-muted motion-reduce:animate-none" />)}
     </div>
   );
 }
 
 export function Loading({ label = "Memuat data…" }: { label?: string }) {
-  return <div role="status" className="flex items-center gap-2 p-6 text-sm text-muted-foreground"><Loader2 className="size-4 animate-spin" />{label}</div>;
+  return (
+    <div role="status" className="space-y-2 p-1">
+      <span className="flex items-center gap-2 text-sm text-muted-foreground"><Loader2 className="size-4 animate-spin" />{label}</span>
+      <div className="h-9 animate-pulse rounded-md bg-muted motion-reduce:animate-none" /><div className="h-9 w-4/5 animate-pulse rounded-md bg-muted motion-reduce:animate-none" />
+    </div>
+  );
 }
 export function Failure({ error, onRetry }: { error: unknown; onRetry?: () => void }) {
   return (

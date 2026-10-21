@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute, notFound, useBlocker } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -78,6 +78,9 @@ function SettingsEditor({ def }: { def: (typeof SETTINGS)[string] }) {
   });
   const [val, setVal] = useState<Record<string, unknown>>({});
   useEffect(() => { if (q.data) setVal((q.data.value as Record<string, unknown>) ?? {}); }, [q.data]);
+  const saved = JSON.stringify((q.data?.value as Record<string, unknown>) ?? {});
+  const dirty = q.isSuccess && JSON.stringify(val) !== saved;
+  useBlocker({ shouldBlockFn: () => dirty && !window.confirm("Perubahan belum disimpan. Tinggalkan halaman ini?"), enableBeforeUnload: () => dirty });
   if (q.isPending) return <Loading />;
   if (q.isError) return <Failure error={q.error} onRetry={() => q.refetch()} />;
   return (
@@ -104,7 +107,12 @@ function SettingsEditor({ def }: { def: (typeof SETTINGS)[string] }) {
       {editable && (
         <ConfirmAction title="Simpan pengaturan?" description="Nilai lama dan baru dicatat di audit log." confirmLabel="Simpan"
           onConfirm={async () => { await rpc("admin_set_setting", { p_key: def.key, p_value: val }); toast.success("Pengaturan tersimpan"); qc.invalidateQueries({ queryKey: ["admin", "setting", def.key] }); }}
-          trigger={(o) => <Button size="sm" className="mt-3" onClick={o}>Simpan</Button>} />
+          trigger={(o) => (
+            <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border pt-3">
+              <Button size="sm" onClick={o} disabled={!dirty}>Simpan perubahan</Button>
+              {dirty && <><Button size="sm" variant="ghost" onClick={() => setVal(JSON.parse(saved))}>Batalkan</Button><span className="text-xs font-semibold text-warning">Ada perubahan yang belum disimpan</span></>}
+            </div>
+          )} />
       )}
     </Panel>
   );
