@@ -41,45 +41,61 @@ export interface AdminNavItem {
   /** any-of permission list; enforced again in the database */
   perms: string[];
 }
-export interface AdminNavGroup { label: string; items: AdminNavItem[] }
+
+/** Every admin page (one per route). Pages that share a workspace appear as tabs of one sidebar entry. */
+const P = {
+  dashboard: { to: "/admin", label: "Ringkasan", icon: LayoutDashboard, description: "Kondisi program saat ini dan hal yang perlu ditindaklanjuti.", perms: ["dashboard.view"] },
+  peserta: { to: "/admin/peserta", label: "Peserta", icon: Users, description: "Cari peserta, lihat komitmen, persetujuan, dan koreksi data.", perms: ["participants.view"] },
+  transaksi: { to: "/admin/transaksi", label: "Transaksi", icon: CreditCard, description: "Dana masuk dan keluar yang tercatat di ledger.", perms: ["finance.view"] },
+  verifikasi: { to: "/admin/verifikasi", label: "Antrian Verifikasi", icon: BadgeCheck, description: "Pembayaran yang menunggu verifikasi.", perms: ["finance.manage"] },
+  nominal: { to: "/admin/nominal-pembayaran", label: "Aturan Nominal", icon: Coins, description: "Batas nominal, nominal cepat, dan metode pembayaran.", perms: ["payments.config"] },
+  pembatalan: { to: "/admin/pembatalan", label: "Pembatalan & Pengembalian", icon: XCircle, description: "Pengajuan pembatalan komitmen dan pengembalian dana.", perms: ["finance.manage"] },
+  pemulihan: { to: "/admin/pemulihan-akun", label: "Pemulihan Akun", icon: KeyRound, description: "Bantuan bagi peserta yang kehilangan akses akun.", perms: ["recovery.manage"] },
+  sapi: { to: "/admin/sapi", label: "Kategori Hewan", icon: PawPrint, description: "Jenis hewan, kapasitas patungan, dan ketersediaan.", perms: ["catalog.view"] },
+  harga: { to: "/admin/harga", label: "Harga & Riwayat", icon: Tags, description: "Harga berlaku dan riwayat perubahannya. Harga komitmen yang sudah akad tidak berubah.", perms: ["catalog.view"] },
+  alokasi: { to: "/admin/alokasi", label: "Alokasi Hewan", icon: Split, description: "Kelompokkan peserta lunas ke unit hewan, lalu kunci setelah ditinjau.", perms: ["allocation.view"] },
+  penyaluran: { to: "/admin/penyaluran", label: "Pelaksanaan & Dokumentasi", icon: RouteIcon, description: "Empat tahap pelaksanaan beserta dokumentasinya.", perms: ["journey.view", "docs.upload"] },
+  pengumuman: { to: "/admin/pengumuman", label: "Pengumuman Kelompok", icon: Megaphone, description: "Snapshot kelompok hewan H-7 dan publikasinya.", perms: ["announcement.view"] },
+  keuangan: { to: "/admin/keuangan", label: "Rekonsiliasi", icon: Landmark, description: "Saldo per akun ledger untuk dicocokkan dengan rekening.", perms: ["finance.view"] },
+  sedekah: { to: "/admin/sedekah", label: "Pengelolaan Dana", icon: HeartHandshake, description: "Kelebihan dana, sedekah, dan pengembalian.", perms: ["finance.view"] },
+  laporan: { to: "/admin/laporan", label: "Laporan", icon: BarChart3, description: "Pilih jenis laporan, atur filter, pratinjau, lalu unduh.", perms: ["reports.view"] },
+  audit: { to: "/admin/audit", label: "Audit Aktivitas", icon: ScrollText, description: "Jejak seluruh aksi penting, tidak dapat diubah.", perms: ["audit.view"] },
+  program: { to: "/admin/program", label: "Program & Akad", icon: CalendarRange, description: "Periode program, tanggal penting, dan versi akad.", perms: ["program.view"] },
+  identitas: { to: "/admin/identitas", label: "Identitas", icon: Building2, description: "Profil organisasi dan penerbit dokumen.", perms: ["settings.view"] },
+  konten: { to: "/admin/konten", label: "Konten Website", icon: FileText, description: "Teks beranda, kontak, dan info program.", perms: ["content.manage", "settings.view"] },
+  website: { to: "/admin/pengaturan-website", label: "Tampilan Website", icon: Settings, description: "Mode pemeliharaan dan elemen yang tampil di situs.", perms: ["settings.view"] },
+  karakter: { to: "/admin/karakter-hewan", label: "Karakter Hewan", icon: Sparkles, description: "Nama karakter di Padang Kurban peserta.", perms: ["settings.view", "characters.manage"] },
+  notifikasi: { to: "/admin/notifikasi", label: "Notifikasi", icon: Bell, description: "Templat pesan dan kanal pengiriman.", perms: ["notifications.manage", "settings.view"] },
+  admins: { to: "/admin/manajemen-admin", label: "Pengguna & Hak Akses", icon: ShieldCheck, description: "Akun admin dan perannya (khusus SUPERADMIN).", perms: ["admins.manage"] },
+} satisfies Record<string, AdminNavItem>;
+
+/** A sidebar entry. `tabs` (≥2) are sibling pages shown as tabs inside the workspace. */
+export interface AdminHub { label: string; icon: LucideIcon; description: string; tabs: AdminNavItem[] }
+export interface AdminNavGroup { label: string; items: AdminHub[] }
+
+const hub = (label: string, icon: LucideIcon, description: string, ...tabs: AdminNavItem[]): AdminHub => ({ label, icon, description, tabs });
+const one = (t: AdminNavItem): AdminHub => hub(t.label, t.icon, t.description, t);
 
 export const ADMIN_GROUPS: AdminNavGroup[] = [
-  { label: "Ringkasan", items: [
-    { to: "/admin", label: "Dashboard", icon: LayoutDashboard, description: "Indikator utama program dari data tersimpan.", perms: ["dashboard.view"] },
+  { label: "Dashboard", items: [one(P.dashboard)] },
+  { label: "Peserta & Transaksi", items: [
+    one(P.peserta),
+    hub("Pembayaran", CreditCard, "Transaksi, antrian verifikasi, dan aturan nominal pembayaran.", P.transaksi, P.verifikasi, P.nominal),
+    one(P.pembatalan), one(P.pemulihan),
   ] },
-  { label: "Peserta & Pembayaran", items: [
-    { to: "/admin/peserta", label: "Peserta", icon: Users, description: "Data peserta, komitmen, dan koreksi data.", perms: ["participants.view"] },
-    { to: "/admin/transaksi", label: "Transaksi", icon: CreditCard, description: "Pembayaran masuk yang tercatat di ledger.", perms: ["finance.view"] },
-    { to: "/admin/verifikasi", label: "Pusat Verifikasi", icon: BadgeCheck, description: "Antrian verifikasi pembayaran.", perms: ["finance.manage"] },
-    { to: "/admin/pembatalan", label: "Pembatalan", icon: XCircle, description: "Pengajuan pembatalan dan pengembalian dana.", perms: ["finance.manage"] },
-    { to: "/admin/pemulihan-akun", label: "Pemulihan Akun", icon: KeyRound, description: "Permintaan pemulihan akses peserta.", perms: ["recovery.manage"] },
+  { label: "Pengelolaan Kurban", items: [
+    hub("Hewan & Harga", PawPrint, "Kategori hewan, harga berlaku, dan riwayat harga.", P.sapi, P.harga),
+    one(P.alokasi), one(P.penyaluran), one(P.pengumuman),
   ] },
-  { label: "Operasional Kurban", items: [
-    { to: "/admin/sapi", label: "Kategori Hewan", icon: PawPrint, description: "Katalog kategori hewan dan ketersediaan.", perms: ["catalog.view"] },
-    { to: "/admin/harga", label: "Harga & Riwayat", icon: Tags, description: "Penetapan harga (append-only) dan riwayatnya.", perms: ["catalog.view"] },
-    { to: "/admin/alokasi", label: "Alokasi & Kelompok Hewan", icon: Split, description: "Unit hewan dan alokasi komitmen lunas.", perms: ["allocation.view"] },
-    { to: "/admin/pengumuman", label: "Pengumuman H-7", icon: Megaphone, description: "Snapshot kelompok hewan dan publikasinya.", perms: ["announcement.view"] },
-    { to: "/admin/penyaluran", label: "Perjalanan & Dokumentasi", icon: RouteIcon, description: "Tahapan pelaksanaan dan dokumentasi.", perms: ["journey.view", "docs.upload"] },
-  ] },
-  { label: "Keuangan", items: [
-    { to: "/admin/sedekah", label: "Sedekah & Kelebihan Dana", icon: HeartHandshake, description: "Kelebihan dana, pengembalian, dan sedekah.", perms: ["finance.view"] },
-    { to: "/admin/keuangan", label: "Rekonsiliasi Keuangan", icon: Landmark, description: "Saldo per akun dan entri ledger.", perms: ["finance.view"] },
-  ] },
-  { label: "Laporan & Audit", items: [
-    { to: "/admin/laporan", label: "Laporan", icon: BarChart3, description: "13 kategori laporan dari data tersimpan.", perms: ["reports.view"] },
-    { to: "/admin/audit", label: "Audit Log", icon: ScrollText, description: "Jejak seluruh aksi penting.", perms: ["audit.view"] },
-  ] },
+  { label: "Keuangan", items: [one(P.keuangan), one(P.sedekah)] },
+  { label: "Laporan", items: [one(P.laporan), one(P.audit)] },
   { label: "Pengaturan", items: [
-    { to: "/admin/program", label: "Program & Akad", icon: CalendarRange, description: "Periode program dan versi akad.", perms: ["program.view"] },
-    { to: "/admin/identitas", label: "Identitas Penyelenggara", icon: Building2, description: "Profil dan identitas penerbit dokumen.", perms: ["settings.view"] },
-    { to: "/admin/karakter-hewan", label: "Karakter Hewan", icon: Sparkles, description: "Nama dan tampilan karakter Padang Kurban.", perms: ["settings.view", "characters.manage"] },
-    { to: "/admin/nominal-pembayaran", label: "Nominal Pembayaran", icon: Coins, description: "Batas nominal dan metode (belum aktif).", perms: ["payments.config"] },
-    { to: "/admin/konten", label: "Konten Website", icon: FileText, description: "Teks beranda, kontak, dan info program.", perms: ["content.manage", "settings.view"] },
-    { to: "/admin/notifikasi", label: "Notifikasi", icon: Bell, description: "Templat dan kanal notifikasi.", perms: ["notifications.manage", "settings.view"] },
-    { to: "/admin/pengaturan-website", label: "Pengaturan Website", icon: Settings, description: "Tampilan umum situs.", perms: ["settings.view"] },
-    { to: "/admin/manajemen-admin", label: "Manajemen Admin", icon: ShieldCheck, description: "Akun admin dan peran (khusus SUPERADMIN).", perms: ["admins.manage"] },
+    one(P.program),
+    hub("Identitas & Website", Building2, "Identitas organisasi, konten, tampilan situs, dan karakter hewan.", P.identitas, P.konten, P.website, P.karakter),
+    one(P.notifikasi), one(P.admins),
   ] },
 ];
 
-export const ADMIN_ITEMS = ADMIN_GROUPS.flatMap((g) => g.items);
+export const ADMIN_ITEMS: AdminNavItem[] = ADMIN_GROUPS.flatMap((g) => g.items.flatMap((h) => h.tabs));
 export const adminItem = (to: string) => ADMIN_ITEMS.find((i) => i.to === to)!;
+export const adminHubOf = (to: string) => ADMIN_GROUPS.flatMap((g) => g.items.map((h) => ({ group: g.label, hub: h }))).find((x) => x.hub.tabs.some((t) => t.to === to));
