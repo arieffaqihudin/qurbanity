@@ -31,10 +31,15 @@ import { Route as SiteTentangRouteImport } from './routes/_site.tentang'
 import { Route as SiteVerifikasiRouteImport } from './routes/_site.verifikasi'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminSectionRouteImport } from './routes/_authenticated/admin.$section'
+import { Route as AuthenticatedAdminHargaRouteImport } from './routes/_authenticated/admin.harga'
+import { Route as AuthenticatedAdminProgramRouteImport } from './routes/_authenticated/admin.program'
+import { Route as AuthenticatedAdminSapiRouteImport } from './routes/_authenticated/admin.sapi'
 import { Route as AuthenticatedPortalIndexRouteImport } from './routes/_authenticated/portal.index'
 import { Route as AuthenticatedPortalSectionRouteImport } from './routes/_authenticated/portal.$section'
 import { Route as AuthenticatedPortalAkunRouteImport } from './routes/_authenticated/portal.akun'
 import { Route as AuthenticatedPortalKurbanBaruRouteImport } from './routes/_authenticated/portal.kurban-baru'
+import { Route as AuthenticatedAdminPesertaIndexRouteImport } from './routes/_authenticated/admin.peserta.index'
+import { Route as AuthenticatedAdminPesertaIdRouteImport } from './routes/_authenticated/admin.peserta.$id'
 import { Route as AuthenticatedPortalKurbanSayaIndexRouteImport } from './routes/_authenticated/portal.kurban-saya.index'
 import { Route as AuthenticatedPortalKurbanSayaIdRouteImport } from './routes/_authenticated/portal.kurban-saya.$id'
 
@@ -147,6 +152,22 @@ const AuthenticatedAdminSectionRoute =
     path: '/$section',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminHargaRoute = AuthenticatedAdminHargaRouteImport.update({
+  id: '/harga',
+  path: '/harga',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminProgramRoute =
+  AuthenticatedAdminProgramRouteImport.update({
+    id: '/program',
+    path: '/program',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminSapiRoute = AuthenticatedAdminSapiRouteImport.update({
+  id: '/sapi',
+  path: '/sapi',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedPortalIndexRoute =
   AuthenticatedPortalIndexRouteImport.update({
     id: '/',
@@ -169,6 +190,18 @@ const AuthenticatedPortalKurbanBaruRoute =
     id: '/kurban-baru',
     path: '/kurban-baru',
     getParentRoute: () => AuthenticatedPortalRoute,
+  } as any)
+const AuthenticatedAdminPesertaIndexRoute =
+  AuthenticatedAdminPesertaIndexRouteImport.update({
+    id: '/peserta/',
+    path: '/peserta/',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminPesertaIdRoute =
+  AuthenticatedAdminPesertaIdRouteImport.update({
+    id: '/peserta/$id',
+    path: '/peserta/$id',
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedPortalKurbanSayaIndexRoute =
   AuthenticatedPortalKurbanSayaIndexRouteImport.update({
@@ -203,12 +236,17 @@ export interface FileRoutesByFullPath {
   '/tentang': typeof SiteTentangRoute
   '/verifikasi': typeof SiteVerifikasiRoute
   '/admin/$section': typeof AuthenticatedAdminSectionRoute
+  '/admin/harga': typeof AuthenticatedAdminHargaRoute
+  '/admin/program': typeof AuthenticatedAdminProgramRoute
+  '/admin/sapi': typeof AuthenticatedAdminSapiRoute
   '/portal/$section': typeof AuthenticatedPortalSectionRoute
   '/portal/akun': typeof AuthenticatedPortalAkunRoute
   '/portal/kurban-baru': typeof AuthenticatedPortalKurbanBaruRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/portal/': typeof AuthenticatedPortalIndexRoute
+  '/admin/peserta/$id': typeof AuthenticatedAdminPesertaIdRoute
   '/portal/kurban-saya/$id': typeof AuthenticatedPortalKurbanSayaIdRoute
+  '/admin/peserta/': typeof AuthenticatedAdminPesertaIndexRoute
   '/portal/kurban-saya/': typeof AuthenticatedPortalKurbanSayaIndexRoute
 }
 export interface FileRoutesByTo {
@@ -229,12 +267,17 @@ export interface FileRoutesByTo {
   '/tentang': typeof SiteTentangRoute
   '/verifikasi': typeof SiteVerifikasiRoute
   '/admin/$section': typeof AuthenticatedAdminSectionRoute
+  '/admin/harga': typeof AuthenticatedAdminHargaRoute
+  '/admin/program': typeof AuthenticatedAdminProgramRoute
+  '/admin/sapi': typeof AuthenticatedAdminSapiRoute
   '/portal/$section': typeof AuthenticatedPortalSectionRoute
   '/portal/akun': typeof AuthenticatedPortalAkunRoute
   '/portal/kurban-baru': typeof AuthenticatedPortalKurbanBaruRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/portal': typeof AuthenticatedPortalIndexRoute
+  '/admin/peserta/$id': typeof AuthenticatedAdminPesertaIdRoute
   '/portal/kurban-saya/$id': typeof AuthenticatedPortalKurbanSayaIdRoute
+  '/admin/peserta': typeof AuthenticatedAdminPesertaIndexRoute
   '/portal/kurban-saya': typeof AuthenticatedPortalKurbanSayaIndexRoute
 }
 export interface FileRoutesById {
@@ -260,12 +303,17 @@ export interface FileRoutesById {
   '/_site/verifikasi': typeof SiteVerifikasiRoute
   '/_site/': typeof SiteIndexRoute
   '/_authenticated/admin/$section': typeof AuthenticatedAdminSectionRoute
+  '/_authenticated/admin/harga': typeof AuthenticatedAdminHargaRoute
+  '/_authenticated/admin/program': typeof AuthenticatedAdminProgramRoute
+  '/_authenticated/admin/sapi': typeof AuthenticatedAdminSapiRoute
   '/_authenticated/portal/$section': typeof AuthenticatedPortalSectionRoute
   '/_authenticated/portal/akun': typeof AuthenticatedPortalAkunRoute
   '/_authenticated/portal/kurban-baru': typeof AuthenticatedPortalKurbanBaruRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/portal/': typeof AuthenticatedPortalIndexRoute
+  '/_authenticated/admin/peserta/$id': typeof AuthenticatedAdminPesertaIdRoute
   '/_authenticated/portal/kurban-saya/$id': typeof AuthenticatedPortalKurbanSayaIdRoute
+  '/_authenticated/admin/peserta/': typeof AuthenticatedAdminPesertaIndexRoute
   '/_authenticated/portal/kurban-saya/': typeof AuthenticatedPortalKurbanSayaIndexRoute
 }
 export interface FileRouteTypes {
@@ -290,12 +338,17 @@ export interface FileRouteTypes {
     | '/tentang'
     | '/verifikasi'
     | '/admin/$section'
+    | '/admin/harga'
+    | '/admin/program'
+    | '/admin/sapi'
     | '/portal/$section'
     | '/portal/akun'
     | '/portal/kurban-baru'
     | '/admin/'
     | '/portal/'
+    | '/admin/peserta/$id'
     | '/portal/kurban-saya/$id'
+    | '/admin/peserta/'
     | '/portal/kurban-saya/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -316,12 +369,17 @@ export interface FileRouteTypes {
     | '/tentang'
     | '/verifikasi'
     | '/admin/$section'
+    | '/admin/harga'
+    | '/admin/program'
+    | '/admin/sapi'
     | '/portal/$section'
     | '/portal/akun'
     | '/portal/kurban-baru'
     | '/admin'
     | '/portal'
+    | '/admin/peserta/$id'
     | '/portal/kurban-saya/$id'
+    | '/admin/peserta'
     | '/portal/kurban-saya'
   id:
     | '__root__'
@@ -346,12 +404,17 @@ export interface FileRouteTypes {
     | '/_site/verifikasi'
     | '/_site/'
     | '/_authenticated/admin/$section'
+    | '/_authenticated/admin/harga'
+    | '/_authenticated/admin/program'
+    | '/_authenticated/admin/sapi'
     | '/_authenticated/portal/$section'
     | '/_authenticated/portal/akun'
     | '/_authenticated/portal/kurban-baru'
     | '/_authenticated/admin/'
     | '/_authenticated/portal/'
+    | '/_authenticated/admin/peserta/$id'
     | '/_authenticated/portal/kurban-saya/$id'
+    | '/_authenticated/admin/peserta/'
     | '/_authenticated/portal/kurban-saya/'
   fileRoutesById: FileRoutesById
 }
@@ -520,6 +583,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSectionRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/harga': {
+      id: '/_authenticated/admin/harga'
+      path: '/harga'
+      fullPath: '/admin/harga'
+      preLoaderRoute: typeof AuthenticatedAdminHargaRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/program': {
+      id: '/_authenticated/admin/program'
+      path: '/program'
+      fullPath: '/admin/program'
+      preLoaderRoute: typeof AuthenticatedAdminProgramRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/sapi': {
+      id: '/_authenticated/admin/sapi'
+      path: '/sapi'
+      fullPath: '/admin/sapi'
+      preLoaderRoute: typeof AuthenticatedAdminSapiRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/portal/': {
       id: '/_authenticated/portal/'
       path: '/'
@@ -548,6 +632,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPortalKurbanBaruRouteImport
       parentRoute: typeof AuthenticatedPortalRoute
     }
+    '/_authenticated/admin/peserta/': {
+      id: '/_authenticated/admin/peserta/'
+      path: '/peserta'
+      fullPath: '/admin/peserta/'
+      preLoaderRoute: typeof AuthenticatedAdminPesertaIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/peserta/$id': {
+      id: '/_authenticated/admin/peserta/$id'
+      path: '/peserta/$id'
+      fullPath: '/admin/peserta/$id'
+      preLoaderRoute: typeof AuthenticatedAdminPesertaIdRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/portal/kurban-saya/': {
       id: '/_authenticated/portal/kurban-saya/'
       path: '/kurban-saya'
@@ -567,12 +665,22 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminSectionRoute: typeof AuthenticatedAdminSectionRoute
+  AuthenticatedAdminHargaRoute: typeof AuthenticatedAdminHargaRoute
+  AuthenticatedAdminProgramRoute: typeof AuthenticatedAdminProgramRoute
+  AuthenticatedAdminSapiRoute: typeof AuthenticatedAdminSapiRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+  AuthenticatedAdminPesertaIdRoute: typeof AuthenticatedAdminPesertaIdRoute
+  AuthenticatedAdminPesertaIndexRoute: typeof AuthenticatedAdminPesertaIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminSectionRoute: AuthenticatedAdminSectionRoute,
+  AuthenticatedAdminHargaRoute: AuthenticatedAdminHargaRoute,
+  AuthenticatedAdminProgramRoute: AuthenticatedAdminProgramRoute,
+  AuthenticatedAdminSapiRoute: AuthenticatedAdminSapiRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+  AuthenticatedAdminPesertaIdRoute: AuthenticatedAdminPesertaIdRoute,
+  AuthenticatedAdminPesertaIndexRoute: AuthenticatedAdminPesertaIndexRoute,
 }
 
 const AuthenticatedAdminRouteWithChildren =

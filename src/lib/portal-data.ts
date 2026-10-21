@@ -27,7 +27,7 @@ export const categoriesQuery = (programId: string) =>
     queryFn: async () => {
       const cats = rows(await supabase.from("animal_categories").select("*").eq("program_id", programId).order("sort_order"));
       const prices = rows(
-        await supabase.from("animal_prices").select("*").in("category_id", cats.map((c) => c.id)).lte("effective_from", new Date().toISOString()).order("effective_from", { ascending: false }),
+        await supabase.from("animal_prices").select("*").in("category_id", cats.map((c) => c.id)).eq("is_final", true).lte("effective_from", new Date().toISOString()).order("effective_from", { ascending: false }),
       );
       return cats.map((c) => ({ ...c, price: prices.find((p) => p.category_id === c.id) ?? null }));
     },

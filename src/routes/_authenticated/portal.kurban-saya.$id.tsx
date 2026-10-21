@@ -50,7 +50,6 @@ function Page() {
           <Row k="Harga hewan" v={formatRupiah(c.animal_cost_snapshot)} />
           <Row k="Biaya operasional" v={formatRupiah(c.operational_cost_snapshot)} />
           {c.rounding_adjustment !== 0 && <Row k="Pembulatan" v={formatRupiah(c.rounding_adjustment)} />}
-          <Row k={`Harga per ${c.animal_kind_snapshot === "sapi" ? "bagian" : "ekor"} × ${c.shares}`} v={`${formatRupiah(c.price_per_share_snapshot)} × ${c.shares}`} />
           <div className="flex justify-between border-t border-border pt-2 text-base font-extrabold"><dt>Total komitmen</dt><dd className="tabular-nums text-primary">{formatRupiah(c.total_amount)}</dd></div>
         </dl>
         <p className="mt-3 text-xs text-muted-foreground">Dikunci pada {formatDate(new Date(c.created_at), { dateStyle: "long", timeStyle: "short" })} WIB. Perubahan harga setelahnya tidak memengaruhi komitmen ini.</p>

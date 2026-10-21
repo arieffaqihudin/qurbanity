@@ -1,14 +1,22 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
-import { AppShell } from "@/components/app/AppShell";
-import { ADMIN_NAV } from "@/lib/navigation";
+import { AdminShell } from "@/components/admin/AdminShell";
+import type { AdminAccess } from "@/lib/admin";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [{ title: "Admin | qurbanity" }, { name: "robots", content: "noindex" }] }),
-  beforeLoad: async ({ context }) => {
-    // UI gate only; every admin data path is enforced by RLS / has_role() in the database.
-    const { data } = await supabase.from("user_roles").select("role").eq("user_id", context.user.id).eq("role", "admin").maybeSingle();
-    if (!data) throw redirect({ to: "/portal" });
+  beforeLoad: async () => {
+    // UI gate only. Every admin read is filtered by RLS and every write re-checks permissions in the database.
+    const { data, error } = await supabase.rpc("my_admin_access");
+    if (error) throw new Error("Hak akses admin tidak dapat diperiksa. Coba muat ulang halaman.");
+    const access = data as unknown as AdminAccess | null;
+    if (!access) throw redirect({ to: "/portal" });
+    return { access };
   },
-  component: () => <AppShell base="/admin" title="Dashboard Admin" items={ADMIN_NAV} />,
+  component: Layout,
 });
+
+function Layout() {
+  const { access } = Route.useRouteContext();
+  return <AdminShell access={access} />;
+}

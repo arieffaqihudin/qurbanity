@@ -34,10 +34,16 @@ describe("simulator edge cases", () => {
   });
 });
 
-describe("share rounding (matches database rule)", () => {
-  it("rounds each share up to the nearest Rp 1.000", async () => {
-    const { sharePrice } = await import("@/lib/pricing");
-    expect(sharePrice(21_500_000, 7)).toBe(3_072_000);
-    expect(sharePrice(21_000_000, 7)).toBe(3_000_000);
+describe("PRD share formula (matches database share_component)", () => {
+  it("each component is ceiling(cost × shares / 7)", async () => {
+    const { quote } = await import("@/lib/pricing");
+    // 19.600.000 × 3 / 7 = 8.400.000 exact; 1.400.000 × 3 / 7 = 600.000 exact
+    expect(quote(19_600_000, 1_400_000, 3, 7)).toEqual({ animal: 8_400_000, operational: 600_000, total: 9_000_000, rounding: 0 });
+    // 20.000.000 × 1 / 7 = 2.857.142,86 → 2.857.143 ; 1.500.000 / 7 = 214.285,71 → 214.286
+    expect(quote(20_000_000, 1_500_000, 1, 7)).toEqual({ animal: 2_857_143, operational: 214_286, total: 3_071_429, rounding: 2 });
+  });
+  it("a full cow (7 shares) costs exactly the full price, no rounding", async () => {
+    const { quote } = await import("@/lib/pricing");
+    expect(quote(20_000_000, 1_500_000, 7, 7).total).toBe(21_500_000);
   });
 });
