@@ -17,6 +17,7 @@ export function PadangKurban({ kind, pct, name, code }: { kind: "sapi" | "kambin
   const clouds = useParallax<SVGGElement>(0.05);
   const far = useParallax<SVGGElement>(0.025);
   const near = useParallax<SVGGElement>(-0.03);
+  const near2 = useParallax<SVGGElement>(-0.03); // grass rides with the near hill
   return (
     <figure className="overflow-hidden rounded-2xl border border-border bg-card">
       <div className="relative aspect-[16/9] w-full">
@@ -32,17 +33,18 @@ export function PadangKurban({ kind, pct, name, code }: { kind: "sapi" | "kambin
           </g>
           <g ref={far}><path d="M0 110 Q60 80 120 100 T240 92 T320 98 V200 H0Z" fill="var(--color-beige)" opacity="0.7" /></g>
           <path d="M0 128 Q80 110 160 124 T320 120 V180 H0Z" fill="oklch(0.7 0.09 135)" />
-          <g ref={near}><path d="M0 150 Q100 138 200 148 T320 146 V200 H0Z" fill="oklch(0.62 0.1 140)" />
-          </g>
+          <g ref={near}><path d="M0 150 Q100 138 200 148 T320 146 V200 H0Z" fill="oklch(0.62 0.1 140)" /></g>
           {/* fence */}
           {Array.from({ length: 9 }).map((_, i) => <rect key={i} x={14 + i * 36} y="112" width="3" height="18" rx="1" fill="var(--color-burgundy-dark)" opacity="0.35" />)}
           <rect x="10" y="117" width="300" height="2" fill="var(--color-burgundy-dark)" opacity="0.3" />
+          <g ref={near2}>
           {/* grass tufts */}
           {Array.from({ length: grass }).map((_, i) => {
             const x = (i * 53) % 310 + 5, y = 150 + ((i * 17) % 22);
             return <path key={i} d={`M${x} ${y} l3 -9 l2 9 l3 -7 l1 7`} stroke="oklch(0.48 0.11 140)" strokeWidth="1.6" fill="none" strokeLinecap="round" />;
           })}
           {Array.from({ length: flowers }).map((_, i) => <circle key={i} cx={40 + i * 60} cy={160 + (i % 2) * 8} r="3" fill="var(--color-rose)" />)}
+          </g>
           {/* animal */}
           <g className="pk-animal" transform={kind === "sapi" ? "translate(118 92)" : "translate(132 104)"}>
             {kind === "sapi" ? <Cow /> : <Goat />}
