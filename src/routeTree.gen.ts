@@ -9,9 +9,14 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as SiteRouteImport } from './routes/_site'
-import { Route as AdminRouteImport } from './routes/admin'
-import { Route as PortalRouteImport } from './routes/portal'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as DaftarRouteImport } from './routes/daftar'
+import { Route as LupaPasswordRouteImport } from './routes/lupa-password'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedPortalRouteImport } from './routes/_authenticated/portal'
 import { Route as SiteIndexRouteImport } from './routes/_site.index'
 import { Route as SiteAkadProgramRouteImport } from './routes/_site.akad-program'
 import { Route as SiteCaraKerjaRouteImport } from './routes/_site.cara-kerja'
@@ -24,24 +29,52 @@ import { Route as SiteSimulasiRouteImport } from './routes/_site.simulasi'
 import { Route as SiteSyaratKetentuanRouteImport } from './routes/_site.syarat-ketentuan'
 import { Route as SiteTentangRouteImport } from './routes/_site.tentang'
 import { Route as SiteVerifikasiRouteImport } from './routes/_site.verifikasi'
-import { Route as AdminIndexRouteImport } from './routes/admin.index'
-import { Route as AdminSectionRouteImport } from './routes/admin.$section'
-import { Route as PortalIndexRouteImport } from './routes/portal.index'
-import { Route as PortalSectionRouteImport } from './routes/portal.$section'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminSectionRouteImport } from './routes/_authenticated/admin.$section'
+import { Route as AuthenticatedPortalIndexRouteImport } from './routes/_authenticated/portal.index'
+import { Route as AuthenticatedPortalSectionRouteImport } from './routes/_authenticated/portal.$section'
+import { Route as AuthenticatedPortalAkunRouteImport } from './routes/_authenticated/portal.akun'
+import { Route as AuthenticatedPortalKurbanBaruRouteImport } from './routes/_authenticated/portal.kurban-baru'
+import { Route as AuthenticatedPortalKurbanSayaIndexRouteImport } from './routes/_authenticated/portal.kurban-saya.index'
+import { Route as AuthenticatedPortalKurbanSayaIdRouteImport } from './routes/_authenticated/portal.kurban-saya.$id'
 
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SiteRoute = SiteRouteImport.update({
   id: '/_site',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminRoute = AdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PortalRoute = PortalRouteImport.update({
+const DaftarRoute = DaftarRouteImport.update({
+  id: '/daftar',
+  path: '/daftar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LupaPasswordRoute = LupaPasswordRouteImport.update({
+  id: '/lupa-password',
+  path: '/lupa-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPortalRoute = AuthenticatedPortalRouteImport.update({
   id: '/portal',
   path: '/portal',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const SiteIndexRoute = SiteIndexRouteImport.update({
   id: '/',
@@ -103,31 +136,61 @@ const SiteVerifikasiRoute = SiteVerifikasiRouteImport.update({
   path: '/verifikasi',
   getParentRoute: () => SiteRoute,
 } as any)
-const AdminIndexRoute = AdminIndexRouteImport.update({
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AdminRoute,
+  getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
-const AdminSectionRoute = AdminSectionRouteImport.update({
-  id: '/$section',
-  path: '/$section',
-  getParentRoute: () => AdminRoute,
+const AuthenticatedAdminSectionRoute =
+  AuthenticatedAdminSectionRouteImport.update({
+    id: '/$section',
+    path: '/$section',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedPortalIndexRoute =
+  AuthenticatedPortalIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedPortalRoute,
+  } as any)
+const AuthenticatedPortalSectionRoute =
+  AuthenticatedPortalSectionRouteImport.update({
+    id: '/$section',
+    path: '/$section',
+    getParentRoute: () => AuthenticatedPortalRoute,
+  } as any)
+const AuthenticatedPortalAkunRoute = AuthenticatedPortalAkunRouteImport.update({
+  id: '/akun',
+  path: '/akun',
+  getParentRoute: () => AuthenticatedPortalRoute,
 } as any)
-const PortalIndexRoute = PortalIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => PortalRoute,
-} as any)
-const PortalSectionRoute = PortalSectionRouteImport.update({
-  id: '/$section',
-  path: '/$section',
-  getParentRoute: () => PortalRoute,
-} as any)
+const AuthenticatedPortalKurbanBaruRoute =
+  AuthenticatedPortalKurbanBaruRouteImport.update({
+    id: '/kurban-baru',
+    path: '/kurban-baru',
+    getParentRoute: () => AuthenticatedPortalRoute,
+  } as any)
+const AuthenticatedPortalKurbanSayaIndexRoute =
+  AuthenticatedPortalKurbanSayaIndexRouteImport.update({
+    id: '/kurban-saya/',
+    path: '/kurban-saya/',
+    getParentRoute: () => AuthenticatedPortalRoute,
+  } as any)
+const AuthenticatedPortalKurbanSayaIdRoute =
+  AuthenticatedPortalKurbanSayaIdRouteImport.update({
+    id: '/kurban-saya/$id',
+    path: '/kurban-saya/$id',
+    getParentRoute: () => AuthenticatedPortalRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof SiteIndexRoute
-  '/admin': typeof AdminRouteWithChildren
-  '/portal': typeof PortalRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/daftar': typeof DaftarRoute
+  '/lupa-password': typeof LupaPasswordRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/portal': typeof AuthenticatedPortalRouteWithChildren
   '/akad-program': typeof SiteAkadProgramRoute
   '/cara-kerja': typeof SiteCaraKerjaRoute
   '/dampak': typeof SiteDampakRoute
@@ -139,12 +202,21 @@ export interface FileRoutesByFullPath {
   '/syarat-ketentuan': typeof SiteSyaratKetentuanRoute
   '/tentang': typeof SiteTentangRoute
   '/verifikasi': typeof SiteVerifikasiRoute
-  '/admin/$section': typeof AdminSectionRoute
-  '/portal/$section': typeof PortalSectionRoute
-  '/admin/': typeof AdminIndexRoute
-  '/portal/': typeof PortalIndexRoute
+  '/admin/$section': typeof AuthenticatedAdminSectionRoute
+  '/portal/$section': typeof AuthenticatedPortalSectionRoute
+  '/portal/akun': typeof AuthenticatedPortalAkunRoute
+  '/portal/kurban-baru': typeof AuthenticatedPortalKurbanBaruRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/portal/': typeof AuthenticatedPortalIndexRoute
+  '/portal/kurban-saya/$id': typeof AuthenticatedPortalKurbanSayaIdRoute
+  '/portal/kurban-saya/': typeof AuthenticatedPortalKurbanSayaIndexRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof SiteIndexRoute
+  '/auth': typeof AuthRoute
+  '/daftar': typeof DaftarRoute
+  '/lupa-password': typeof LupaPasswordRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/akad-program': typeof SiteAkadProgramRoute
   '/cara-kerja': typeof SiteCaraKerjaRoute
   '/dampak': typeof SiteDampakRoute
@@ -156,17 +228,25 @@ export interface FileRoutesByTo {
   '/syarat-ketentuan': typeof SiteSyaratKetentuanRoute
   '/tentang': typeof SiteTentangRoute
   '/verifikasi': typeof SiteVerifikasiRoute
-  '/admin/$section': typeof AdminSectionRoute
-  '/portal/$section': typeof PortalSectionRoute
-  '/': typeof SiteIndexRoute
-  '/admin': typeof AdminIndexRoute
-  '/portal': typeof PortalIndexRoute
+  '/admin/$section': typeof AuthenticatedAdminSectionRoute
+  '/portal/$section': typeof AuthenticatedPortalSectionRoute
+  '/portal/akun': typeof AuthenticatedPortalAkunRoute
+  '/portal/kurban-baru': typeof AuthenticatedPortalKurbanBaruRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
+  '/portal': typeof AuthenticatedPortalIndexRoute
+  '/portal/kurban-saya/$id': typeof AuthenticatedPortalKurbanSayaIdRoute
+  '/portal/kurban-saya': typeof AuthenticatedPortalKurbanSayaIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/_site': typeof SiteRouteWithChildren
-  '/admin': typeof AdminRouteWithChildren
-  '/portal': typeof PortalRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/daftar': typeof DaftarRoute
+  '/lupa-password': typeof LupaPasswordRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/_authenticated/portal': typeof AuthenticatedPortalRouteWithChildren
   '/_site/akad-program': typeof SiteAkadProgramRoute
   '/_site/cara-kerja': typeof SiteCaraKerjaRoute
   '/_site/dampak': typeof SiteDampakRoute
@@ -178,16 +258,24 @@ export interface FileRoutesById {
   '/_site/syarat-ketentuan': typeof SiteSyaratKetentuanRoute
   '/_site/tentang': typeof SiteTentangRoute
   '/_site/verifikasi': typeof SiteVerifikasiRoute
-  '/admin/$section': typeof AdminSectionRoute
-  '/portal/$section': typeof PortalSectionRoute
   '/_site/': typeof SiteIndexRoute
-  '/admin/': typeof AdminIndexRoute
-  '/portal/': typeof PortalIndexRoute
+  '/_authenticated/admin/$section': typeof AuthenticatedAdminSectionRoute
+  '/_authenticated/portal/$section': typeof AuthenticatedPortalSectionRoute
+  '/_authenticated/portal/akun': typeof AuthenticatedPortalAkunRoute
+  '/_authenticated/portal/kurban-baru': typeof AuthenticatedPortalKurbanBaruRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/portal/': typeof AuthenticatedPortalIndexRoute
+  '/_authenticated/portal/kurban-saya/$id': typeof AuthenticatedPortalKurbanSayaIdRoute
+  '/_authenticated/portal/kurban-saya/': typeof AuthenticatedPortalKurbanSayaIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
+    | '/daftar'
+    | '/lupa-password'
+    | '/reset-password'
     | '/admin'
     | '/portal'
     | '/akad-program'
@@ -203,10 +291,19 @@ export interface FileRouteTypes {
     | '/verifikasi'
     | '/admin/$section'
     | '/portal/$section'
+    | '/portal/akun'
+    | '/portal/kurban-baru'
     | '/admin/'
     | '/portal/'
+    | '/portal/kurban-saya/$id'
+    | '/portal/kurban-saya/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
+    | '/auth'
+    | '/daftar'
+    | '/lupa-password'
+    | '/reset-password'
     | '/akad-program'
     | '/cara-kerja'
     | '/dampak'
@@ -220,14 +317,22 @@ export interface FileRouteTypes {
     | '/verifikasi'
     | '/admin/$section'
     | '/portal/$section'
-    | '/'
+    | '/portal/akun'
+    | '/portal/kurban-baru'
     | '/admin'
     | '/portal'
+    | '/portal/kurban-saya/$id'
+    | '/portal/kurban-saya'
   id:
     | '__root__'
+    | '/_authenticated'
     | '/_site'
-    | '/admin'
-    | '/portal'
+    | '/auth'
+    | '/daftar'
+    | '/lupa-password'
+    | '/reset-password'
+    | '/_authenticated/admin'
+    | '/_authenticated/portal'
     | '/_site/akad-program'
     | '/_site/cara-kerja'
     | '/_site/dampak'
@@ -239,21 +344,35 @@ export interface FileRouteTypes {
     | '/_site/syarat-ketentuan'
     | '/_site/tentang'
     | '/_site/verifikasi'
-    | '/admin/$section'
-    | '/portal/$section'
     | '/_site/'
-    | '/admin/'
-    | '/portal/'
+    | '/_authenticated/admin/$section'
+    | '/_authenticated/portal/$section'
+    | '/_authenticated/portal/akun'
+    | '/_authenticated/portal/kurban-baru'
+    | '/_authenticated/admin/'
+    | '/_authenticated/portal/'
+    | '/_authenticated/portal/kurban-saya/$id'
+    | '/_authenticated/portal/kurban-saya/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   SiteRoute: typeof SiteRouteWithChildren
-  AdminRoute: typeof AdminRouteWithChildren
-  PortalRoute: typeof PortalRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  DaftarRoute: typeof DaftarRoute
+  LupaPasswordRoute: typeof LupaPasswordRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_site': {
       id: '/_site'
       path: ''
@@ -261,19 +380,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SiteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/portal': {
-      id: '/portal'
+    '/daftar': {
+      id: '/daftar'
+      path: '/daftar'
+      fullPath: '/daftar'
+      preLoaderRoute: typeof DaftarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lupa-password': {
+      id: '/lupa-password'
+      path: '/lupa-password'
+      fullPath: '/lupa-password'
+      preLoaderRoute: typeof LupaPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/portal': {
+      id: '/_authenticated/portal'
       path: '/portal'
       fullPath: '/portal'
-      preLoaderRoute: typeof PortalRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedPortalRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_site/': {
       id: '/_site/'
@@ -359,36 +506,112 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SiteVerifikasiRouteImport
       parentRoute: typeof SiteRoute
     }
-    '/admin/': {
-      id: '/admin/'
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
       path: '/'
       fullPath: '/admin/'
-      preLoaderRoute: typeof AdminIndexRouteImport
-      parentRoute: typeof AdminRoute
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/admin/$section': {
-      id: '/admin/$section'
+    '/_authenticated/admin/$section': {
+      id: '/_authenticated/admin/$section'
       path: '/$section'
       fullPath: '/admin/$section'
-      preLoaderRoute: typeof AdminSectionRouteImport
-      parentRoute: typeof AdminRoute
+      preLoaderRoute: typeof AuthenticatedAdminSectionRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/portal/': {
-      id: '/portal/'
+    '/_authenticated/portal/': {
+      id: '/_authenticated/portal/'
       path: '/'
       fullPath: '/portal/'
-      preLoaderRoute: typeof PortalIndexRouteImport
-      parentRoute: typeof PortalRoute
+      preLoaderRoute: typeof AuthenticatedPortalIndexRouteImport
+      parentRoute: typeof AuthenticatedPortalRoute
     }
-    '/portal/$section': {
-      id: '/portal/$section'
+    '/_authenticated/portal/$section': {
+      id: '/_authenticated/portal/$section'
       path: '/$section'
       fullPath: '/portal/$section'
-      preLoaderRoute: typeof PortalSectionRouteImport
-      parentRoute: typeof PortalRoute
+      preLoaderRoute: typeof AuthenticatedPortalSectionRouteImport
+      parentRoute: typeof AuthenticatedPortalRoute
+    }
+    '/_authenticated/portal/akun': {
+      id: '/_authenticated/portal/akun'
+      path: '/akun'
+      fullPath: '/portal/akun'
+      preLoaderRoute: typeof AuthenticatedPortalAkunRouteImport
+      parentRoute: typeof AuthenticatedPortalRoute
+    }
+    '/_authenticated/portal/kurban-baru': {
+      id: '/_authenticated/portal/kurban-baru'
+      path: '/kurban-baru'
+      fullPath: '/portal/kurban-baru'
+      preLoaderRoute: typeof AuthenticatedPortalKurbanBaruRouteImport
+      parentRoute: typeof AuthenticatedPortalRoute
+    }
+    '/_authenticated/portal/kurban-saya/': {
+      id: '/_authenticated/portal/kurban-saya/'
+      path: '/kurban-saya'
+      fullPath: '/portal/kurban-saya/'
+      preLoaderRoute: typeof AuthenticatedPortalKurbanSayaIndexRouteImport
+      parentRoute: typeof AuthenticatedPortalRoute
+    }
+    '/_authenticated/portal/kurban-saya/$id': {
+      id: '/_authenticated/portal/kurban-saya/$id'
+      path: '/kurban-saya/$id'
+      fullPath: '/portal/kurban-saya/$id'
+      preLoaderRoute: typeof AuthenticatedPortalKurbanSayaIdRouteImport
+      parentRoute: typeof AuthenticatedPortalRoute
     }
   }
 }
+
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminSectionRoute: typeof AuthenticatedAdminSectionRoute
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminSectionRoute: AuthenticatedAdminSectionRoute,
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
+interface AuthenticatedPortalRouteChildren {
+  AuthenticatedPortalSectionRoute: typeof AuthenticatedPortalSectionRoute
+  AuthenticatedPortalAkunRoute: typeof AuthenticatedPortalAkunRoute
+  AuthenticatedPortalKurbanBaruRoute: typeof AuthenticatedPortalKurbanBaruRoute
+  AuthenticatedPortalIndexRoute: typeof AuthenticatedPortalIndexRoute
+  AuthenticatedPortalKurbanSayaIdRoute: typeof AuthenticatedPortalKurbanSayaIdRoute
+  AuthenticatedPortalKurbanSayaIndexRoute: typeof AuthenticatedPortalKurbanSayaIndexRoute
+}
+
+const AuthenticatedPortalRouteChildren: AuthenticatedPortalRouteChildren = {
+  AuthenticatedPortalSectionRoute: AuthenticatedPortalSectionRoute,
+  AuthenticatedPortalAkunRoute: AuthenticatedPortalAkunRoute,
+  AuthenticatedPortalKurbanBaruRoute: AuthenticatedPortalKurbanBaruRoute,
+  AuthenticatedPortalIndexRoute: AuthenticatedPortalIndexRoute,
+  AuthenticatedPortalKurbanSayaIdRoute: AuthenticatedPortalKurbanSayaIdRoute,
+  AuthenticatedPortalKurbanSayaIndexRoute:
+    AuthenticatedPortalKurbanSayaIndexRoute,
+}
+
+const AuthenticatedPortalRouteWithChildren =
+  AuthenticatedPortalRoute._addFileChildren(AuthenticatedPortalRouteChildren)
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+  AuthenticatedPortalRoute: typeof AuthenticatedPortalRouteWithChildren
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+  AuthenticatedPortalRoute: AuthenticatedPortalRouteWithChildren,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 interface SiteRouteChildren {
   SiteAkadProgramRoute: typeof SiteAkadProgramRoute
@@ -422,35 +645,13 @@ const SiteRouteChildren: SiteRouteChildren = {
 
 const SiteRouteWithChildren = SiteRoute._addFileChildren(SiteRouteChildren)
 
-interface AdminRouteChildren {
-  AdminSectionRoute: typeof AdminSectionRoute
-  AdminIndexRoute: typeof AdminIndexRoute
-}
-
-const AdminRouteChildren: AdminRouteChildren = {
-  AdminSectionRoute: AdminSectionRoute,
-  AdminIndexRoute: AdminIndexRoute,
-}
-
-const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
-
-interface PortalRouteChildren {
-  PortalSectionRoute: typeof PortalSectionRoute
-  PortalIndexRoute: typeof PortalIndexRoute
-}
-
-const PortalRouteChildren: PortalRouteChildren = {
-  PortalSectionRoute: PortalSectionRoute,
-  PortalIndexRoute: PortalIndexRoute,
-}
-
-const PortalRouteWithChildren =
-  PortalRoute._addFileChildren(PortalRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   SiteRoute: SiteRouteWithChildren,
-  AdminRoute: AdminRouteWithChildren,
-  PortalRoute: PortalRouteWithChildren,
+  AuthRoute: AuthRoute,
+  DaftarRoute: DaftarRoute,
+  LupaPasswordRoute: LupaPasswordRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

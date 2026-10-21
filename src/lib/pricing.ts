@@ -80,10 +80,15 @@ export function fullPrice(c: AnimalCategory): number | null {
   return c.animalCost! + c.operationalCost!;
 }
 
+/** Mirrors the DB rule: per share = full / max shares, rounded UP to nearest Rp 1.000. */
+export function sharePrice(full: number, maxShares: number): number {
+  return Math.ceil(full / maxShares / 1000) * 1000;
+}
+
 /** Price per share (sapi) or per animal (kambing). */
 export function pricePerShare(c: AnimalCategory): number | null {
   const full = fullPrice(c);
-  return full === null ? null : Math.round(full / c.maxShares);
+  return full === null ? null : sharePrice(full, c.maxShares);
 }
 
 const DAY = 86_400_000;

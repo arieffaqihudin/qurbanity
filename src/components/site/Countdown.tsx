@@ -12,13 +12,14 @@ function diff(target: Date) {
   };
 }
 
-export function Countdown() {
+export function Countdown({ target = IDULADHA_DATE, compact }: { target?: Date; compact?: boolean } = {}) {
   const [t, setT] = useState<ReturnType<typeof diff> | null>(null);
   useEffect(() => {
-    setT(diff(IDULADHA_DATE));
-    const id = setInterval(() => setT(diff(IDULADHA_DATE)), 1000);
+    setT(diff(target));
+    const id = setInterval(() => setT(diff(target)), 1000);
     return () => clearInterval(id);
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [target.getTime()]);
   return (
     <div>
       <div className="grid grid-cols-4 gap-2 md:gap-4" aria-live="off">
@@ -29,9 +30,9 @@ export function Countdown() {
           </div>
         ))}
       </div>
-      <p className="mt-4 text-sm text-cream/75">
-        Perkiraan Iduladha 1448 H: {formatDate(IDULADHA_DATE, { weekday: "long", day: "numeric", month: "long", year: "numeric" })}. Tanggal resmi mengikuti penetapan pemerintah.
-      </p>
+      {!compact && <p className="mt-4 text-sm text-cream/75">
+        Perkiraan Iduladha 1448 H: {formatDate(target, { weekday: "long", day: "numeric", month: "long", year: "numeric" })}. Tanggal resmi mengikuti penetapan pemerintah.
+      </p>}
     </div>
   );
 }

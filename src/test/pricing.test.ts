@@ -33,3 +33,11 @@ describe("simulator edge cases", () => {
     expect(simulate(getCategory("sapi-reguler"), 0, "bulanan")!.total).toBe(3_000_000);
   });
 });
+
+describe("share rounding (matches database rule)", () => {
+  it("rounds each share up to the nearest Rp 1.000", async () => {
+    const { sharePrice } = await import("@/lib/pricing");
+    expect(sharePrice(21_500_000, 7)).toBe(3_072_000);
+    expect(sharePrice(21_000_000, 7)).toBe(3_000_000);
+  });
+});
