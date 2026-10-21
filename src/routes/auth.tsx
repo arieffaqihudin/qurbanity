@@ -1,0 +1,65 @@
+import { useState, type FormEvent } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { z } from "zod";
+import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { AuthShell, FormAlert } from "@/components/auth/AuthShell";
+import { PasswordInput } from "@/components/auth/PasswordInput";
+import { supabase } from "@/integrations/supabase/client";
+import { authErrorMessage } from "@/lib/validation";
+
+const search = z.object({ redirect: z.string().optional(), verified: z.coerce.boolean().optional() });
+
+export const Route = createFileRoute("/auth")({
+  validateSearch: search,
+  head: () => ({ meta: [{ title: "Masuk | qurbanity" }, { name: "description", content: "Masuk ke portal peserta qurbanity." }, { name: "robots", content: "noindex" }] }),
+  component: LoginPage,
+});
+
+function safePath(p?: string) {
+  return p && p.startsWith("/") && !p.startsWith("//") ? p : "/portal";
+}
+
+function LoginPage() {
+  const { redirect, verified } = Route.useSearch();
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const submit = async (e: FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    if (!email || !password) return setError("Email dan kata sandi wajib diisi.");
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithPassword({ email: email.trim().toLowerCase(), password });
+    setLoading(false);
+    if (error) return setError(authErrorMessage(error.message));
+    navigate({ to: safePath(redirect), replace: true });
+  };
+
+  return (
+    <AuthShell title="Masuk" subtitle="Lanjutkan perjalanan kurbanmu.">
+      <form onSubmit={submit} className="space-y-4" noValidate>
+        {verified && <FormAlert kind="success">Email berhasil diverifikasi. Silakan masuk.</FormAlert>}
+        {error && <FormAlert kind="error">{error}</FormAlert>}
+        <div>
+          <Label htmlFor="email">Email</Label>
+          <Input id="email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1.5 h-11" required />
+        </div>
+        <div>
+          <div className="flex items-center justify-between">
+            <Label htmlFor="password">Kata sandi</Label>
+            <Link to="/lupa-password" className="text-sm font-semibold text-primary hover:underline">Lupa kata sandi?</Link>
+          </div>
+          <div className="mt-1.5"><PasswordInput id="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required /></div>
+        </div>
+        <Button type="submit" size="lg" className="w-full" disabled={loading}>{loading && <Loader2 className="animate-spin" />} Masuk</Button>
+        <p className="text-center text-sm text-muted-foreground">Belum punya akun? <Link to="/daftar" className="font-semibold text-primary hover:underline">Daftar</Link></p>
+      </form>
+    </AuthShell>
+  );
+}

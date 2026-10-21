@@ -2,7 +2,7 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { ShellPage } from "@/components/app/AppShell";
 import { PORTAL_NAV } from "@/lib/navigation";
 
-export const Route = createFileRoute("/portal/$section")({
+export const Route = createFileRoute("/_authenticated/portal/$section")({
   loader: ({ params }) => {
     const item = PORTAL_NAV.find((n) => n.slug && n.slug === params.section);
     if (!item) throw notFound();

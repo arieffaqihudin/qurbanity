@@ -24,7 +24,7 @@ export function SiteHeader() {
           ))}
         </nav>
         <div className="hidden items-center gap-2 lg:flex">
-          <Button variant="ghost" size="sm" asChild><Link to="/portal">Masuk</Link></Button>
+          <Button variant="ghost" size="sm" asChild><Link to="/auth">Masuk</Link></Button>
           <Button size="sm" asChild><Link to="/simulasi">Mulai Kurban</Link></Button>
         </div>
         <Button variant="ghost" size="icon" className="min-h-11 min-w-11 lg:hidden" aria-label={open ? "Tutup menu" : "Buka menu"} aria-expanded={open} onClick={() => setOpen(!open)}>
@@ -40,7 +40,7 @@ export function SiteHeader() {
               </Link>
             ))}
             <div className="mt-3 grid grid-cols-2 gap-2">
-              <Button variant="outline" asChild><Link to="/portal" onClick={() => setOpen(false)}>Masuk</Link></Button>
+              <Button variant="outline" asChild><Link to="/auth" onClick={() => setOpen(false)}>Masuk</Link></Button>
               <Button asChild><Link to="/simulasi" onClick={() => setOpen(false)}>Mulai Kurban</Link></Button>
             </div>
           </div>

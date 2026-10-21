@@ -1,6 +1,8 @@
 import { useState, type ReactNode } from "react";
-import { Link, Outlet } from "@tanstack/react-router";
-import { Menu, LogOut } from "lucide-react";
+import { Link, Outlet, useNavigate } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { Menu, LogOut, Home } from "lucide-react";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/site/Logo";
@@ -36,13 +38,22 @@ function NavList({ base, items, onNavigate }: Omit<Props, "title"> & { onNavigat
 
 export function AppShell({ base, title, items }: Props) {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  const qc = useQueryClient();
+  const signOut = async () => {
+    await qc.cancelQueries();
+    qc.clear();
+    await supabase.auth.signOut();
+    navigate({ to: "/auth", replace: true });
+  };
   const sidebar = (onNavigate?: () => void) => (
     <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
       <div className="flex h-16 items-center border-b border-sidebar-border px-4"><Logo light /></div>
       <p className="px-4 pb-2 pt-5 text-xs font-bold uppercase tracking-wider text-sidebar-primary">{title}</p>
       <nav aria-label={title} className="flex-1 overflow-y-auto px-2 pb-4"><NavList base={base} items={items} onNavigate={onNavigate} /></nav>
       <div className="border-t border-sidebar-border p-3">
-        <Link to="/" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold text-sidebar-foreground/80 hover:bg-sidebar-accent"><LogOut className="size-4" /> Kembali ke situs</Link>
+        <Link to="/" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold text-sidebar-foreground/80 hover:bg-sidebar-accent"><Home className="size-4" /> Kembali ke situs</Link>
+        <button type="button" onClick={signOut} className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold text-sidebar-foreground/80 hover:bg-sidebar-accent"><LogOut className="size-4" /> Keluar</button>
       </div>
     </div>
   );
@@ -62,7 +73,7 @@ export function AppShell({ base, title, items }: Props) {
         <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border bg-ivory/90 px-4 backdrop-blur md:px-8">
           <Button variant="ghost" size="icon" className="min-h-11 min-w-11 lg:hidden" aria-label="Buka menu" aria-expanded={open} onClick={() => setOpen(true)}><Menu /></Button>
           <p className="font-bold text-burgundy-dark">{title}</p>
-          <span className="ml-auto rounded-full bg-beige/60 px-3 py-1 text-xs font-bold text-burgundy-dark">Pratinjau tata letak</span>
+          {base === "/admin" && <span className="ml-auto rounded-full bg-beige/60 px-3 py-1 text-xs font-bold text-burgundy-dark">Pratinjau tata letak</span>}
         </header>
         <main className="flex-1 p-4 md:p-8"><Outlet /></main>
       </div>
