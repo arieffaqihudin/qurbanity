@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { programsQuery } from "@/lib/admin";
 
 export type CatalogCategory = { id: string; program_id: string; code: string; name: string; kind: "sapi" | "kambing"; max_shares: number; weight_range: string | null; description: string | null; is_available: boolean; sort_order: number };
-type Price = { id: string; category_id: string; animal_cost: number; operational_cost: number; is_final: boolean; effective_from: string; created_at: string };
+type Price = { id: string; category_id: string; animal_cost: number; operational_cost: number; is_final: boolean; effective_from: string; created_at: string; note: string | null };
 
 export function useCatalog(program: string) {
   return useQuery({

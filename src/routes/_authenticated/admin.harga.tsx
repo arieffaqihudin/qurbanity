@@ -40,7 +40,7 @@ function Page() {
                     {p.is_final ? <Tag tone="success">FINAL</Tag> : <Tag tone="warning">DRAFT</Tag>}
                     {c.final?.id === p.id && <Tag tone="primary">Berlaku</Tag>}
                     <span className="ml-auto text-xs text-muted-foreground">{formatDate(new Date(p.created_at), { dateStyle: "medium", timeStyle: "short" })}</span>
-                    {(p as { note?: string | null }).note && <span className="w-full text-xs text-muted-foreground">{(p as { note?: string | null }).note}</span>}
+                    {p.note && <span className="w-full text-xs text-muted-foreground">{p.note}</span>}
                   </li>))}</ul>
               )}
             </Panel>
