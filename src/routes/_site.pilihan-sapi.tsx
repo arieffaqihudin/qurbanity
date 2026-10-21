@@ -21,6 +21,7 @@ function Page() {
       <PageHeader eyebrow="Pilihan hewan" title="Hewan kurban sesuai niat dan kemampuan" intro="Setiap kategori mencakup harga hewan dan biaya operasional: perawatan, penyembelihan, pengemasan, dan distribusi." />
       <Section>
         <Notice kind="sample" className="mb-8">Seluruh harga di halaman ini adalah contoh dari PRD dan belum final. Harga resmi akan dikunci pada saat akad.</Notice>
+        <h2 className="sr-only">Kategori hewan</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {CATEGORIES.map((c) => <CategoryCard key={c.id} c={c} featured={c.id === "sapi-reguler"} />)}
         </div>

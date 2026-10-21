@@ -11,6 +11,7 @@ export const Route = createFileRoute("/_site/faq")({
       <PageHeader eyebrow="FAQ" title="Pertanyaan yang sering diajukan" />
       <Section>
         <div className="mx-auto max-w-3xl">
+          <h2 className="sr-only">Daftar pertanyaan</h2>
           <FaqList />
           <div className="mt-8 rounded-2xl bg-cream/60 p-6 text-center">
             <p className="font-bold text-burgundy-dark">Belum menemukan jawaban?</p>
