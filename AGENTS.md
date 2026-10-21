@@ -13,8 +13,10 @@
 - Public pages live under the `_site` pathless layout; participant portal under `/portal`, admin under `/admin`, each driven by nav config in `src/lib/navigation.ts` — one source of truth for menus.
 - Pricing/installment math lives only in `src/lib/pricing.ts` (covered by `src/test/pricing.test.ts`); public values are sample data until replaced by DB prices locked per commitment.
 - Clearly label sample, demo and pending-approval content with the shared `Notice`/`StatusPill`/`Placeholder` components — never present drafts as final.
-- Portal and admin routes live under `src/routes/_authenticated/` (client-only gate, redirects to `/auth`); admin additionally checks `user_roles` in `beforeLoad`, but real enforcement is RLS + `has_role()`.
+- Portal and admin routes live under `src/routes/_authenticated/` (client-only gate, redirects to `/auth`). Admin RBAC = `admin_members` + `role_permissions` (deny by default, superadmin `*`); UI filters via `my_admin_access()`/`ADMIN_GROUPS.perms`, but enforcement is RLS `has_permission()` and `require_perm()` inside every `admin_*` SECURITY DEFINER function.
+- All admin writes go through `admin_*` RPCs (validated + audited via `write_audit` / `audit_row_change` trigger, reason passed with `app.reason`); admin tables have no client INSERT/UPDATE grants.
+- Every ledger posting goes through internal `post_ledger()` (idempotency key, no negative non-EXTERNAL balance, append-only); allocation lock posts COMMITMENT→ANIMAL/OPERATIONAL and fails without verified funds.
 - Commitments are created ONLY through the `create_commitment` SECURITY DEFINER RPC, which recomputes prices server-side and snapshots them; clients have no INSERT/UPDATE grants on commitment, consent, share or plan tables.
 - `verified_paid_amount` is reserved for the future verified-payment ledger; `payment_status` is a generated column derived from it. Never expose a client write path to either.
 - Price history (`animal_prices`), consent records and audit logs are append-only (triggers block UPDATE/DELETE); add new rows instead of editing.
-- Share price rule lives in two mirrored places: SQL `price_per_share()` and TS `sharePrice()` (tested) — change both together.
+- Share price rule lives in two mirrored places: SQL `share_component()` (used by `create_commitment`) and TS `quote()` in `src/lib/pricing.ts` (tested) — change both together. `current_price()` returns only the latest FINAL price.
