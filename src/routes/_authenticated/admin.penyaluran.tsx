@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -75,9 +75,9 @@ function Page() {
           <Panel title={`Dokumentasi (${q.data.docs.length})`}>
             {q.data.docs.length === 0 ? <Empty title="Belum ada dokumentasi" /> : (
               <ul className="divide-y divide-border text-sm">
-                {[...q.data.docs].sort((a, b) => (a.stage ?? 9) - (b.stage ?? 9)).map((d, i, arr) => (<>
-                  {(i === 0 || arr[i - 1]!.stage !== d.stage) && <li key={`h-${d.stage}`} className="pt-3 text-xs font-bold uppercase tracking-wide text-primary">{d.stage ? `Tahap ${d.stage} · ${STAGES[d.stage - 1]}` : "Tanpa tahap"}</li>}
-                  <li key={d.id} className="flex flex-wrap items-center gap-2 py-2">
+                {[...q.data.docs].sort((a, b) => (a.stage ?? 9) - (b.stage ?? 9)).map((d, i, arr) => (<Fragment key={d.id}>
+                  {(i === 0 || arr[i - 1]!.stage !== d.stage) && <li className="pt-3 text-xs font-bold uppercase tracking-wide text-primary">{d.stage ? `Tahap ${d.stage} · ${STAGES[d.stage - 1]}` : "Tanpa tahap"}</li>}
+                  <li className="flex flex-wrap items-center gap-2 py-2">
                     <FileText className="size-4 text-muted-foreground" /><span className="font-semibold">{d.title}</span>
                     <Tag>{DOC_CATEGORY_LABEL[d.category]}</Tag>{d.stage && <Tag>Tahap {d.stage}</Tag>}
                     {d.visibility === "published" ? <Tag tone="success">Dipublikasikan</Tag> : <Tag tone="warning">Draf</Tag>}
@@ -96,7 +96,7 @@ function Page() {
                       )}
                     </div>
                   </li>
-                ))}
+                </Fragment>))}
               </ul>
             )}
           </Panel>
