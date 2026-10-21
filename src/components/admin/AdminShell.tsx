@@ -18,7 +18,10 @@ const GROUPS_KEY = "qurbanity.admin.groups";
 
 export function AdminShell({ access }: { access: AdminAccess }) {
   const [drawer, setDrawer] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
+  const [pref, setPref] = useState(false);
+  const [wide, setWide] = useState(true);
+  // Tablets (md–lg) always get the icon rail so content keeps its width; desktop follows the saved preference.
+  const collapsed = pref || !wide;
   const [closedGroups, setClosedGroups] = useState<string[]>([]);
   const navigate = useNavigate();
   const qc = useQueryClient();
@@ -26,11 +29,15 @@ export function AdminShell({ access }: { access: AdminAccess }) {
 
   useEffect(() => {
     try {
-      setCollapsed(localStorage.getItem(PREF_KEY) === "collapsed");
+      setPref(localStorage.getItem(PREF_KEY) === "collapsed");
       setClosedGroups(JSON.parse(localStorage.getItem(GROUPS_KEY) ?? "[]"));
     } catch { /* ignore corrupt preference */ }
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const on = () => setWide(mq.matches);
+    on(); mq.addEventListener("change", on);
+    return () => mq.removeEventListener("change", on);
   }, []);
-  const toggleCollapsed = () => setCollapsed((c) => { localStorage.setItem(PREF_KEY, c ? "expanded" : "collapsed"); return !c; });
+  const toggleCollapsed = () => setPref((c) => { localStorage.setItem(PREF_KEY, c ? "expanded" : "collapsed"); return !c; });
   const toggleGroup = (g: string) => setClosedGroups((cur) => {
     const next = cur.includes(g) ? cur.filter((x) => x !== g) : [...cur, g];
     localStorage.setItem(GROUPS_KEY, JSON.stringify(next));
@@ -150,7 +157,7 @@ export function AdminShell({ access }: { access: AdminAccess }) {
         <a href="#admin-main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground">Lewati ke konten</a>
 
         {/* Desktop sidebar */}
-        <aside className={cn("sticky top-0 z-40 hidden h-dvh shrink-0 transition-[width] duration-200 ease-out motion-reduce:transition-none lg:block", collapsed ? "w-[4.5rem]" : "w-64")}>
+        <aside className={cn("sticky top-0 z-40 hidden h-dvh shrink-0 transition-[width] duration-200 ease-out motion-reduce:transition-none md:block", collapsed ? "w-[4.5rem]" : "w-64")}>
           <div className="flex h-full flex-col overflow-hidden bg-sidebar text-sidebar-foreground">
             <div className={cn("flex h-14 shrink-0 items-center border-b border-sidebar-border", collapsed ? "justify-center" : "px-4")}>
               {collapsed ? <img src={symbol} alt="qurbanity" className="size-8 object-contain" /> : <div className="flex items-center gap-2"><Logo light /><span className="text-[10px] font-bold uppercase tracking-wider text-sidebar-primary">Admin</span></div>}
@@ -158,10 +165,10 @@ export function AdminShell({ access }: { access: AdminAccess }) {
             {collapsed ? collapsedNav : expandedNav()}
             {footer(collapsed)}
           </div>
-          <button type="button" onClick={toggleCollapsed} aria-label={collapsed ? "Perluas menu samping" : "Ciutkan menu samping"} aria-expanded={!collapsed}
+          {wide && <button type="button" onClick={toggleCollapsed} aria-label={collapsed ? "Perluas menu samping" : "Ciutkan menu samping"} aria-expanded={!collapsed}
             className="absolute right-0 top-1/2 z-50 grid size-7 -translate-y-1/2 translate-x-1/2 place-items-center rounded-full border border-border bg-card text-primary shadow-sm transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
             {collapsed ? <ChevronRight className="size-4" /> : <ChevronLeft className="size-4" />}
-          </button>
+          </button>}
         </aside>
 
         {/* Mobile / tablet drawer */}
@@ -179,7 +186,7 @@ export function AdminShell({ access }: { access: AdminAccess }) {
 
         <div className="flex min-w-0 flex-1 flex-col">
           <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-ivory/90 px-3 backdrop-blur md:px-6">
-            <Button variant="ghost" size="icon" className="min-h-11 min-w-11 lg:hidden" aria-label="Buka menu" aria-expanded={drawer} onClick={() => setDrawer(true)}><Menu /></Button>
+            <Button variant="ghost" size="icon" className="min-h-11 min-w-11 md:hidden" aria-label="Buka menu" aria-expanded={drawer} onClick={() => setDrawer(true)}><Menu /></Button>
             <p className="truncate font-bold text-burgundy-dark">{activeHub ?? "Dashboard Admin"}</p>
             <span className="ml-auto shrink-0 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-bold text-primary">{ROLE_LABEL[access.role]}</span>
           </header>

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -45,15 +45,17 @@ function Page() {
       {q.isPending ? <Loading /> : q.isError ? <Failure error={q.error} onRetry={() => q.refetch()} /> : q.data && (
         <>
           <Panel title="Tahapan program">
-            <ol className="grid gap-2 md:grid-cols-4">
+            <ol className="relative grid gap-3 md:grid-cols-4" aria-label="Linimasa pelaksanaan">
               {STAGES.map((name, i) => {
                 const s = q.data.stages.find((x) => x.stage === i + 1);
                 const prevOk = i === 0 || q.data.stages.some((x) => x.stage === i && x.status === "verified");
                 const done = s?.status === "verified";
                 const docs = q.data.docs.filter((d) => d.stage === i + 1).length;
                 return (
-                  <li key={name} className="rounded-lg border border-border p-3 text-sm">
-                    <p className="flex items-center gap-1.5 font-bold text-burgundy-dark">{done ? <CheckCircle2 className="size-4 text-success" /> : <Circle className="size-4 text-muted-foreground" />}{i + 1}. {name}</p>
+                  <li key={name} aria-current={!done && prevOk ? "step" : undefined} className={`relative rounded-lg border p-3 text-sm ${done ? "border-success/40 bg-success/5" : prevOk ? "border-primary/50 bg-primary/5" : "border-dashed border-border opacity-80"}`}>
+                    {i < 3 && <span aria-hidden className={`absolute -right-3 top-6 hidden h-0.5 w-3 md:block ${done ? "bg-success" : "bg-border"}`} />}
+                    <p className="flex items-center gap-1.5 font-bold text-burgundy-dark">{done ? <CheckCircle2 className="size-4 text-success" /> : <Circle className={`size-4 ${prevOk ? "text-primary" : "text-muted-foreground"}`} />}{i + 1}. {name}</p>
+                    <div className="mt-1">{done ? <Tag tone="success">Terverifikasi</Tag> : prevOk ? <Tag tone="primary">Tahap berjalan</Tag> : <Tag>Menunggu</Tag>}</div>
                     {done ? (
                       <div className="mt-1 text-xs text-muted-foreground">
                         <p>{formatDate(new Date(s.stage_date!), { dateStyle: "medium" })} · {s.location}</p>
@@ -73,8 +75,9 @@ function Page() {
           <Panel title={`Dokumentasi (${q.data.docs.length})`}>
             {q.data.docs.length === 0 ? <Empty title="Belum ada dokumentasi" /> : (
               <ul className="divide-y divide-border text-sm">
-                {q.data.docs.map((d) => (
-                  <li key={d.id} className="flex flex-wrap items-center gap-2 py-2">
+                {[...q.data.docs].sort((a, b) => (a.stage ?? 9) - (b.stage ?? 9)).map((d, i, arr) => (<Fragment key={d.id}>
+                  {(i === 0 || arr[i - 1]!.stage !== d.stage) && <li className="pt-3 text-xs font-bold uppercase tracking-wide text-primary">{d.stage ? `Tahap ${d.stage} · ${STAGES[d.stage - 1]}` : "Tanpa tahap"}</li>}
+                  <li className="flex flex-wrap items-center gap-2 py-2">
                     <FileText className="size-4 text-muted-foreground" /><span className="font-semibold">{d.title}</span>
                     <Tag>{DOC_CATEGORY_LABEL[d.category]}</Tag>{d.stage && <Tag>Tahap {d.stage}</Tag>}
                     {d.visibility === "published" ? <Tag tone="success">Dipublikasikan</Tag> : <Tag tone="warning">Draf</Tag>}
@@ -93,7 +96,7 @@ function Page() {
                       )}
                     </div>
                   </li>
-                ))}
+                </Fragment>))}
               </ul>
             )}
           </Panel>

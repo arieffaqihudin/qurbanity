@@ -5,7 +5,7 @@ import { PageHead, Panel, Guard, Loading, Failure, SearchBox, NativeSelect, Prog
 import { rpc } from "@/lib/admin";
 import { formatRupiah, formatDate } from "@/lib/format";
 
-const searchSchema = z.object({ q: z.string().optional(), status: z.string().optional(), program: z.string().optional(), page: z.coerce.number().int().min(0).optional() });
+export const searchSchema = z.object({ q: z.string().optional(), status: z.string().optional(), program: z.string().optional(), page: z.coerce.number().int().min(0).optional() });
 
 export const Route = createFileRoute("/_authenticated/admin/peserta/")({
   validateSearch: searchSchema,
@@ -46,16 +46,16 @@ function Page() {
         </div>
         {q.isPending ? <Loading /> : q.isError ? <Failure error={q.error} onRetry={() => q.refetch()} /> : (
           <>
-            <DataTable rows={q.data.rows} rowKey={(r) => r.id} empty={<Empty title="Tidak ada peserta" text="Coba ubah kata kunci atau filter." />} cols={[
-              { label: "Nama Peserta", primary: true, cell: (r) => <Link to="/admin/peserta/$id" params={{ id: r.id }} className="font-semibold text-primary hover:underline">{r.full_name}</Link> },
-              { label: "Email", cell: (r) => <span className="break-all">{r.email}</span> },
+            <DataTable rows={q.data.rows} rowKey={(r) => r.id} onRowClick={(r) => nav({ to: "/admin/peserta/$id", params: { id: r.id }, search: sp })} empty={<Empty title="Tidak ada peserta" text="Coba ubah kata kunci atau filter." />} cols={[
+              { label: "Nama Peserta", primary: true, sort: (r) => r.full_name.toLowerCase(), cell: (r) => <Link to="/admin/peserta/$id" params={{ id: r.id }} search={sp} className="font-semibold text-primary hover:underline">{r.full_name}</Link> },
+              { label: "Email", hideOnMobile: true, cell: (r) => <span className="break-all">{r.email}</span> },
               { label: "WhatsApp", cell: (r) => r.whatsapp },
-              { label: "Komitmen", className: "text-right", cell: (r) => r.commitments },
-              { label: "Nilai Komitmen", className: "text-right tabular-nums", cell: (r) => formatRupiah(r.total) },
-              { label: "Terverifikasi", className: "text-right tabular-nums", cell: (r) => formatRupiah(r.paid) },
+              { label: "Komitmen", sort: (r) => r.commitments, className: "text-right", cell: (r) => r.commitments },
+              { label: "Nilai Komitmen", sort: (r) => r.total, className: "text-right tabular-nums", cell: (r) => formatRupiah(r.total) },
+              { label: "Terverifikasi", sort: (r) => r.paid, className: "text-right tabular-nums", cell: (r) => formatRupiah(r.paid) },
               { label: "Status", cell: (r) => <Tag tone={STATUS[r.status]?.tone ?? "muted"}>{STATUS[r.status]?.label ?? r.status}</Tag> },
-              { label: "Bergabung", cell: (r) => formatDate(new Date(r.created_at), { dateStyle: "medium" }) },
-              { label: "Aksi", cell: (r) => <Link to="/admin/peserta/$id" params={{ id: r.id }} className="text-xs font-semibold text-primary underline">Detail</Link> },
+              { label: "Bergabung", sort: (r) => r.created_at, hideOnMobile: true, cell: (r) => formatDate(new Date(r.created_at), { dateStyle: "medium" }) },
+              { label: "Aksi", hideOnMobile: true, cell: (r) => <Link to="/admin/peserta/$id" params={{ id: r.id }} search={sp} className="text-xs font-semibold text-primary underline">Detail</Link> },
             ]} />
             <Pager page={page} pageSize={PAGE} total={q.data.total} onPage={setPage} />
           </>

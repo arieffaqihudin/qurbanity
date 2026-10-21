@@ -12,4 +12,9 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  vite: {
+    // Pre-bundle lazily discovered Radix packages so the dev server never re-optimizes mid-session
+    // (a re-optimization leaves two React copies loaded → "Cannot read properties of null (reading 'useRef')").
+    optimizeDeps: { include: ["@radix-ui/react-tooltip", "@radix-ui/react-dropdown-menu"] },
+  },
 });

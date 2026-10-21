@@ -74,8 +74,11 @@ function Page() {
                       <li key={u.id} className="rounded-lg border border-border p-3 text-sm">
                         <div className="flex flex-wrap items-center gap-2"><span className="font-bold">{u.code}</span><span className="text-muted-foreground">{cat?.name}</span><Tag tone={UNIT_TONE[u.status]}>{UNIT_LABEL[u.status]}</Tag></div>
                         <p className="text-xs text-muted-foreground">{u.estimated_weight || "Bobot belum diisi"}{u.details ? ` · ${u.details}` : ""}</p>
-                        <div className="mt-2 h-2 overflow-hidden rounded-full bg-muted" role="progressbar" aria-valuenow={used} aria-valuemax={cap} aria-label={`Slot ${u.code}`}><div className="h-full bg-primary" style={{ width: `${cap ? (used / cap) * 100 : 0}%` }} /></div>
-                        <p className="mt-1 text-xs">{used} / {cap} {cat?.kind === "sapi" ? "bagian" : "ekor"} · sisa {cap - used}</p>
+                        <SlotGrid cap={cap} allocs={ua.map((a) => ({ shares: a.shares, code: d.commitments.find((x) => x.id === a.commitment_id)?.code ?? "?" }))} label={u.code} />
+                        <p className="mt-1 flex flex-wrap items-center gap-2 text-xs">
+                          <span>{used} / {cap} {cat?.kind === "sapi" ? "bagian" : "ekor"} · sisa {cap - used}</span>
+                          {u.status !== "locked" && (used === cap ? <Tag tone="success">Siap difinalkan</Tag> : used > cap ? <Tag tone="danger">Melebihi kapasitas</Tag> : <Tag tone="warning">Belum penuh</Tag>)}
+                        </p>
                         <ul className="mt-2 space-y-1">{ua.map((a) => {
                           const c = d.commitments.find((x) => x.id === a.commitment_id);
                           const pref = [...(c?.participant_publication_consents ?? [])].sort((x, y) => y.created_at.localeCompare(x.created_at))[0]?.preference;
@@ -104,9 +107,9 @@ function Page() {
                           )}
                           {can("allocation.lock") && u.status === "final" && (
                             <ConfirmAction title={`Kunci alokasi ${u.code}?`} confirmLabel="Kunci alokasi"
-                              description={<p>Penguncian bersifat final dan memposting ledger: dana komitmen → Pembelian Hewan &amp; Operasional. Hanya berhasil bila dana terverifikasi setiap komitmen sudah mencukupi.</p>}
+                              description={<LockReview unit={u.code} cap={cap} used={used} rows={ua.map((a) => { const c = d.commitments.find((x) => x.id === a.commitment_id); return { code: c?.code ?? "?", shares: a.shares, paid: c?.payment_status === "lunas", names: (c?.qurban_shares ?? []).sort((x, y) => x.position - y.position).map((s) => s.shahibul_name) }; })} />}
                               onConfirm={async () => { await rpc("admin_lock_unit", { p_unit_id: u.id }); toast.success("Alokasi dikunci dan ledger diposting"); refresh(); }}
-                              trigger={(o) => <Button size="sm" onClick={o}><Lock className="size-3.5" /> Kunci</Button>} />
+                              trigger={(o) => <Button size="sm" onClick={o}><Lock className="size-3.5" /> Tinjau &amp; kunci</Button>} />
                           )}
                         </div>
                       </li>
@@ -170,6 +173,38 @@ function NewUnit({ program, cats, onSaved }: { program: string; cats: { id: stri
           try { await rpc("admin_create_unit", { p_program_id: program, p_category_id: f.category, p_code: f.code, p_weight: f.weight, p_details: f.details }); toast.success("Unit dibuat"); setOpen(false); setF({ code: "", category: "", weight: "", details: "" }); onSaved(); }
           catch (e) { setErr((e as Error).message); }
         }}>Simpan unit</Button>
+      </div>
+    </div>
+  );
+}
+
+/** Visual seats: one cell per share; each commitment gets a contiguous colored block. */
+function SlotGrid({ cap, allocs, label }: { cap: number; allocs: { shares: number; code: string }[]; label: string }) {
+  const cells: (string | null)[] = [];
+  allocs.forEach((a) => { for (let i = 0; i < a.shares; i++) cells.push(a.code); });
+  while (cells.length < cap) cells.push(null);
+  const over = cells.length > cap;
+  return (
+    <div role="img" aria-label={`Slot ${label}: ${allocs.reduce((s, a) => s + a.shares, 0)} dari ${cap} terisi`} className="mt-2 flex flex-wrap gap-1">
+      {cells.map((c, i) => (
+        <span key={i} title={c ?? "Slot kosong"} className={c ? (i >= cap || over ? "h-6 min-w-6 flex-1 rounded bg-destructive" : "h-6 min-w-6 flex-1 rounded bg-primary") : "h-6 min-w-6 flex-1 rounded border border-dashed border-border bg-muted/40"} />
+      ))}
+    </div>
+  );
+}
+
+function LockReview({ unit, cap, used, rows }: { unit: string; cap: number; used: number; rows: { code: string; shares: number; paid: boolean; names: string[] }[] }) {
+  const checks = [
+    { ok: used === cap, text: `Kapasitas terisi penuh (${used}/${cap})` },
+    { ok: rows.every((r) => r.paid), text: "Semua komitmen berstatus lunas (pembayaran terverifikasi)" },
+  ];
+  return (
+    <div className="space-y-3 text-sm">
+      <p>Tinjau isi unit <b>{unit}</b> sebelum mengunci. Penguncian bersifat final dan memposting ledger: dana komitmen → Pembelian Hewan &amp; Operasional. Sistem menolak bila dana terverifikasi belum mencukupi.</p>
+      <ul className="space-y-1">{checks.map((c) => <li key={c.text} className={c.ok ? "text-success" : "font-semibold text-destructive"}>{c.ok ? "✓" : "✕"} {c.text}</li>)}</ul>
+      <div className="max-h-48 overflow-y-auto rounded-lg border border-border">
+        <table className="w-full text-xs"><thead className="bg-muted/60 text-left"><tr><th className="p-2">Komitmen</th><th className="p-2">Bagian</th><th className="p-2">Shahibul</th></tr></thead>
+          <tbody>{rows.map((r) => <tr key={r.code} className="border-t border-border"><td className="p-2 font-semibold">{r.code}</td><td className="p-2">{r.shares}</td><td className="p-2">{r.names.join(", ") || "—"}</td></tr>)}</tbody></table>
       </div>
     </div>
   );

@@ -13,18 +13,22 @@ export const Route = createFileRoute("/_authenticated/admin/laporan")({
   component: () => <Guard perms="reports.view"><Page /></Guard>,
 });
 
-const REPORTS: { key: string; label: string; perm?: string }[] = [
-  { key: "transaksi", label: "Transaksi", perm: "finance.view" }, { key: "keuangan", label: "Keuangan per Akun", perm: "finance.view" },
-  { key: "peserta", label: "Peserta", perm: "participants.view" }, { key: "kategori", label: "Kategori Hewan" }, { key: "akad", label: "Akad & Persetujuan" },
-  { key: "alokasi", label: "Alokasi" }, { key: "sedekah", label: "Sedekah", perm: "finance.view" }, { key: "pengembalian", label: "Pengembalian", perm: "finance.view" },
-  { key: "penggunaan", label: "Penggunaan Dana", perm: "finance.view" }, { key: "penyaluran", label: "Penyaluran" }, { key: "penerima", label: "Penerima Manfaat" },
-  { key: "audit", label: "Audit", perm: "audit.view" }, { key: "eksekutif", label: "Eksekutif" },
+const REPORTS: { key: string; label: string; perm?: string; group: string }[] = [
+  { key: "transaksi", label: "Transaksi", group: "Keuangan", perm: "finance.view" }, { key: "keuangan", label: "Keuangan per Akun", group: "Keuangan", perm: "finance.view" },
+  { key: "peserta", label: "Peserta", group: "Peserta & Akad", perm: "participants.view" }, { key: "kategori", label: "Kategori Hewan", group: "Operasional" }, { key: "akad", label: "Akad & Persetujuan", group: "Peserta & Akad" },
+  { key: "alokasi", label: "Alokasi", group: "Operasional" }, { key: "sedekah", label: "Sedekah", group: "Keuangan", perm: "finance.view" }, { key: "pengembalian", label: "Pengembalian", group: "Keuangan", perm: "finance.view" },
+  { key: "penggunaan", label: "Penggunaan Dana", group: "Keuangan", perm: "finance.view" }, { key: "penyaluran", label: "Penyaluran", group: "Operasional" }, { key: "penerima", label: "Penerima Manfaat", group: "Operasional" },
+  { key: "audit", label: "Audit", group: "Ringkasan & Audit", perm: "audit.view" }, { key: "eksekutif", label: "Eksekutif", group: "Ringkasan & Audit" },
 ];
+
+const PREVIEW = 100;
+const human = (c: string) => c.replace(/_/g, " ").replace(/^./, (m) => m.toUpperCase());
 
 function Page() {
   const { can } = useAdmin();
   const [kind, setKind] = useState("kategori");
   const [program, setProgram] = useState("");
+  const [sort, setSort] = useState<{ col: string; dir: 1 | -1 } | null>(null);
   const q = useQuery({ queryKey: ["admin", "report", kind, program], queryFn: () => rpc<Record<string, unknown>[]>("admin_report", { p_kind: kind, p_program_id: program || null, p_export: false }) });
   const label = REPORTS.find((r) => r.key === kind)!.label;
   const exportAs = async (fmt: "csv" | "xls") => {
@@ -38,19 +42,28 @@ function Page() {
   };
   const rows = q.data ?? [];
   const cols = Array.from(new Set(rows.flatMap((r) => Object.keys(r))));
+  const sorted = sort ? [...rows].sort((a, b) => { const x = a[sort.col] as never, y = b[sort.col] as never; return (x < y ? -1 : x > y ? 1 : 0) * sort.dir; }) : rows;
+  const preview = sorted.slice(0, PREVIEW);
   return (
     <div className="mx-auto max-w-7xl space-y-3">
       <PageHead to="/admin/laporan" actions={<ProgramFilter value={program} onChange={setProgram} />} />
-      <div className="flex flex-wrap gap-1.5 print:hidden" role="tablist" aria-label="Kategori laporan">
-        {REPORTS.map((r, i) => {
-          const ok = !r.perm || can(r.perm);
-          return (
-            <button key={r.key} type="button" role="tab" aria-selected={kind === r.key} disabled={!ok} onClick={() => setKind(r.key)}
-              className={cn("rounded-full border px-3 py-1 text-xs font-semibold", kind === r.key ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card hover:border-primary/40", !ok && "cursor-not-allowed opacity-40")}>
-              {i + 1}. {r.label}
-            </button>
-          );
-        })}
+      <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4 print:hidden" aria-label="Jenis laporan">
+        {["Keuangan", "Peserta & Akad", "Operasional", "Ringkasan & Audit"].map((g) => (
+          <fieldset key={g} className="rounded-xl border border-border bg-card p-2">
+            <legend className="px-1 text-[11px] font-bold uppercase tracking-wider text-primary">{g}</legend>
+            <div className="flex flex-wrap gap-1">
+              {REPORTS.filter((r) => r.group === g).map((r) => {
+                const ok = !r.perm || can(r.perm);
+                return (
+                  <button key={r.key} type="button" aria-pressed={kind === r.key} disabled={!ok} title={ok ? undefined : "Peranmu tidak memiliki akses ke laporan ini"} onClick={() => { setKind(r.key); setSort(null); }}
+                    className={cn("rounded-md border px-2.5 py-1.5 text-xs font-semibold", kind === r.key ? "border-primary bg-primary text-primary-foreground" : "border-border hover:border-primary/40", !ok && "cursor-not-allowed opacity-40")}>
+                    {r.label}
+                  </button>
+                );
+              })}
+            </div>
+          </fieldset>
+        ))}
       </div>
       <Panel title={label} action={can("reports.export") && rows.length > 0 && (
         <div className="flex gap-2 print:hidden">
@@ -60,14 +73,19 @@ function Page() {
         </div>
       )}>
         {q.isPending ? <Loading /> : q.isError ? <Failure error={q.error} onRetry={() => q.refetch()} /> : rows.length === 0 ? <Empty title="Belum ada data untuk laporan ini" text="Laporan disusun dari data yang benar-benar tersimpan." /> : kind === "eksekutif" ? (
-          <pre className="whitespace-pre-wrap break-words rounded-lg bg-muted/50 p-3 text-xs">{JSON.stringify(rows[0], null, 2)}</pre>
+          <dl className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">{Object.entries(rows[0] ?? {}).map(([k, v]) => (
+            <div key={k} className="rounded-lg border border-border p-3"><dt className="text-xs font-semibold text-muted-foreground">{human(k)}</dt><dd className="mt-0.5 break-words font-bold tabular-nums text-burgundy-dark">{fmt(v)}</dd></div>
+          ))}</dl>
         ) : (
-          <div className="max-h-[70vh] overflow-auto">
+          <>
+          <p className="mb-2 text-xs text-muted-foreground" role="status">Pratinjau {preview.length} dari {rows.length} baris · {cols.length} kolom.{rows.length > PREVIEW && " Unduh untuk melihat seluruh baris."} Klik judul kolom untuk mengurutkan.</p>
+          <div className="max-h-[70vh] overflow-auto rounded-lg border border-border">
             <table className="w-full text-xs">
-              <thead className="sticky top-0 bg-card"><tr className="border-b border-border text-left">{cols.map((c) => <th key={c} scope="col" className="px-2 py-1.5 font-semibold">{c}</th>)}</tr></thead>
-              <tbody>{rows.map((r, i) => <tr key={i} className="border-b border-border/50">{cols.map((c) => <td key={c} className="px-2 py-1 align-top">{fmt(r[c])}</td>)}</tr>)}</tbody>
+              <thead className="sticky top-0 bg-card"><tr className="border-b border-border text-left">{cols.map((c) => <th key={c} scope="col" aria-sort={sort?.col === c ? (sort.dir === 1 ? "ascending" : "descending") : undefined} className="whitespace-nowrap px-2 py-1.5 font-semibold"><button type="button" className="hover:text-primary" onClick={() => setSort((s) => (s?.col === c ? (s.dir === 1 ? { col: c, dir: -1 } : null) : { col: c, dir: 1 }))}>{human(c)}{sort?.col === c ? (sort.dir === 1 ? " ↑" : " ↓") : ""}</button></th>)}</tr></thead>
+              <tbody>{preview.map((r, i) => <tr key={i} className="border-b border-border/50">{cols.map((c) => <td key={c} className="px-2 py-1 align-top">{fmt(r[c])}</td>)}</tr>)}</tbody>
             </table>
           </div>
+          </>
         )}
       </Panel>
       {!can("reports.export") && <p className="text-xs text-muted-foreground">Peranmu dapat melihat laporan tetapi tidak dapat mengekspornya.</p>}
