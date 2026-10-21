@@ -81,18 +81,34 @@ export function Panel({ title, action, children, className, dense }: { title?: R
   );
 }
 
-export function Kpi({ label, value, hint }: { label: string; value: ReactNode; hint?: string }) {
-  return (
-    <div className="rounded-xl border border-border bg-card p-3">
+export function Kpi({ label, value, hint, to, tone }: { label: string; value: ReactNode; hint?: string; to?: string; tone?: "attention" }) {
+  const body = (
+    <>
       <p className="text-xs font-semibold text-muted-foreground">{label}</p>
       <p className="mt-1 text-lg font-extrabold tabular-nums text-burgundy-dark md:text-xl">{value}</p>
-      {hint && <p className="text-[11px] text-muted-foreground">{hint}</p>}
+      {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
+    </>
+  );
+  const cls = cn("block rounded-xl border bg-card p-3", tone === "attention" ? "border-warning/50 bg-warning/5" : "border-border");
+  if (to) return <Link to={to} className={cn(cls, "transition-colors hover:border-primary/40 focus-visible:outline-2 focus-visible:outline-ring")}>{body}<span className="mt-1 block text-xs font-semibold text-primary">Lihat detail ›</span></Link>;
+  return <div className={cls}>{body}</div>;
+}
+
+export function Skeleton({ rows = 4 }: { rows?: number }) {
+  return (
+    <div role="status" aria-label="Memuat data" className="space-y-2 p-1">
+      {Array.from({ length: rows }).map((_, i) => <div key={i} className="h-9 animate-pulse rounded-md bg-muted motion-reduce:animate-none" />)}
     </div>
   );
 }
 
 export function Loading({ label = "Memuat data…" }: { label?: string }) {
-  return <div role="status" className="flex items-center gap-2 p-6 text-sm text-muted-foreground"><Loader2 className="size-4 animate-spin" />{label}</div>;
+  return (
+    <div role="status" className="space-y-2 p-1">
+      <span className="flex items-center gap-2 text-sm text-muted-foreground"><Loader2 className="size-4 animate-spin" />{label}</span>
+      <div className="h-9 animate-pulse rounded-md bg-muted motion-reduce:animate-none" /><div className="h-9 w-4/5 animate-pulse rounded-md bg-muted motion-reduce:animate-none" />
+    </div>
+  );
 }
 export function Failure({ error, onRetry }: { error: unknown; onRetry?: () => void }) {
   return (
