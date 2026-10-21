@@ -16,21 +16,16 @@ function NavList({ base, items, onNavigate }: Omit<Props, "title"> & { onNavigat
   return (
     <ul className="space-y-0.5">
       {items.map((it) => {
-        const linkProps = it.slug
-          ? ({ to: `${base}/$section`, params: { section: it.slug } } as const)
-          : ({ to: base, activeOptions: { exact: true } } as const);
+        const cls = "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold text-sidebar-foreground/85 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground";
+        const active = { className: "bg-sidebar-accent text-sidebar-accent-foreground [&>svg]:text-sidebar-primary" };
+        const inner = (<><it.icon className="size-4 shrink-0" />{it.label}</>);
         return (
           <li key={it.slug || "index"}>
-            <Link
-              {...(linkProps as object)}
-              to={linkProps.to}
-              onClick={onNavigate}
-              className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold text-sidebar-foreground/85 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-              activeProps={{ className: "bg-sidebar-accent text-sidebar-accent-foreground [&>svg]:text-sidebar-primary" }}
-            >
-              <it.icon className="size-4 shrink-0" />
-              {it.label}
-            </Link>
+            {it.slug ? (
+              <Link to={`${base}/$section`} params={{ section: it.slug }} onClick={onNavigate} className={cls} activeProps={active}>{inner}</Link>
+            ) : (
+              <Link to={base} activeOptions={{ exact: true }} onClick={onNavigate} className={cls} activeProps={active}>{inner}</Link>
+            )}
           </li>
         );
       })}
