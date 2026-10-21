@@ -31,10 +31,23 @@ import { Route as SiteTentangRouteImport } from './routes/_site.tentang'
 import { Route as SiteVerifikasiRouteImport } from './routes/_site.verifikasi'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminSectionRouteImport } from './routes/_authenticated/admin.$section'
+import { Route as AuthenticatedAdminAlokasiRouteImport } from './routes/_authenticated/admin.alokasi'
+import { Route as AuthenticatedAdminAuditRouteImport } from './routes/_authenticated/admin.audit'
+import { Route as AuthenticatedAdminHargaRouteImport } from './routes/_authenticated/admin.harga'
+import { Route as AuthenticatedAdminKeuanganRouteImport } from './routes/_authenticated/admin.keuangan'
+import { Route as AuthenticatedAdminLaporanRouteImport } from './routes/_authenticated/admin.laporan'
+import { Route as AuthenticatedAdminManajemenAdminRouteImport } from './routes/_authenticated/admin.manajemen-admin'
+import { Route as AuthenticatedAdminPengumumanRouteImport } from './routes/_authenticated/admin.pengumuman'
+import { Route as AuthenticatedAdminPenyaluranRouteImport } from './routes/_authenticated/admin.penyaluran'
+import { Route as AuthenticatedAdminProgramRouteImport } from './routes/_authenticated/admin.program'
+import { Route as AuthenticatedAdminSapiRouteImport } from './routes/_authenticated/admin.sapi'
+import { Route as AuthenticatedAdminSedekahRouteImport } from './routes/_authenticated/admin.sedekah'
 import { Route as AuthenticatedPortalIndexRouteImport } from './routes/_authenticated/portal.index'
 import { Route as AuthenticatedPortalSectionRouteImport } from './routes/_authenticated/portal.$section'
 import { Route as AuthenticatedPortalAkunRouteImport } from './routes/_authenticated/portal.akun'
 import { Route as AuthenticatedPortalKurbanBaruRouteImport } from './routes/_authenticated/portal.kurban-baru'
+import { Route as AuthenticatedAdminPesertaIndexRouteImport } from './routes/_authenticated/admin.peserta.index'
+import { Route as AuthenticatedAdminPesertaIdRouteImport } from './routes/_authenticated/admin.peserta.$id'
 import { Route as AuthenticatedPortalKurbanSayaIndexRouteImport } from './routes/_authenticated/portal.kurban-saya.index'
 import { Route as AuthenticatedPortalKurbanSayaIdRouteImport } from './routes/_authenticated/portal.kurban-saya.$id'
 
@@ -147,6 +160,69 @@ const AuthenticatedAdminSectionRoute =
     path: '/$section',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminAlokasiRoute =
+  AuthenticatedAdminAlokasiRouteImport.update({
+    id: '/alokasi',
+    path: '/alokasi',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminAuditRoute = AuthenticatedAdminAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminHargaRoute = AuthenticatedAdminHargaRouteImport.update({
+  id: '/harga',
+  path: '/harga',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminKeuanganRoute =
+  AuthenticatedAdminKeuanganRouteImport.update({
+    id: '/keuangan',
+    path: '/keuangan',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminLaporanRoute =
+  AuthenticatedAdminLaporanRouteImport.update({
+    id: '/laporan',
+    path: '/laporan',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminManajemenAdminRoute =
+  AuthenticatedAdminManajemenAdminRouteImport.update({
+    id: '/manajemen-admin',
+    path: '/manajemen-admin',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminPengumumanRoute =
+  AuthenticatedAdminPengumumanRouteImport.update({
+    id: '/pengumuman',
+    path: '/pengumuman',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminPenyaluranRoute =
+  AuthenticatedAdminPenyaluranRouteImport.update({
+    id: '/penyaluran',
+    path: '/penyaluran',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminProgramRoute =
+  AuthenticatedAdminProgramRouteImport.update({
+    id: '/program',
+    path: '/program',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminSapiRoute = AuthenticatedAdminSapiRouteImport.update({
+  id: '/sapi',
+  path: '/sapi',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminSedekahRoute =
+  AuthenticatedAdminSedekahRouteImport.update({
+    id: '/sedekah',
+    path: '/sedekah',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedPortalIndexRoute =
   AuthenticatedPortalIndexRouteImport.update({
     id: '/',
@@ -169,6 +245,18 @@ const AuthenticatedPortalKurbanBaruRoute =
     id: '/kurban-baru',
     path: '/kurban-baru',
     getParentRoute: () => AuthenticatedPortalRoute,
+  } as any)
+const AuthenticatedAdminPesertaIndexRoute =
+  AuthenticatedAdminPesertaIndexRouteImport.update({
+    id: '/peserta/',
+    path: '/peserta/',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminPesertaIdRoute =
+  AuthenticatedAdminPesertaIdRouteImport.update({
+    id: '/peserta/$id',
+    path: '/peserta/$id',
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedPortalKurbanSayaIndexRoute =
   AuthenticatedPortalKurbanSayaIndexRouteImport.update({
@@ -203,12 +291,25 @@ export interface FileRoutesByFullPath {
   '/tentang': typeof SiteTentangRoute
   '/verifikasi': typeof SiteVerifikasiRoute
   '/admin/$section': typeof AuthenticatedAdminSectionRoute
+  '/admin/alokasi': typeof AuthenticatedAdminAlokasiRoute
+  '/admin/audit': typeof AuthenticatedAdminAuditRoute
+  '/admin/harga': typeof AuthenticatedAdminHargaRoute
+  '/admin/keuangan': typeof AuthenticatedAdminKeuanganRoute
+  '/admin/laporan': typeof AuthenticatedAdminLaporanRoute
+  '/admin/manajemen-admin': typeof AuthenticatedAdminManajemenAdminRoute
+  '/admin/pengumuman': typeof AuthenticatedAdminPengumumanRoute
+  '/admin/penyaluran': typeof AuthenticatedAdminPenyaluranRoute
+  '/admin/program': typeof AuthenticatedAdminProgramRoute
+  '/admin/sapi': typeof AuthenticatedAdminSapiRoute
+  '/admin/sedekah': typeof AuthenticatedAdminSedekahRoute
   '/portal/$section': typeof AuthenticatedPortalSectionRoute
   '/portal/akun': typeof AuthenticatedPortalAkunRoute
   '/portal/kurban-baru': typeof AuthenticatedPortalKurbanBaruRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/portal/': typeof AuthenticatedPortalIndexRoute
+  '/admin/peserta/$id': typeof AuthenticatedAdminPesertaIdRoute
   '/portal/kurban-saya/$id': typeof AuthenticatedPortalKurbanSayaIdRoute
+  '/admin/peserta/': typeof AuthenticatedAdminPesertaIndexRoute
   '/portal/kurban-saya/': typeof AuthenticatedPortalKurbanSayaIndexRoute
 }
 export interface FileRoutesByTo {
@@ -229,12 +330,25 @@ export interface FileRoutesByTo {
   '/tentang': typeof SiteTentangRoute
   '/verifikasi': typeof SiteVerifikasiRoute
   '/admin/$section': typeof AuthenticatedAdminSectionRoute
+  '/admin/alokasi': typeof AuthenticatedAdminAlokasiRoute
+  '/admin/audit': typeof AuthenticatedAdminAuditRoute
+  '/admin/harga': typeof AuthenticatedAdminHargaRoute
+  '/admin/keuangan': typeof AuthenticatedAdminKeuanganRoute
+  '/admin/laporan': typeof AuthenticatedAdminLaporanRoute
+  '/admin/manajemen-admin': typeof AuthenticatedAdminManajemenAdminRoute
+  '/admin/pengumuman': typeof AuthenticatedAdminPengumumanRoute
+  '/admin/penyaluran': typeof AuthenticatedAdminPenyaluranRoute
+  '/admin/program': typeof AuthenticatedAdminProgramRoute
+  '/admin/sapi': typeof AuthenticatedAdminSapiRoute
+  '/admin/sedekah': typeof AuthenticatedAdminSedekahRoute
   '/portal/$section': typeof AuthenticatedPortalSectionRoute
   '/portal/akun': typeof AuthenticatedPortalAkunRoute
   '/portal/kurban-baru': typeof AuthenticatedPortalKurbanBaruRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/portal': typeof AuthenticatedPortalIndexRoute
+  '/admin/peserta/$id': typeof AuthenticatedAdminPesertaIdRoute
   '/portal/kurban-saya/$id': typeof AuthenticatedPortalKurbanSayaIdRoute
+  '/admin/peserta': typeof AuthenticatedAdminPesertaIndexRoute
   '/portal/kurban-saya': typeof AuthenticatedPortalKurbanSayaIndexRoute
 }
 export interface FileRoutesById {
@@ -260,12 +374,25 @@ export interface FileRoutesById {
   '/_site/verifikasi': typeof SiteVerifikasiRoute
   '/_site/': typeof SiteIndexRoute
   '/_authenticated/admin/$section': typeof AuthenticatedAdminSectionRoute
+  '/_authenticated/admin/alokasi': typeof AuthenticatedAdminAlokasiRoute
+  '/_authenticated/admin/audit': typeof AuthenticatedAdminAuditRoute
+  '/_authenticated/admin/harga': typeof AuthenticatedAdminHargaRoute
+  '/_authenticated/admin/keuangan': typeof AuthenticatedAdminKeuanganRoute
+  '/_authenticated/admin/laporan': typeof AuthenticatedAdminLaporanRoute
+  '/_authenticated/admin/manajemen-admin': typeof AuthenticatedAdminManajemenAdminRoute
+  '/_authenticated/admin/pengumuman': typeof AuthenticatedAdminPengumumanRoute
+  '/_authenticated/admin/penyaluran': typeof AuthenticatedAdminPenyaluranRoute
+  '/_authenticated/admin/program': typeof AuthenticatedAdminProgramRoute
+  '/_authenticated/admin/sapi': typeof AuthenticatedAdminSapiRoute
+  '/_authenticated/admin/sedekah': typeof AuthenticatedAdminSedekahRoute
   '/_authenticated/portal/$section': typeof AuthenticatedPortalSectionRoute
   '/_authenticated/portal/akun': typeof AuthenticatedPortalAkunRoute
   '/_authenticated/portal/kurban-baru': typeof AuthenticatedPortalKurbanBaruRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/portal/': typeof AuthenticatedPortalIndexRoute
+  '/_authenticated/admin/peserta/$id': typeof AuthenticatedAdminPesertaIdRoute
   '/_authenticated/portal/kurban-saya/$id': typeof AuthenticatedPortalKurbanSayaIdRoute
+  '/_authenticated/admin/peserta/': typeof AuthenticatedAdminPesertaIndexRoute
   '/_authenticated/portal/kurban-saya/': typeof AuthenticatedPortalKurbanSayaIndexRoute
 }
 export interface FileRouteTypes {
@@ -290,12 +417,25 @@ export interface FileRouteTypes {
     | '/tentang'
     | '/verifikasi'
     | '/admin/$section'
+    | '/admin/alokasi'
+    | '/admin/audit'
+    | '/admin/harga'
+    | '/admin/keuangan'
+    | '/admin/laporan'
+    | '/admin/manajemen-admin'
+    | '/admin/pengumuman'
+    | '/admin/penyaluran'
+    | '/admin/program'
+    | '/admin/sapi'
+    | '/admin/sedekah'
     | '/portal/$section'
     | '/portal/akun'
     | '/portal/kurban-baru'
     | '/admin/'
     | '/portal/'
+    | '/admin/peserta/$id'
     | '/portal/kurban-saya/$id'
+    | '/admin/peserta/'
     | '/portal/kurban-saya/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -316,12 +456,25 @@ export interface FileRouteTypes {
     | '/tentang'
     | '/verifikasi'
     | '/admin/$section'
+    | '/admin/alokasi'
+    | '/admin/audit'
+    | '/admin/harga'
+    | '/admin/keuangan'
+    | '/admin/laporan'
+    | '/admin/manajemen-admin'
+    | '/admin/pengumuman'
+    | '/admin/penyaluran'
+    | '/admin/program'
+    | '/admin/sapi'
+    | '/admin/sedekah'
     | '/portal/$section'
     | '/portal/akun'
     | '/portal/kurban-baru'
     | '/admin'
     | '/portal'
+    | '/admin/peserta/$id'
     | '/portal/kurban-saya/$id'
+    | '/admin/peserta'
     | '/portal/kurban-saya'
   id:
     | '__root__'
@@ -346,12 +499,25 @@ export interface FileRouteTypes {
     | '/_site/verifikasi'
     | '/_site/'
     | '/_authenticated/admin/$section'
+    | '/_authenticated/admin/alokasi'
+    | '/_authenticated/admin/audit'
+    | '/_authenticated/admin/harga'
+    | '/_authenticated/admin/keuangan'
+    | '/_authenticated/admin/laporan'
+    | '/_authenticated/admin/manajemen-admin'
+    | '/_authenticated/admin/pengumuman'
+    | '/_authenticated/admin/penyaluran'
+    | '/_authenticated/admin/program'
+    | '/_authenticated/admin/sapi'
+    | '/_authenticated/admin/sedekah'
     | '/_authenticated/portal/$section'
     | '/_authenticated/portal/akun'
     | '/_authenticated/portal/kurban-baru'
     | '/_authenticated/admin/'
     | '/_authenticated/portal/'
+    | '/_authenticated/admin/peserta/$id'
     | '/_authenticated/portal/kurban-saya/$id'
+    | '/_authenticated/admin/peserta/'
     | '/_authenticated/portal/kurban-saya/'
   fileRoutesById: FileRoutesById
 }
@@ -520,6 +686,83 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSectionRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/alokasi': {
+      id: '/_authenticated/admin/alokasi'
+      path: '/alokasi'
+      fullPath: '/admin/alokasi'
+      preLoaderRoute: typeof AuthenticatedAdminAlokasiRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/audit': {
+      id: '/_authenticated/admin/audit'
+      path: '/audit'
+      fullPath: '/admin/audit'
+      preLoaderRoute: typeof AuthenticatedAdminAuditRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/harga': {
+      id: '/_authenticated/admin/harga'
+      path: '/harga'
+      fullPath: '/admin/harga'
+      preLoaderRoute: typeof AuthenticatedAdminHargaRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/keuangan': {
+      id: '/_authenticated/admin/keuangan'
+      path: '/keuangan'
+      fullPath: '/admin/keuangan'
+      preLoaderRoute: typeof AuthenticatedAdminKeuanganRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/laporan': {
+      id: '/_authenticated/admin/laporan'
+      path: '/laporan'
+      fullPath: '/admin/laporan'
+      preLoaderRoute: typeof AuthenticatedAdminLaporanRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/manajemen-admin': {
+      id: '/_authenticated/admin/manajemen-admin'
+      path: '/manajemen-admin'
+      fullPath: '/admin/manajemen-admin'
+      preLoaderRoute: typeof AuthenticatedAdminManajemenAdminRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/pengumuman': {
+      id: '/_authenticated/admin/pengumuman'
+      path: '/pengumuman'
+      fullPath: '/admin/pengumuman'
+      preLoaderRoute: typeof AuthenticatedAdminPengumumanRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/penyaluran': {
+      id: '/_authenticated/admin/penyaluran'
+      path: '/penyaluran'
+      fullPath: '/admin/penyaluran'
+      preLoaderRoute: typeof AuthenticatedAdminPenyaluranRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/program': {
+      id: '/_authenticated/admin/program'
+      path: '/program'
+      fullPath: '/admin/program'
+      preLoaderRoute: typeof AuthenticatedAdminProgramRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/sapi': {
+      id: '/_authenticated/admin/sapi'
+      path: '/sapi'
+      fullPath: '/admin/sapi'
+      preLoaderRoute: typeof AuthenticatedAdminSapiRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/sedekah': {
+      id: '/_authenticated/admin/sedekah'
+      path: '/sedekah'
+      fullPath: '/admin/sedekah'
+      preLoaderRoute: typeof AuthenticatedAdminSedekahRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/portal/': {
       id: '/_authenticated/portal/'
       path: '/'
@@ -548,6 +791,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPortalKurbanBaruRouteImport
       parentRoute: typeof AuthenticatedPortalRoute
     }
+    '/_authenticated/admin/peserta/': {
+      id: '/_authenticated/admin/peserta/'
+      path: '/peserta'
+      fullPath: '/admin/peserta/'
+      preLoaderRoute: typeof AuthenticatedAdminPesertaIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/peserta/$id': {
+      id: '/_authenticated/admin/peserta/$id'
+      path: '/peserta/$id'
+      fullPath: '/admin/peserta/$id'
+      preLoaderRoute: typeof AuthenticatedAdminPesertaIdRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/portal/kurban-saya/': {
       id: '/_authenticated/portal/kurban-saya/'
       path: '/kurban-saya'
@@ -567,12 +824,38 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminSectionRoute: typeof AuthenticatedAdminSectionRoute
+  AuthenticatedAdminAlokasiRoute: typeof AuthenticatedAdminAlokasiRoute
+  AuthenticatedAdminAuditRoute: typeof AuthenticatedAdminAuditRoute
+  AuthenticatedAdminHargaRoute: typeof AuthenticatedAdminHargaRoute
+  AuthenticatedAdminKeuanganRoute: typeof AuthenticatedAdminKeuanganRoute
+  AuthenticatedAdminLaporanRoute: typeof AuthenticatedAdminLaporanRoute
+  AuthenticatedAdminManajemenAdminRoute: typeof AuthenticatedAdminManajemenAdminRoute
+  AuthenticatedAdminPengumumanRoute: typeof AuthenticatedAdminPengumumanRoute
+  AuthenticatedAdminPenyaluranRoute: typeof AuthenticatedAdminPenyaluranRoute
+  AuthenticatedAdminProgramRoute: typeof AuthenticatedAdminProgramRoute
+  AuthenticatedAdminSapiRoute: typeof AuthenticatedAdminSapiRoute
+  AuthenticatedAdminSedekahRoute: typeof AuthenticatedAdminSedekahRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+  AuthenticatedAdminPesertaIdRoute: typeof AuthenticatedAdminPesertaIdRoute
+  AuthenticatedAdminPesertaIndexRoute: typeof AuthenticatedAdminPesertaIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminSectionRoute: AuthenticatedAdminSectionRoute,
+  AuthenticatedAdminAlokasiRoute: AuthenticatedAdminAlokasiRoute,
+  AuthenticatedAdminAuditRoute: AuthenticatedAdminAuditRoute,
+  AuthenticatedAdminHargaRoute: AuthenticatedAdminHargaRoute,
+  AuthenticatedAdminKeuanganRoute: AuthenticatedAdminKeuanganRoute,
+  AuthenticatedAdminLaporanRoute: AuthenticatedAdminLaporanRoute,
+  AuthenticatedAdminManajemenAdminRoute: AuthenticatedAdminManajemenAdminRoute,
+  AuthenticatedAdminPengumumanRoute: AuthenticatedAdminPengumumanRoute,
+  AuthenticatedAdminPenyaluranRoute: AuthenticatedAdminPenyaluranRoute,
+  AuthenticatedAdminProgramRoute: AuthenticatedAdminProgramRoute,
+  AuthenticatedAdminSapiRoute: AuthenticatedAdminSapiRoute,
+  AuthenticatedAdminSedekahRoute: AuthenticatedAdminSedekahRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+  AuthenticatedAdminPesertaIdRoute: AuthenticatedAdminPesertaIdRoute,
+  AuthenticatedAdminPesertaIndexRoute: AuthenticatedAdminPesertaIndexRoute,
 }
 
 const AuthenticatedAdminRouteWithChildren =

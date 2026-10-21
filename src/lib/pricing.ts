@@ -80,15 +80,30 @@ export function fullPrice(c: AnimalCategory): number | null {
   return c.animalCost! + c.operationalCost!;
 }
 
-/** Mirrors the DB rule: per share = full / max shares, rounded UP to nearest Rp 1.000. */
-export function sharePrice(full: number, maxShares: number): number {
-  return Math.ceil(full / maxShares / 1000) * 1000;
+/** PRD rule (mirrors SQL share_component): ceiling(cost × shares / maxShares), exact rupiah. */
+export function shareComponent(cost: number, shares: number, maxShares: number): number {
+  return Math.ceil((cost * shares) / maxShares);
 }
 
-/** Price per share (sapi) or per animal (kambing). */
+export interface Quote { animal: number; operational: number; total: number; rounding: number }
+
+/** Authoritative mirror of the DB quote: each component rounded up separately. */
+export function quote(animalCost: number, operationalCost: number, shares: number, maxShares: number): Quote {
+  const animal = shareComponent(animalCost, shares, maxShares);
+  const operational = shareComponent(operationalCost, shares, maxShares);
+  const rounding = animal - Math.floor((animalCost * shares) / maxShares) + operational - Math.floor((operationalCost * shares) / maxShares);
+  return { animal, operational, total: animal + operational, rounding };
+}
+
+/** Total for N shares of a category (null when no final price). */
+export function totalFor(c: AnimalCategory, shares: number): number | null {
+  if (!isAvailable(c)) return null;
+  return quote(c.animalCost!, c.operationalCost!, shares, c.maxShares).total;
+}
+
+/** Price for one share (sapi) or one animal (kambing). */
 export function pricePerShare(c: AnimalCategory): number | null {
-  const full = fullPrice(c);
-  return full === null ? null : sharePrice(full, c.maxShares);
+  return totalFor(c, 1);
 }
 
 const DAY = 86_400_000;
@@ -116,10 +131,9 @@ export function simulate(
   now: Date = new Date(),
   deadline: Date = PAYMENT_DEADLINE,
 ): Simulation | null {
-  const per = pricePerShare(c);
-  if (per === null) return null;
+  if (!isAvailable(c)) return null;
   const s = Math.min(Math.max(1, Math.floor(shares)), c.maxShares);
-  const total = per * s;
+  const total = totalFor(c, s)!;
   const periods = countPeriods(freq, now, deadline);
   const daysLeft = Math.max(0, Math.ceil((deadline.getTime() - now.getTime()) / DAY));
   const perPeriod = periods > 0 ? Math.ceil(total / periods / 1000) * 1000 : total;

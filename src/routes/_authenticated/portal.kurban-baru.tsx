@@ -11,7 +11,7 @@ import { Card, EmptyState, ErrorState, LoadingState } from "@/components/portal/
 import { FieldError, FormAlert } from "@/components/auth/AuthShell";
 import { supabase } from "@/integrations/supabase/client";
 import { categoriesQuery, contractsQuery, FREQ_LABEL, FREQ_UNIT, profileQuery, programQuery, type Frequency, type PublicationPref } from "@/lib/portal-data";
-import { countPeriods, sharePrice } from "@/lib/pricing";
+import { countPeriods, quote } from "@/lib/pricing";
 import { shahibulSchema } from "@/lib/validation";
 import { formatDate, formatRupiah } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -51,17 +51,15 @@ function Wizard() {
   const [saveError, setSaveError] = useState<string | null>(null);
 
   const cat = cats.data?.find((c) => c.id === catId);
-  const isFinal = (c: NonNullable<typeof cats.data>[number]) => !!c.price?.is_final;
+  const isFinal = (c: NonNullable<typeof cats.data>[number]) => !!c.price?.is_final && c.is_available !== false;
 
   const pricing = useMemo(() => {
     if (!cat?.price || !program.data) return null;
     const full = cat.price.animal_cost + cat.price.operational_cost;
-    const pps = sharePrice(full, cat.max_shares);
-    const total = pps * shares;
-    const animal = Math.round((cat.price.animal_cost * shares) / cat.max_shares);
-    const ops = Math.round((cat.price.operational_cost * shares) / cat.max_shares);
+    const q = quote(cat.price.animal_cost, cat.price.operational_cost, shares, cat.max_shares);
+    const total = q.total;
     const periods = countPeriods(freq === "fleksibel" ? "bulanan" : freq, new Date(), new Date(program.data.payment_deadline));
-    return { full, pps, total, animal, ops, rounding: total - animal - ops, periods, suggested: periods > 0 ? Math.ceil(total / periods / 1000) * 1000 : total };
+    return { full, total, animal: q.animal, ops: q.operational, rounding: q.rounding, periods, suggested: periods > 0 ? Math.ceil(total / periods / 1000) * 1000 : total };
   }, [cat, shares, freq, program.data]);
 
   if (program.isPending || cats.isPending || contracts.isPending) return <LoadingState />;
@@ -138,7 +136,7 @@ function Wizard() {
           <div className="grid gap-3 sm:grid-cols-2" role="radiogroup" aria-label="Kategori hewan">
             {cats.data!.map((c) => {
               const ok = isFinal(c);
-              const pps = c.price ? sharePrice(c.price.animal_cost + c.price.operational_cost, c.max_shares) : null;
+              const pps = c.price ? quote(c.price.animal_cost, c.price.operational_cost, 1, c.max_shares).total : null;
               return (
                 <button key={c.id} type="button" role="radio" aria-checked={catId === c.id} disabled={!ok}
                   onClick={() => { setCatId(c.id); setShareCount(c.kind === "kambing" ? 1 : Math.min(shares, 7)); setErrors({}); }}
@@ -201,10 +199,9 @@ function Wizard() {
             <PRow k="Harga hewan" v={formatRupiah(pricing.animal)} />
             <PRow k="Biaya operasional" v={formatRupiah(pricing.ops)} />
             {pricing.rounding !== 0 && <PRow k="Pembulatan" v={formatRupiah(pricing.rounding)} />}
-            <PRow k={`Harga per ${cat.kind === "sapi" ? "bagian" : "ekor"}`} v={`${formatRupiah(pricing.pps)} × ${shares}`} />
             <div className="flex justify-between border-t border-border pt-3 text-lg font-extrabold"><dt>Total komitmen</dt><dd className="tabular-nums text-primary">{formatRupiah(pricing.total)}</dd></div>
           </dl>
-          <p className="mt-3 rounded-xl bg-muted p-3 text-xs text-muted-foreground">Harga per bagian = (harga hewan + operasional) ÷ {cat.max_shares}, dibulatkan ke atas ke Rp 1.000 terdekat. Selisih pembulatan ditampilkan terpisah. Nilai akhir dihitung ulang oleh sistem saat komitmen disimpan.</p>
+          <p className="mt-3 rounded-xl bg-muted p-3 text-xs text-muted-foreground">Komponen hewan = harga hewan × {shares} ÷ {cat.max_shares}, dan komponen operasional = biaya operasional × {shares} ÷ {cat.max_shares}; masing-masing dibulatkan ke atas ke rupiah terdekat. Tambahan dari pembulatan ditampilkan terpisah. Nilai akhir dihitung ulang oleh sistem saat komitmen disimpan.</p>
           <div className="mt-5 rounded-xl border border-border p-4">
             <p className="text-sm font-bold">Estimasi rencana setoran {FREQ_LABEL[freq].toLowerCase()}</p>
             <p className="mt-1 text-2xl font-extrabold tabular-nums text-primary">{formatRupiah(pricing.suggested)} <span className="text-base font-semibold text-muted-foreground">/ {FREQ_UNIT[freq]}</span></p>

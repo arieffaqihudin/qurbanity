@@ -14,6 +14,95 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_members: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          is_active: boolean
+          role: Database["public"]["Enums"]["admin_role"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          is_active?: boolean
+          role: Database["public"]["Enums"]["admin_role"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          is_active?: boolean
+          role?: Database["public"]["Enums"]["admin_role"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      allocations: {
+        Row: {
+          commitment_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          is_active: boolean
+          removed_at: string | null
+          removed_by: string | null
+          removed_reason: string | null
+          shares: number
+          unit_id: string
+        }
+        Insert: {
+          commitment_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          removed_at?: string | null
+          removed_by?: string | null
+          removed_reason?: string | null
+          shares: number
+          unit_id: string
+        }
+        Update: {
+          commitment_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          removed_at?: string | null
+          removed_by?: string | null
+          removed_reason?: string | null
+          shares?: number
+          unit_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "allocations_commitment_id_fkey"
+            columns: ["commitment_id"]
+            isOneToOne: false
+            referencedRelation: "qurban_commitments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "allocations_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "animal_units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       animal_categories: {
         Row: {
           code: string
@@ -21,6 +110,7 @@ export type Database = {
           description: string | null
           id: string
           is_active: boolean
+          is_available: boolean
           kind: Database["public"]["Enums"]["animal_kind"]
           max_shares: number
           name: string
@@ -35,6 +125,7 @@ export type Database = {
           description?: string | null
           id?: string
           is_active?: boolean
+          is_available?: boolean
           kind: Database["public"]["Enums"]["animal_kind"]
           max_shares: number
           name: string
@@ -49,6 +140,7 @@ export type Database = {
           description?: string | null
           id?: string
           is_active?: boolean
+          is_available?: boolean
           kind?: Database["public"]["Enums"]["animal_kind"]
           max_shares?: number
           name?: string
@@ -111,6 +203,155 @@ export type Database = {
           },
         ]
       }
+      animal_units: {
+        Row: {
+          category_id: string
+          code: string
+          created_at: string
+          created_by: string | null
+          details: string | null
+          estimated_weight: string | null
+          id: string
+          locked_at: string | null
+          locked_by: string | null
+          program_id: string
+          status: Database["public"]["Enums"]["unit_status"]
+          updated_at: string
+        }
+        Insert: {
+          category_id: string
+          code: string
+          created_at?: string
+          created_by?: string | null
+          details?: string | null
+          estimated_weight?: string | null
+          id?: string
+          locked_at?: string | null
+          locked_by?: string | null
+          program_id: string
+          status?: Database["public"]["Enums"]["unit_status"]
+          updated_at?: string
+        }
+        Update: {
+          category_id?: string
+          code?: string
+          created_at?: string
+          created_by?: string | null
+          details?: string | null
+          estimated_weight?: string | null
+          id?: string
+          locked_at?: string | null
+          locked_by?: string | null
+          program_id?: string
+          status?: Database["public"]["Enums"]["unit_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "animal_units_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "animal_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "animal_units_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      announcements: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          program_id: string
+          published_at: string | null
+          published_by: string | null
+          scheduled_at: string | null
+          snapshot: Json
+          status: Database["public"]["Enums"]["announcement_status"]
+          title: string
+          unlocked_warning: number
+          updated_at: string
+          version: number
+          withdrawn_at: string | null
+          withdrawn_reason: string | null
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          program_id: string
+          published_at?: string | null
+          published_by?: string | null
+          scheduled_at?: string | null
+          snapshot?: Json
+          status?: Database["public"]["Enums"]["announcement_status"]
+          title: string
+          unlocked_warning?: number
+          updated_at?: string
+          version: number
+          withdrawn_at?: string | null
+          withdrawn_reason?: string | null
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          program_id?: string
+          published_at?: string | null
+          published_by?: string | null
+          scheduled_at?: string | null
+          snapshot?: Json
+          status?: Database["public"]["Enums"]["announcement_status"]
+          title?: string
+          unlocked_warning?: number
+          updated_at?: string
+          version?: number
+          withdrawn_at?: string | null
+          withdrawn_reason?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "announcements_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      app_settings: {
+        Row: {
+          key: string
+          updated_at: string
+          updated_by: string | null
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          updated_by?: string | null
+          value?: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          updated_by?: string | null
+          value?: Json
+        }
+        Relationships: []
+      }
       audit_logs: {
         Row: {
           action: string
@@ -119,7 +360,12 @@ export type Database = {
           entity: string
           entity_id: string | null
           id: string
+          ip_address: string | null
           metadata: Json
+          new_values: Json | null
+          old_values: Json | null
+          reason: string | null
+          source: string
         }
         Insert: {
           action: string
@@ -128,7 +374,12 @@ export type Database = {
           entity: string
           entity_id?: string | null
           id?: string
+          ip_address?: string | null
           metadata?: Json
+          new_values?: Json | null
+          old_values?: Json | null
+          reason?: string | null
+          source?: string
         }
         Update: {
           action?: string
@@ -137,7 +388,12 @@ export type Database = {
           entity?: string
           entity_id?: string | null
           id?: string
+          ip_address?: string | null
           metadata?: Json
+          new_values?: Json | null
+          old_values?: Json | null
+          reason?: string | null
+          source?: string
         }
         Relationships: []
       }
@@ -198,13 +454,20 @@ export type Database = {
       contract_versions: {
         Row: {
           approved_at: string | null
+          approved_by: string | null
           body: string
           contract_code: string
+          contract_type: string | null
           created_at: string
+          created_by: string | null
           id: string
           is_active: boolean
           is_mandatory: boolean
+          legal_reviewer: string | null
           program_id: string
+          requires_reconsent: boolean
+          review_notes: string | null
+          sharia_reviewer: string | null
           status: Database["public"]["Enums"]["contract_status"]
           summary: string
           title: string
@@ -212,13 +475,20 @@ export type Database = {
         }
         Insert: {
           approved_at?: string | null
+          approved_by?: string | null
           body: string
           contract_code: string
+          contract_type?: string | null
           created_at?: string
+          created_by?: string | null
           id?: string
           is_active?: boolean
           is_mandatory?: boolean
+          legal_reviewer?: string | null
           program_id: string
+          requires_reconsent?: boolean
+          review_notes?: string | null
+          sharia_reviewer?: string | null
           status?: Database["public"]["Enums"]["contract_status"]
           summary: string
           title: string
@@ -226,13 +496,20 @@ export type Database = {
         }
         Update: {
           approved_at?: string | null
+          approved_by?: string | null
           body?: string
           contract_code?: string
+          contract_type?: string | null
           created_at?: string
+          created_by?: string | null
           id?: string
           is_active?: boolean
           is_mandatory?: boolean
+          legal_reviewer?: string | null
           program_id?: string
+          requires_reconsent?: boolean
+          review_notes?: string | null
+          sharia_reviewer?: string | null
           status?: Database["public"]["Enums"]["contract_status"]
           summary?: string
           title?: string
@@ -244,6 +521,191 @@ export type Database = {
             columns: ["program_id"]
             isOneToOne: false
             referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      documents: {
+        Row: {
+          category: Database["public"]["Enums"]["doc_category"]
+          created_at: string
+          id: string
+          mime_type: string
+          privacy_confirmed: boolean
+          program_id: string
+          published_at: string | null
+          published_by: string | null
+          size_bytes: number
+          stage: number | null
+          storage_path: string
+          title: string
+          uploaded_by: string
+          visibility: string
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["doc_category"]
+          created_at?: string
+          id?: string
+          mime_type: string
+          privacy_confirmed: boolean
+          program_id: string
+          published_at?: string | null
+          published_by?: string | null
+          size_bytes: number
+          stage?: number | null
+          storage_path: string
+          title: string
+          uploaded_by: string
+          visibility?: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["doc_category"]
+          created_at?: string
+          id?: string
+          mime_type?: string
+          privacy_confirmed?: boolean
+          program_id?: string
+          published_at?: string | null
+          published_by?: string | null
+          size_bytes?: number
+          stage?: number | null
+          storage_path?: string
+          title?: string
+          uploaded_by?: string
+          visibility?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "documents_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      journey_stages: {
+        Row: {
+          created_at: string
+          id: string
+          location: string | null
+          notes: string | null
+          program_id: string
+          responsible_id: string | null
+          stage: number
+          stage_date: string | null
+          status: string
+          updated_at: string
+          verified_at: string | null
+          verified_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          location?: string | null
+          notes?: string | null
+          program_id: string
+          responsible_id?: string | null
+          stage: number
+          stage_date?: string | null
+          status?: string
+          updated_at?: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          location?: string | null
+          notes?: string | null
+          program_id?: string
+          responsible_id?: string | null
+          stage?: number
+          stage_date?: string | null
+          status?: string
+          updated_at?: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "journey_stages_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ledger_entries: {
+        Row: {
+          actor_id: string | null
+          amount: number
+          basis: string
+          commitment_id: string | null
+          created_at: string
+          dest_account: Database["public"]["Enums"]["ledger_account"]
+          id: string
+          idempotency_key: string
+          is_fixture: boolean
+          program_id: string | null
+          reference: string
+          reverses_id: string | null
+          source_account: Database["public"]["Enums"]["ledger_account"]
+          system_source: string | null
+        }
+        Insert: {
+          actor_id?: string | null
+          amount: number
+          basis: string
+          commitment_id?: string | null
+          created_at?: string
+          dest_account: Database["public"]["Enums"]["ledger_account"]
+          id?: string
+          idempotency_key: string
+          is_fixture?: boolean
+          program_id?: string | null
+          reference: string
+          reverses_id?: string | null
+          source_account: Database["public"]["Enums"]["ledger_account"]
+          system_source?: string | null
+        }
+        Update: {
+          actor_id?: string | null
+          amount?: number
+          basis?: string
+          commitment_id?: string | null
+          created_at?: string
+          dest_account?: Database["public"]["Enums"]["ledger_account"]
+          id?: string
+          idempotency_key?: string
+          is_fixture?: boolean
+          program_id?: string | null
+          reference?: string
+          reverses_id?: string | null
+          source_account?: Database["public"]["Enums"]["ledger_account"]
+          system_source?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ledger_entries_commitment_id_fkey"
+            columns: ["commitment_id"]
+            isOneToOne: false
+            referencedRelation: "qurban_commitments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ledger_entries_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ledger_entries_reverses_id_fkey"
+            columns: ["reverses_id"]
+            isOneToOne: false
+            referencedRelation: "ledger_entries"
             referencedColumns: ["id"]
           },
         ]
@@ -389,35 +851,47 @@ export type Database = {
       }
       programs: {
         Row: {
+          announcement_days: number
           code: string
           created_at: string
+          date_status: string
           hijri_year: number
           id: string
           iduladha_date: string
+          minimum_payment: number
           name: string
           payment_deadline: string
+          registration_opens_at: string | null
           status: Database["public"]["Enums"]["program_status"]
           updated_at: string
         }
         Insert: {
+          announcement_days?: number
           code: string
           created_at?: string
+          date_status?: string
           hijri_year: number
           id?: string
           iduladha_date: string
+          minimum_payment?: number
           name: string
           payment_deadline: string
+          registration_opens_at?: string | null
           status?: Database["public"]["Enums"]["program_status"]
           updated_at?: string
         }
         Update: {
+          announcement_days?: number
           code?: string
           created_at?: string
+          date_status?: string
           hijri_year?: number
           id?: string
           iduladha_date?: string
+          minimum_payment?: number
           name?: string
           payment_deadline?: string
+          registration_opens_at?: string | null
           status?: Database["public"]["Enums"]["program_status"]
           updated_at?: string
         }
@@ -546,6 +1020,21 @@ export type Database = {
           },
         ]
       }
+      role_permissions: {
+        Row: {
+          permission: string
+          role: Database["public"]["Enums"]["admin_role"]
+        }
+        Insert: {
+          permission: string
+          role: Database["public"]["Enums"]["admin_role"]
+        }
+        Update: {
+          permission?: string
+          role?: Database["public"]["Enums"]["admin_role"]
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -569,6 +1058,169 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_add_price: {
+        Args: {
+          p_animal_cost: number
+          p_category_id: string
+          p_is_final: boolean
+          p_note: string
+          p_operational_cost: number
+        }
+        Returns: string
+      }
+      admin_allocate: {
+        Args: { p_commitment_id: string; p_unit_id: string }
+        Returns: string
+      }
+      admin_announcement_transition: {
+        Args: {
+          p_id: string
+          p_reason?: string
+          p_scheduled_at?: string
+          p_to: Database["public"]["Enums"]["announcement_status"]
+        }
+        Returns: undefined
+      }
+      admin_approve_contract: {
+        Args: {
+          p_id: string
+          p_legal_reviewer: string
+          p_notes: string
+          p_sharia_reviewer: string
+        }
+        Returns: undefined
+      }
+      admin_correct_profile: {
+        Args: { p_changes: Json; p_reason: string; p_user_id: string }
+        Returns: undefined
+      }
+      admin_correct_shahibul: {
+        Args: { p_name: string; p_reason: string; p_share_id: string }
+        Returns: undefined
+      }
+      admin_create_unit: {
+        Args: {
+          p_category_id: string
+          p_code: string
+          p_details: string
+          p_program_id: string
+          p_weight: string
+        }
+        Returns: string
+      }
+      admin_dashboard: { Args: { p_program_id?: string }; Returns: Json }
+      admin_generate_announcement: {
+        Args: { p_program_id: string; p_title: string }
+        Returns: string
+      }
+      admin_ledger_balances: {
+        Args: { p_program_id?: string }
+        Returns: {
+          account: Database["public"]["Enums"]["ledger_account"]
+          balance: number
+          entries: number
+        }[]
+      }
+      admin_lock_unit: { Args: { p_unit_id: string }; Returns: undefined }
+      admin_participants: {
+        Args: {
+          p_limit?: number
+          p_offset?: number
+          p_program_id?: string
+          p_search?: string
+          p_status?: string
+        }
+        Returns: Json
+      }
+      admin_reconsent_candidates: {
+        Args: { p_program_id: string }
+        Returns: {
+          active_version: string
+          affected_commitments: number
+          contract_code: string
+          requires_reconsent: boolean
+        }[]
+      }
+      admin_register_document: {
+        Args: {
+          p_category: Database["public"]["Enums"]["doc_category"]
+          p_mime: string
+          p_path: string
+          p_privacy: boolean
+          p_program_id: string
+          p_size: number
+          p_stage: number
+          p_title: string
+        }
+        Returns: string
+      }
+      admin_remove_allocation: {
+        Args: { p_allocation_id: string; p_reason: string }
+        Returns: undefined
+      }
+      admin_report: {
+        Args: { p_export?: boolean; p_kind: string; p_program_id?: string }
+        Returns: Json
+      }
+      admin_reverse_entry: {
+        Args: { p_entry_id: string; p_reason: string }
+        Returns: string
+      }
+      admin_save_category: {
+        Args: { p: Json; p_id: string; p_reason?: string }
+        Returns: string
+      }
+      admin_save_contract_draft: {
+        Args: { p: Json; p_id: string }
+        Returns: string
+      }
+      admin_save_program: {
+        Args: { p: Json; p_id: string; p_reason?: string }
+        Returns: string
+      }
+      admin_set_document_visibility: {
+        Args: { p_id: string; p_reason?: string; p_visibility: string }
+        Returns: undefined
+      }
+      admin_set_member: {
+        Args: {
+          p_active: boolean
+          p_email: string
+          p_reason: string
+          p_role: Database["public"]["Enums"]["admin_role"]
+        }
+        Returns: undefined
+      }
+      admin_set_program_status: {
+        Args: {
+          p_id: string
+          p_reason: string
+          p_status: Database["public"]["Enums"]["program_status"]
+        }
+        Returns: undefined
+      }
+      admin_set_setting: {
+        Args: { p_key: string; p_reason?: string; p_value: Json }
+        Returns: undefined
+      }
+      admin_set_unit_status: {
+        Args: {
+          p_reason: string
+          p_status: Database["public"]["Enums"]["unit_status"]
+          p_unit_id: string
+        }
+        Returns: undefined
+      }
+      admin_verify_stage: {
+        Args: {
+          p_date: string
+          p_location: string
+          p_notes: string
+          p_program_id: string
+          p_stage: number
+        }
+        Returns: undefined
+      }
       count_periods: {
         Args: {
           _freq: Database["public"]["Enums"]["payment_frequency"]
@@ -612,6 +1264,10 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      has_permission: {
+        Args: { _perm: string; _user_id: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -619,16 +1275,71 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_staff: { Args: { _user_id: string }; Returns: boolean }
+      mask_name: { Args: { _n: string }; Returns: string }
+      my_admin_access: { Args: never; Returns: Json }
+      post_ledger: {
+        Args: {
+          _amount: number
+          _basis: string
+          _commitment: string
+          _dst: Database["public"]["Enums"]["ledger_account"]
+          _key: string
+          _reference: string
+          _reverses?: string
+          _src: Database["public"]["Enums"]["ledger_account"]
+          _system?: string
+        }
+        Returns: string
+      }
       price_per_share: {
         Args: { _full: number; _max_shares: number }
         Returns: number
       }
+      require_perm: { Args: { _perm: string }; Returns: undefined }
+      share_component: {
+        Args: { _cost: number; _max: number; _shares: number }
+        Returns: number
+      }
+      write_audit: {
+        Args: {
+          _action: string
+          _entity: string
+          _entity_id: string
+          _meta?: Json
+          _new: Json
+          _old: Json
+          _reason: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
+      admin_role:
+        | "superadmin"
+        | "finance"
+        | "program"
+        | "field_officer"
+        | "auditor"
+        | "content"
       animal_kind: "sapi" | "kambing"
+      announcement_status:
+        | "draft"
+        | "approved"
+        | "scheduled"
+        | "published"
+        | "withdrawn"
       app_role: "admin" | "participant"
       consent_decision: "accepted" | "declined"
       contract_status: "draft" | "approved" | "retired"
+      doc_category:
+        | "animal_photo"
+        | "preparation"
+        | "slaughter"
+        | "distribution"
+        | "beneficiaries"
+        | "supporting"
+        | "impact_report"
       execution_status:
         | "menunggu"
         | "dialokasikan"
@@ -636,9 +1347,21 @@ export type Database = {
         | "didistribusikan"
         | "selesai"
         | "dibatalkan"
+      ledger_account:
+        | "EXTERNAL"
+        | "COMMITMENT"
+        | "ANIMAL"
+        | "OPERATIONAL"
+        | "SEDEKAH"
+        | "EXCESS"
+        | "KUASA"
+        | "REFUND"
+        | "CANCEL_COST"
+        | "USED"
       payment_frequency: "harian" | "mingguan" | "bulanan" | "fleksibel"
       program_status: "draft" | "open" | "closed" | "completed"
       publication_preference: "full" | "masked" | "private"
+      unit_status: "draft" | "final" | "locked"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -766,10 +1489,34 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      admin_role: [
+        "superadmin",
+        "finance",
+        "program",
+        "field_officer",
+        "auditor",
+        "content",
+      ],
       animal_kind: ["sapi", "kambing"],
+      announcement_status: [
+        "draft",
+        "approved",
+        "scheduled",
+        "published",
+        "withdrawn",
+      ],
       app_role: ["admin", "participant"],
       consent_decision: ["accepted", "declined"],
       contract_status: ["draft", "approved", "retired"],
+      doc_category: [
+        "animal_photo",
+        "preparation",
+        "slaughter",
+        "distribution",
+        "beneficiaries",
+        "supporting",
+        "impact_report",
+      ],
       execution_status: [
         "menunggu",
         "dialokasikan",
@@ -778,9 +1525,22 @@ export const Constants = {
         "selesai",
         "dibatalkan",
       ],
+      ledger_account: [
+        "EXTERNAL",
+        "COMMITMENT",
+        "ANIMAL",
+        "OPERATIONAL",
+        "SEDEKAH",
+        "EXCESS",
+        "KUASA",
+        "REFUND",
+        "CANCEL_COST",
+        "USED",
+      ],
       payment_frequency: ["harian", "mingguan", "bulanan", "fleksibel"],
       program_status: ["draft", "open", "closed", "completed"],
       publication_preference: ["full", "masked", "private"],
+      unit_status: ["draft", "final", "locked"],
     },
   },
 } as const
