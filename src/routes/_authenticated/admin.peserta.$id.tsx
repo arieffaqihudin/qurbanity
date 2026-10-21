@@ -28,6 +28,7 @@ const dt = (s: string) => formatDate(new Date(s), { dateStyle: "medium", timeSty
 
 function Page() {
   const { id } = Route.useParams();
+  const back = Route.useSearch();
   const { can } = useAdmin();
   const qc = useQueryClient();
   const q = useQuery({
@@ -60,7 +61,7 @@ function Page() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-3">
-      <Link to="/admin/peserta" search={Route.useSearch()} className="inline-flex items-center gap-1 text-sm font-semibold text-primary"><ArrowLeft className="size-4" /> Peserta</Link>
+      <Link to="/admin/peserta" search={back} className="inline-flex items-center gap-1 text-sm font-semibold text-primary"><ArrowLeft className="size-4" /> Peserta</Link>
       <h1 className="text-xl font-extrabold text-burgundy-dark md:text-2xl">{profile.full_name}</h1>
       <div className="grid gap-3 lg:grid-cols-[1fr_1.4fr]">
         <Panel title="Profil & Kontak">
