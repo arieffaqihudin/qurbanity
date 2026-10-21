@@ -9,50 +9,448 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as SiteRouteImport } from './routes/_site'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as PortalRouteImport } from './routes/portal'
+import { Route as SiteIndexRouteImport } from './routes/_site.index'
+import { Route as SiteAkadProgramRouteImport } from './routes/_site.akad-program'
+import { Route as SiteCaraKerjaRouteImport } from './routes/_site.cara-kerja'
+import { Route as SiteDampakRouteImport } from './routes/_site.dampak'
+import { Route as SiteFaqRouteImport } from './routes/_site.faq'
+import { Route as SiteKebijakanPrivasiRouteImport } from './routes/_site.kebijakan-privasi'
+import { Route as SiteKontakRouteImport } from './routes/_site.kontak'
+import { Route as SitePilihanSapiRouteImport } from './routes/_site.pilihan-sapi'
+import { Route as SiteSimulasiRouteImport } from './routes/_site.simulasi'
+import { Route as SiteSyaratKetentuanRouteImport } from './routes/_site.syarat-ketentuan'
+import { Route as SiteTentangRouteImport } from './routes/_site.tentang'
+import { Route as SiteVerifikasiRouteImport } from './routes/_site.verifikasi'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminSectionRouteImport } from './routes/admin.$section'
+import { Route as PortalIndexRouteImport } from './routes/portal.index'
+import { Route as PortalSectionRouteImport } from './routes/portal.$section'
 
-const IndexRoute = IndexRouteImport.update({
+const SiteRoute = SiteRouteImport.update({
+  id: '/_site',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortalRoute = PortalRouteImport.update({
+  id: '/portal',
+  path: '/portal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SiteIndexRoute = SiteIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteAkadProgramRoute = SiteAkadProgramRouteImport.update({
+  id: '/akad-program',
+  path: '/akad-program',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteCaraKerjaRoute = SiteCaraKerjaRouteImport.update({
+  id: '/cara-kerja',
+  path: '/cara-kerja',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteDampakRoute = SiteDampakRouteImport.update({
+  id: '/dampak',
+  path: '/dampak',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteFaqRoute = SiteFaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteKebijakanPrivasiRoute = SiteKebijakanPrivasiRouteImport.update({
+  id: '/kebijakan-privasi',
+  path: '/kebijakan-privasi',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteKontakRoute = SiteKontakRouteImport.update({
+  id: '/kontak',
+  path: '/kontak',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SitePilihanSapiRoute = SitePilihanSapiRouteImport.update({
+  id: '/pilihan-sapi',
+  path: '/pilihan-sapi',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteSimulasiRoute = SiteSimulasiRouteImport.update({
+  id: '/simulasi',
+  path: '/simulasi',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteSyaratKetentuanRoute = SiteSyaratKetentuanRouteImport.update({
+  id: '/syarat-ketentuan',
+  path: '/syarat-ketentuan',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteTentangRoute = SiteTentangRouteImport.update({
+  id: '/tentang',
+  path: '/tentang',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteVerifikasiRoute = SiteVerifikasiRouteImport.update({
+  id: '/verifikasi',
+  path: '/verifikasi',
+  getParentRoute: () => SiteRoute,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSectionRoute = AdminSectionRouteImport.update({
+  id: '/$section',
+  path: '/$section',
+  getParentRoute: () => AdminRoute,
+} as any)
+const PortalIndexRoute = PortalIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalSectionRoute = PortalSectionRouteImport.update({
+  id: '/$section',
+  path: '/$section',
+  getParentRoute: () => PortalRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof SiteIndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/portal': typeof PortalRouteWithChildren
+  '/akad-program': typeof SiteAkadProgramRoute
+  '/cara-kerja': typeof SiteCaraKerjaRoute
+  '/dampak': typeof SiteDampakRoute
+  '/faq': typeof SiteFaqRoute
+  '/kebijakan-privasi': typeof SiteKebijakanPrivasiRoute
+  '/kontak': typeof SiteKontakRoute
+  '/pilihan-sapi': typeof SitePilihanSapiRoute
+  '/simulasi': typeof SiteSimulasiRoute
+  '/syarat-ketentuan': typeof SiteSyaratKetentuanRoute
+  '/tentang': typeof SiteTentangRoute
+  '/verifikasi': typeof SiteVerifikasiRoute
+  '/admin/$section': typeof AdminSectionRoute
+  '/portal/$section': typeof PortalSectionRoute
+  '/admin/': typeof AdminIndexRoute
+  '/portal/': typeof PortalIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/akad-program': typeof SiteAkadProgramRoute
+  '/cara-kerja': typeof SiteCaraKerjaRoute
+  '/dampak': typeof SiteDampakRoute
+  '/faq': typeof SiteFaqRoute
+  '/kebijakan-privasi': typeof SiteKebijakanPrivasiRoute
+  '/kontak': typeof SiteKontakRoute
+  '/pilihan-sapi': typeof SitePilihanSapiRoute
+  '/simulasi': typeof SiteSimulasiRoute
+  '/syarat-ketentuan': typeof SiteSyaratKetentuanRoute
+  '/tentang': typeof SiteTentangRoute
+  '/verifikasi': typeof SiteVerifikasiRoute
+  '/admin/$section': typeof AdminSectionRoute
+  '/portal/$section': typeof PortalSectionRoute
+  '/': typeof SiteIndexRoute
+  '/admin': typeof AdminIndexRoute
+  '/portal': typeof PortalIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_site': typeof SiteRouteWithChildren
+  '/admin': typeof AdminRouteWithChildren
+  '/portal': typeof PortalRouteWithChildren
+  '/_site/akad-program': typeof SiteAkadProgramRoute
+  '/_site/cara-kerja': typeof SiteCaraKerjaRoute
+  '/_site/dampak': typeof SiteDampakRoute
+  '/_site/faq': typeof SiteFaqRoute
+  '/_site/kebijakan-privasi': typeof SiteKebijakanPrivasiRoute
+  '/_site/kontak': typeof SiteKontakRoute
+  '/_site/pilihan-sapi': typeof SitePilihanSapiRoute
+  '/_site/simulasi': typeof SiteSimulasiRoute
+  '/_site/syarat-ketentuan': typeof SiteSyaratKetentuanRoute
+  '/_site/tentang': typeof SiteTentangRoute
+  '/_site/verifikasi': typeof SiteVerifikasiRoute
+  '/admin/$section': typeof AdminSectionRoute
+  '/portal/$section': typeof PortalSectionRoute
+  '/_site/': typeof SiteIndexRoute
+  '/admin/': typeof AdminIndexRoute
+  '/portal/': typeof PortalIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/portal'
+    | '/akad-program'
+    | '/cara-kerja'
+    | '/dampak'
+    | '/faq'
+    | '/kebijakan-privasi'
+    | '/kontak'
+    | '/pilihan-sapi'
+    | '/simulasi'
+    | '/syarat-ketentuan'
+    | '/tentang'
+    | '/verifikasi'
+    | '/admin/$section'
+    | '/portal/$section'
+    | '/admin/'
+    | '/portal/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/akad-program'
+    | '/cara-kerja'
+    | '/dampak'
+    | '/faq'
+    | '/kebijakan-privasi'
+    | '/kontak'
+    | '/pilihan-sapi'
+    | '/simulasi'
+    | '/syarat-ketentuan'
+    | '/tentang'
+    | '/verifikasi'
+    | '/admin/$section'
+    | '/portal/$section'
+    | '/'
+    | '/admin'
+    | '/portal'
+  id:
+    | '__root__'
+    | '/_site'
+    | '/admin'
+    | '/portal'
+    | '/_site/akad-program'
+    | '/_site/cara-kerja'
+    | '/_site/dampak'
+    | '/_site/faq'
+    | '/_site/kebijakan-privasi'
+    | '/_site/kontak'
+    | '/_site/pilihan-sapi'
+    | '/_site/simulasi'
+    | '/_site/syarat-ketentuan'
+    | '/_site/tentang'
+    | '/_site/verifikasi'
+    | '/admin/$section'
+    | '/portal/$section'
+    | '/_site/'
+    | '/admin/'
+    | '/portal/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  SiteRoute: typeof SiteRouteWithChildren
+  AdminRoute: typeof AdminRouteWithChildren
+  PortalRoute: typeof PortalRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/_site': {
+      id: '/_site'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof SiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portal': {
+      id: '/portal'
+      path: '/portal'
+      fullPath: '/portal'
+      preLoaderRoute: typeof PortalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_site/': {
+      id: '/_site/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof SiteIndexRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/akad-program': {
+      id: '/_site/akad-program'
+      path: '/akad-program'
+      fullPath: '/akad-program'
+      preLoaderRoute: typeof SiteAkadProgramRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/cara-kerja': {
+      id: '/_site/cara-kerja'
+      path: '/cara-kerja'
+      fullPath: '/cara-kerja'
+      preLoaderRoute: typeof SiteCaraKerjaRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/dampak': {
+      id: '/_site/dampak'
+      path: '/dampak'
+      fullPath: '/dampak'
+      preLoaderRoute: typeof SiteDampakRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/faq': {
+      id: '/_site/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof SiteFaqRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/kebijakan-privasi': {
+      id: '/_site/kebijakan-privasi'
+      path: '/kebijakan-privasi'
+      fullPath: '/kebijakan-privasi'
+      preLoaderRoute: typeof SiteKebijakanPrivasiRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/kontak': {
+      id: '/_site/kontak'
+      path: '/kontak'
+      fullPath: '/kontak'
+      preLoaderRoute: typeof SiteKontakRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/pilihan-sapi': {
+      id: '/_site/pilihan-sapi'
+      path: '/pilihan-sapi'
+      fullPath: '/pilihan-sapi'
+      preLoaderRoute: typeof SitePilihanSapiRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/simulasi': {
+      id: '/_site/simulasi'
+      path: '/simulasi'
+      fullPath: '/simulasi'
+      preLoaderRoute: typeof SiteSimulasiRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/syarat-ketentuan': {
+      id: '/_site/syarat-ketentuan'
+      path: '/syarat-ketentuan'
+      fullPath: '/syarat-ketentuan'
+      preLoaderRoute: typeof SiteSyaratKetentuanRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/tentang': {
+      id: '/_site/tentang'
+      path: '/tentang'
+      fullPath: '/tentang'
+      preLoaderRoute: typeof SiteTentangRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/verifikasi': {
+      id: '/_site/verifikasi'
+      path: '/verifikasi'
+      fullPath: '/verifikasi'
+      preLoaderRoute: typeof SiteVerifikasiRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/$section': {
+      id: '/admin/$section'
+      path: '/$section'
+      fullPath: '/admin/$section'
+      preLoaderRoute: typeof AdminSectionRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/portal/': {
+      id: '/portal/'
+      path: '/'
+      fullPath: '/portal/'
+      preLoaderRoute: typeof PortalIndexRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/$section': {
+      id: '/portal/$section'
+      path: '/$section'
+      fullPath: '/portal/$section'
+      preLoaderRoute: typeof PortalSectionRouteImport
+      parentRoute: typeof PortalRoute
     }
   }
 }
 
+interface SiteRouteChildren {
+  SiteAkadProgramRoute: typeof SiteAkadProgramRoute
+  SiteCaraKerjaRoute: typeof SiteCaraKerjaRoute
+  SiteDampakRoute: typeof SiteDampakRoute
+  SiteFaqRoute: typeof SiteFaqRoute
+  SiteKebijakanPrivasiRoute: typeof SiteKebijakanPrivasiRoute
+  SiteKontakRoute: typeof SiteKontakRoute
+  SitePilihanSapiRoute: typeof SitePilihanSapiRoute
+  SiteSimulasiRoute: typeof SiteSimulasiRoute
+  SiteSyaratKetentuanRoute: typeof SiteSyaratKetentuanRoute
+  SiteTentangRoute: typeof SiteTentangRoute
+  SiteVerifikasiRoute: typeof SiteVerifikasiRoute
+  SiteIndexRoute: typeof SiteIndexRoute
+}
+
+const SiteRouteChildren: SiteRouteChildren = {
+  SiteAkadProgramRoute: SiteAkadProgramRoute,
+  SiteCaraKerjaRoute: SiteCaraKerjaRoute,
+  SiteDampakRoute: SiteDampakRoute,
+  SiteFaqRoute: SiteFaqRoute,
+  SiteKebijakanPrivasiRoute: SiteKebijakanPrivasiRoute,
+  SiteKontakRoute: SiteKontakRoute,
+  SitePilihanSapiRoute: SitePilihanSapiRoute,
+  SiteSimulasiRoute: SiteSimulasiRoute,
+  SiteSyaratKetentuanRoute: SiteSyaratKetentuanRoute,
+  SiteTentangRoute: SiteTentangRoute,
+  SiteVerifikasiRoute: SiteVerifikasiRoute,
+  SiteIndexRoute: SiteIndexRoute,
+}
+
+const SiteRouteWithChildren = SiteRoute._addFileChildren(SiteRouteChildren)
+
+interface AdminRouteChildren {
+  AdminSectionRoute: typeof AdminSectionRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminSectionRoute: AdminSectionRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
+interface PortalRouteChildren {
+  PortalSectionRoute: typeof PortalSectionRoute
+  PortalIndexRoute: typeof PortalIndexRoute
+}
+
+const PortalRouteChildren: PortalRouteChildren = {
+  PortalSectionRoute: PortalSectionRoute,
+  PortalIndexRoute: PortalIndexRoute,
+}
+
+const PortalRouteWithChildren =
+  PortalRoute._addFileChildren(PortalRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  SiteRoute: SiteRouteWithChildren,
+  AdminRoute: AdminRouteWithChildren,
+  PortalRoute: PortalRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
