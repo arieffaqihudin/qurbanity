@@ -21,7 +21,7 @@ export function Section({ id, className, children, tone = "default" }: { id?: st
 export function SectionHeading({ eyebrow, title, intro, align = "left", light }: { eyebrow?: string; title: ReactNode; intro?: ReactNode; align?: "left" | "center"; light?: boolean }) {
   return (
     <div className={cn("mb-8 max-w-2xl md:mb-10", align === "center" && "mx-auto text-center")}>
-      {eyebrow && <p className={cn("eyebrow mb-3", light && "text-rose")}>{eyebrow}</p>}
+      {eyebrow && <p className={cn("eyebrow mb-3", light && "text-cream/90")}>{eyebrow}</p>}
       <h2 className={cn("text-2xl font-extrabold leading-tight tracking-tight md:text-4xl", light ? "text-ivory" : "text-burgundy-dark")}>{title}</h2>
       {intro && <p className={cn("mt-3 text-base leading-relaxed md:text-lg", light ? "text-cream/85" : "text-muted-foreground")}>{intro}</p>}
     </div>
@@ -33,7 +33,7 @@ export function PageHeader({ eyebrow, title, intro, children }: { eyebrow: strin
     <header className="relative overflow-hidden bg-burgundy-gradient text-ivory">
       <div className="pattern-dots absolute inset-0 opacity-40" aria-hidden />
       <div className="container-q relative py-12 md:py-16">
-        <p className="eyebrow mb-3 text-rose">{eyebrow}</p>
+        <p className="eyebrow mb-3 text-cream/90">{eyebrow}</p>
         <h1 className="animate-rise max-w-3xl text-3xl font-extrabold leading-tight tracking-tight md:text-5xl">{title}</h1>
         {intro && <p className="mt-4 max-w-2xl text-base leading-relaxed text-cream/85 md:text-lg">{intro}</p>}
         {children && <div className="mt-6">{children}</div>}

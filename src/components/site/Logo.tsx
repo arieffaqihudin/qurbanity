@@ -17,7 +17,7 @@ export function Logo({ light, className }: { light?: boolean; className?: string
         height={306}
         className="h-7 w-auto transition-transform duration-300 group-hover:-translate-y-0.5 md:h-8"
       />
-      <span className={cn("mt-1 pl-[19%] text-[10px] font-semibold tracking-wide md:text-[11px]", light ? "text-rose" : "text-muted-foreground")}>
+      <span className={cn("mt-1 whitespace-nowrap pl-[19%] text-[10px] font-semibold tracking-wide md:text-[11px]", light ? "text-rose" : "text-muted-foreground")}>
         by Manfaat Mengalir
       </span>
     </Link>

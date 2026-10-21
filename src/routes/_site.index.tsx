@@ -32,7 +32,7 @@ function Home() {
         <img src={heroImg} alt="Sapi merumput di padang hijau saat senja" width={1600} height={1008} className="absolute inset-0 -z-10 h-full w-full object-cover" />
         <div className="bg-hero-overlay absolute inset-0 -z-10" aria-hidden />
         <div className="container-q py-20 text-ivory md:py-28 lg:py-32">
-          <p className="eyebrow animate-rise mb-4 text-rose">Mulai dikit, jadi kurban</p>
+          <p className="eyebrow animate-rise mb-4 text-cream">Mulai dikit, jadi kurban</p>
           <h1 className="animate-rise max-w-2xl text-4xl font-extrabold leading-[1.1] tracking-tight md:text-6xl">
             Kurban gak harus dadakan.
           </h1>
