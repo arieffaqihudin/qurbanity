@@ -36,10 +36,10 @@ function Home() {
         <div className="bg-hero-overlay absolute inset-0 -z-10" aria-hidden />
         {/* Depth: photo and clouds drift slower than the page; the foreground hill and text stay anchored. */}
         <ParallaxLayer speed={0.08} className="absolute inset-x-0 top-6 -z-10 hidden md:block">
-          <svg viewBox="0 0 1200 120" className="h-24 w-full opacity-25" fill="var(--color-ivory)"><ellipse cx="180" cy="60" rx="120" ry="22" /><ellipse cx="260" cy="48" rx="70" ry="20" /><ellipse cx="900" cy="40" rx="140" ry="18" /><ellipse cx="990" cy="30" rx="70" ry="16" /></svg>
+          <svg viewBox="0 0 1200 120" className="h-24 w-full fill-ivory opacity-25"><ellipse cx="180" cy="60" rx="120" ry="22" /><ellipse cx="260" cy="48" rx="70" ry="20" /><ellipse cx="900" cy="40" rx="140" ry="18" /><ellipse cx="990" cy="30" rx="70" ry="16" /></svg>
         </ParallaxLayer>
         <div aria-hidden className="pointer-events-none absolute inset-x-0 -bottom-px z-0">
-          <svg viewBox="0 0 1440 80" preserveAspectRatio="none" className="block h-10 w-full md:h-16" fill="var(--color-background)"><path d="M0 60 Q240 20 480 44 T960 38 T1440 30 V80 H0Z" /></svg>
+          <svg viewBox="0 0 1440 80" preserveAspectRatio="none" className="block h-10 w-full fill-background md:h-16"><path d="M0 60 Q240 20 480 44 T960 38 T1440 30 V80 H0Z" /></svg>
         </div>
         <div className="container-q relative z-10 pb-24 pt-20 text-ivory md:pb-36 md:pt-28 lg:pt-32">
           <p className="eyebrow animate-rise mb-4 text-cream">Mulai dikit, jadi kurban</p>
