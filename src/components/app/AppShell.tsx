@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { Link, Outlet } from "@tanstack/react-router";
-import { Menu, LogOut, X } from "lucide-react";
+import { Menu, LogOut } from "lucide-react";
+import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/site/Logo";
 import type { ShellItem } from "@/lib/navigation";
@@ -47,20 +48,19 @@ export function AppShell({ base, title, items }: Props) {
   );
 
   return (
-    <div className="min-h-screen bg-background lg:grid lg:grid-cols-[17rem_1fr]">
-      <aside className="sticky top-0 hidden h-screen lg:block">{sidebar()}</aside>
-      {open && (
-        <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label={title}>
-          <button className="absolute inset-0 bg-charcoal/50" aria-label="Tutup menu" onClick={() => setOpen(false)} />
-          <div className="animate-rise relative h-full w-72 shadow-lift">
-            {sidebar(() => setOpen(false))}
-            <Button variant="ghost" size="icon" className="absolute right-2 top-3 text-sidebar-foreground hover:bg-sidebar-accent" aria-label="Tutup menu" onClick={() => setOpen(false)}><X /></Button>
-          </div>
-        </div>
-      )}
+    <div className="min-h-dvh bg-background lg:grid lg:grid-cols-[17rem_1fr]">
+      <a href="#app-main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground">Lewati ke konten</a>
+      <aside className="sticky top-0 hidden h-dvh lg:block">{sidebar()}</aside>
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetContent side="left" className="w-72 border-0 p-0 [&>button]:text-sidebar-foreground">
+          <SheetTitle className="sr-only">{title}</SheetTitle>
+          <SheetDescription className="sr-only">Menu navigasi</SheetDescription>
+          {sidebar(() => setOpen(false))}
+        </SheetContent>
+      </Sheet>
       <div className="flex min-w-0 flex-col">
         <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border bg-ivory/90 px-4 backdrop-blur md:px-8">
-          <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Buka menu" onClick={() => setOpen(true)}><Menu /></Button>
+          <Button variant="ghost" size="icon" className="min-h-11 min-w-11 lg:hidden" aria-label="Buka menu" aria-expanded={open} onClick={() => setOpen(true)}><Menu /></Button>
           <p className="font-bold text-burgundy-dark">{title}</p>
           <span className="ml-auto rounded-full bg-gold/20 px-3 py-1 text-xs font-bold text-gold-foreground">Pratinjau tata letak</span>
         </header>

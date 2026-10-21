@@ -40,7 +40,7 @@ export function Simulator({ compact }: { compact?: boolean }) {
                   aria-pressed={active}
                   onClick={() => pickCat(c.id)}
                   className={cn(
-                    "rounded-xl border-2 p-3 text-left transition-all",
+                    "min-h-16 rounded-xl border-2 p-3 text-left transition-all",
                     active ? "border-primary bg-primary/5" : "border-border hover:border-primary/40",
                     !avail && "cursor-not-allowed opacity-60",
                   )}
@@ -71,15 +71,14 @@ export function Simulator({ compact }: { compact?: boolean }) {
 
         <fieldset>
           <legend className="mb-3 text-sm font-bold text-burgundy-dark">3. Frekuensi pembayaran</legend>
-          <div role="radiogroup" className="inline-flex rounded-full bg-muted p-1">
+          <div className="grid grid-cols-3 rounded-full bg-muted p-1 sm:inline-grid">
             {(Object.keys(FREQUENCY_LABEL) as Frequency[]).map((f) => (
               <button
                 key={f}
                 type="button"
-                role="radio"
-                aria-checked={freq === f}
+                aria-pressed={freq === f}
                 onClick={() => setFreq(f)}
-                className={cn("rounded-full px-4 py-2 text-sm font-semibold transition-all", freq === f ? "bg-primary text-primary-foreground shadow" : "text-muted-foreground hover:text-foreground")}
+                className={cn("min-h-11 rounded-full px-4 py-2 text-sm font-semibold transition-all", freq === f ? "bg-primary text-primary-foreground shadow" : "text-muted-foreground hover:text-foreground")}
               >
                 {FREQUENCY_LABEL[f]}
               </button>
@@ -92,7 +91,9 @@ export function Simulator({ compact }: { compact?: boolean }) {
         <div className="pattern-dots absolute inset-0 opacity-30" aria-hidden />
         <div className="relative" aria-live="polite">
           <p className="text-sm font-semibold text-gold">Estimasi cicilan {FREQUENCY_LABEL[freq].toLowerCase()}</p>
-          {result ? (
+          {result && result.daysLeft === 0 ? (
+            <p className="mt-2 text-lg">Batas pelunasan periode ini telah lewat. Simulasi untuk periode berikutnya akan dibuka setelah jadwal baru diumumkan.</p>
+          ) : result ? (
             <>
               <p className="mt-1 text-4xl font-extrabold tabular-nums md:text-5xl">{formatRupiah(result.perPeriod)}</p>
               <p className="mt-1 text-sm text-cream/80">selama ± {formatNumber(result.periods)} {FREQUENCY_UNIT[freq]}</p>
@@ -108,9 +109,9 @@ export function Simulator({ compact }: { compact?: boolean }) {
         </div>
         <div className="relative space-y-3">
           <Button variant="gold" size="lg" className="w-full" asChild>
-            <Link to="/portal">Mulai Komitmen <ArrowRight /></Link>
+            <Link to="/portal">Lanjut ke Portal Peserta <ArrowRight /></Link>
           </Button>
-          <p className="text-xs text-cream/70">Nominal setoran tetap fleksibel. Estimasi ini hanya panduan.</p>
+          <p className="text-xs text-cream/70">Nominal setoran tetap fleksibel. Estimasi ini hanya panduan. Pendaftaran & akad dibuka pada tahap berikutnya.</p>
         </div>
       </div>
       {!compact && (
