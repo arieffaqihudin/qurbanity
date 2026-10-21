@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Search, ShieldQuestion } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,7 +18,7 @@ function Page() {
   const [code, setCode] = useState("");
   const [state, setState] = useState<"idle" | "invalid" | "pending">("idle");
 
-  const submit = (e: React.FormEvent) => {
+  const submit = (e: FormEvent) => {
     e.preventDefault();
     const c = code.trim().toUpperCase();
     setState(CODE_RE.test(c) ? "pending" : "invalid");

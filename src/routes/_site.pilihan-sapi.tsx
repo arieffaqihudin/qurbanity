@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Check, Minus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -53,7 +54,7 @@ function Page() {
   );
 }
 
-function Row({ label, cells, strong }: { label: string; cells: React.ReactNode[]; strong?: boolean }) {
+function Row({ label, cells, strong }: { label: string; cells: ReactNode[]; strong?: boolean }) {
   return (
     <tr>
       <th scope="row" className="p-4 font-semibold text-muted-foreground">{label}</th>
