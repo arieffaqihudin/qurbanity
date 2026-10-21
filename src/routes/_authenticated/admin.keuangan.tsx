@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { PageHead, Panel, Guard, Loading, Failure, ProgramFilter, Tag, NativeSelect, PendingIntegration } from "@/components/admin/ui";
 import { LedgerTable, Balances } from "@/components/admin/finance";
 import { rpc, LEDGER_LABEL } from "@/lib/admin";
-import { formatRupiah, formatDate } from "@/lib/format";
+import { formatRupiah } from "@/lib/format";
 
 export const Route = createFileRoute("/_authenticated/admin/keuangan")({
   head: () => ({ meta: [{ title: "Rekonsiliasi Keuangan | Admin qurbanity" }, { name: "robots", content: "noindex" }] }),
