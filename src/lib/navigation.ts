@@ -27,7 +27,7 @@ export const PORTAL_NAV: ShellItem[] = [
   { slug: "kurban-saya", label: "Kurban Saya", icon: HeartHandshake, description: "Daftar komitmen kurban dengan harga terkunci saat akad." },
   { slug: "bayar", label: "Bayar", icon: Wallet, description: "Pembayaran cicilan dengan nominal fleksibel." },
   { slug: "aktivitas", label: "Aktivitas & Riwayat", icon: History, description: "Riwayat transaksi dan aktivitas akun." },
-  { slug: "dokumentasi", label: "Dokumentasi", icon: Camera, description: "Foto dan video perjalanan hewan kurban Anda." },
+  { slug: "dokumentasi", label: "Dokumentasi", icon: Camera, description: "Foto dan video perjalanan hewan kurbanmu." },
   { slug: "laporan", label: "Laporan", icon: FileText, description: "Laporan pelaksanaan dan distribusi kurban." },
   { slug: "akun", label: "Akun & Profil", icon: UserCircle, description: "Data diri, keamanan akun, dan persetujuan publikasi." },
 ];

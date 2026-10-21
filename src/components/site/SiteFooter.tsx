@@ -19,7 +19,7 @@ export function SiteFooter() {
         </div>
         {cols.map((c) => (
           <div key={c.title}>
-            <p className="mb-3 text-sm font-bold text-gold">{c.title}</p>
+            <p className="mb-3 text-sm font-bold text-rose">{c.title}</p>
             <ul className="space-y-2">
               {c.links.map(([to, label]) => (
                 <li key={to}><Link to={to} className="text-sm text-cream/80 transition-colors hover:text-ivory">{label}</Link></li>

@@ -62,7 +62,7 @@ export function AppShell({ base, title, items }: Props) {
         <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border bg-ivory/90 px-4 backdrop-blur md:px-8">
           <Button variant="ghost" size="icon" className="min-h-11 min-w-11 lg:hidden" aria-label="Buka menu" aria-expanded={open} onClick={() => setOpen(true)}><Menu /></Button>
           <p className="font-bold text-burgundy-dark">{title}</p>
-          <span className="ml-auto rounded-full bg-gold/20 px-3 py-1 text-xs font-bold text-gold-foreground">Pratinjau tata letak</span>
+          <span className="ml-auto rounded-full bg-beige/60 px-3 py-1 text-xs font-bold text-burgundy-dark">Pratinjau tata letak</span>
         </header>
         <main className="flex-1 p-4 md:p-8"><Outlet /></main>
       </div>

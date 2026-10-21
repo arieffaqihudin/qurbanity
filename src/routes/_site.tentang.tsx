@@ -4,19 +4,19 @@ import { PageHeader, Section, SectionHeading } from "@/components/site/primitive
 import { seo } from "@/lib/seo";
 
 export const Route = createFileRoute("/_site/tentang")({
-  head: () => seo("Tentang Kami", "Mengenal Manfaat Mengalir dan inisiatif QURBANITY untuk memudahkan umat menunaikan ibadah kurban."),
+  head: () => seo("Tentang Kami", "Mengenal Manfaat Mengalir dan inisiatif qurbanity untuk memudahkan umat menunaikan ibadah kurban."),
   component: Page,
 });
 
 function Page() {
   return (
     <>
-      <PageHeader eyebrow="Tentang kami" title="Manfaat yang terus mengalir" intro="QURBANITY lahir dari keyakinan bahwa setiap Muslim yang berniat kurban layak mendapatkan jalan yang mudah, amanah, dan transparan." />
+      <PageHeader eyebrow="Tentang kami" title="Manfaat yang terus mengalir" intro="qurbanity lahir dari keyakinan bahwa setiap Muslim yang berniat kurban layak mendapatkan jalan yang mudah, amanah, dan transparan." />
       <Section>
         <div className="grid gap-10 lg:grid-cols-2">
           <div className="space-y-4 text-lg leading-relaxed text-muted-foreground">
             <p><strong className="text-burgundy-dark">Manfaat Mengalir</strong> adalah inisiatif sosial-keagamaan yang berfokus pada program kebaikan berkelanjutan.</p>
-            <p>Banyak keluarga ingin berkurban, namun terkendala harga yang harus dibayar sekaligus. QURBANITY membantu mewujudkan niat itu melalui komitmen bertahap dengan harga yang dikunci sejak awal.</p>
+            <p>Banyak keluarga ingin berkurban, namun terkendala harga yang harus dibayar sekaligus. qurbanity membantu mewujudkan niat itu melalui komitmen bertahap dengan harga yang dikunci sejak awal.</p>
             <p>Kami menjaga amanah dengan pencatatan yang rapi, verifikasi setiap pembayaran, dan laporan pelaksanaan yang dapat diakses peserta.</p>
           </div>
           <div className="grid gap-4">

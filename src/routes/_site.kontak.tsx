@@ -9,7 +9,7 @@ import { PageHeader, Section, Notice } from "@/components/site/primitives";
 import { seo } from "@/lib/seo";
 
 export const Route = createFileRoute("/_site/kontak")({
-  head: () => seo("Kontak", "Hubungi tim QURBANITY untuk pertanyaan seputar program kurban bertahap."),
+  head: () => seo("Kontak", "Hubungi tim qurbanity untuk pertanyaan seputar program kurban bertahap."),
   component: Page,
 });
 
@@ -17,7 +17,7 @@ function Page() {
   const [sent, setSent] = useState(false);
   return (
     <>
-      <PageHeader eyebrow="Kontak" title="Kami siap membantu" intro="Sampaikan pertanyaan Anda tentang program, pembayaran, atau pelaksanaan kurban." />
+      <PageHeader eyebrow="Kontak" title="Kami siap membantu" intro="Sampaikan pertanyaanmu tentang program, pembayaran, atau pelaksanaan kurban." />
       <Section>
         <div className="grid gap-8 lg:grid-cols-[1fr_1.4fr]">
           <div className="space-y-4">
@@ -39,7 +39,7 @@ function Page() {
             </div>
             <div><Label htmlFor="pesan">Pesan</Label><Textarea id="pesan" required rows={5} className="mt-1.5" /></div>
             <Button type="submit" size="lg">Kirim pesan</Button>
-            {sent && <Notice kind="info">Formulir belum terhubung ke sistem. Pesan Anda belum terkirim; silakan hubungi kami melalui kanal resmi setelah diumumkan.</Notice>}
+            {sent && <Notice kind="info">Formulir belum terhubung ke sistem. Pesanmu belum terkirim; silakan hubungi kami melalui kanal resmi setelah diumumkan.</Notice>}
           </form>
         </div>
       </Section>

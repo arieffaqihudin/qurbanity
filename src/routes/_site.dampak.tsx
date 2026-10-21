@@ -4,7 +4,7 @@ import { formatNumber } from "@/lib/format";
 import { seo } from "@/lib/seo";
 
 export const Route = createFileRoute("/_site/dampak")({
-  head: () => seo("Laporan Dampak", "Laporan dampak program kurban QURBANITY: jumlah pekurban, hewan, paket daging, dan wilayah penerima."),
+  head: () => seo("Laporan Dampak", "Laporan dampak program kurban qurbanity: jumlah pekurban, hewan, paket daging, dan wilayah penerima."),
   component: Page,
 });
 

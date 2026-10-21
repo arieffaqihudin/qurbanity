@@ -90,7 +90,7 @@ export function Simulator({ compact }: { compact?: boolean }) {
       <div className="relative flex flex-col justify-between gap-6 bg-burgundy-gradient p-5 text-ivory md:p-8">
         <div className="pattern-dots absolute inset-0 opacity-30" aria-hidden />
         <div className="relative" aria-live="polite">
-          <p className="text-sm font-semibold text-gold">Estimasi cicilan {FREQUENCY_LABEL[freq].toLowerCase()}</p>
+          <p className="text-sm font-semibold text-rose">Estimasi cicilan {FREQUENCY_LABEL[freq].toLowerCase()}</p>
           {result && result.daysLeft === 0 ? (
             <p className="mt-2 text-lg">Batas pelunasan periode ini telah lewat. Simulasi untuk periode berikutnya akan dibuka setelah jadwal baru diumumkan.</p>
           ) : result ? (
@@ -108,7 +108,7 @@ export function Simulator({ compact }: { compact?: boolean }) {
           )}
         </div>
         <div className="relative space-y-3">
-          <Button variant="gold" size="lg" className="w-full" asChild>
+          <Button variant="ivory" size="lg" className="w-full" asChild>
             <Link to="/portal">Lanjut ke Portal Peserta <ArrowRight /></Link>
           </Button>
           <p className="text-xs text-cream/70">Nominal setoran tetap fleksibel. Estimasi ini hanya panduan. Pendaftaran & akad dibuka pada tahap berikutnya.</p>

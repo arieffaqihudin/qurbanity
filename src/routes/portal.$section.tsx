@@ -9,7 +9,7 @@ export const Route = createFileRoute("/portal/$section")({
     return { slug: item.slug };
   },
   head: ({ loaderData }) => ({
-    meta: [{ title: `${PORTAL_NAV.find((n) => n.slug === loaderData?.slug)?.label ?? "Halaman"} | Portal Peserta QURBANITY` }, { name: "robots", content: "noindex" }],
+    meta: [{ title: `${PORTAL_NAV.find((n) => n.slug === loaderData?.slug)?.label ?? "Halaman"} | Portal Peserta qurbanity` }, { name: "robots", content: "noindex" }],
   }),
   component: Page,
 });
