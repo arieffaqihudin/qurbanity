@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Plus } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { PageHead, Panel, Guard, Loading, Failure, ProgramFilter, DataTable, Tag, Field, ConfirmAction } from "@/components/admin/ui";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { rpc, useAdmin, programsQuery } from "@/lib/admin";
+import { rpc, useAdmin } from "@/lib/admin";
+import { useCatalog, useDefaultProgram, type CatalogCategory } from "@/lib/admin-hooks";
 import { formatRupiah } from "@/lib/format";
 
 export const Route = createFileRoute("/_authenticated/admin/sapi")({
@@ -17,34 +17,7 @@ export const Route = createFileRoute("/_authenticated/admin/sapi")({
   component: () => <Guard perms="catalog.view"><Page /></Guard>,
 });
 
-type Cat = { id: string; program_id: string; code: string; name: string; kind: "sapi" | "kambing"; max_shares: number; weight_range: string | null; description: string | null; is_available: boolean; sort_order: number };
-type Price = { id: string; category_id: string; animal_cost: number; operational_cost: number; is_final: boolean; effective_from: string; created_at: string };
-
-export function useCatalog(program: string) {
-  return useQuery({
-    queryKey: ["admin", "catalog", program], enabled: !!program,
-    queryFn: async () => {
-      const c = await supabase.from("animal_categories").select("*").eq("program_id", program).order("sort_order");
-      if (c.error) throw new Error(c.error.message);
-      const p = await supabase.from("animal_prices").select("*").in("category_id", (c.data ?? []).map((x) => x.id)).order("effective_from", { ascending: false }).order("created_at", { ascending: false });
-      if (p.error) throw new Error(p.error.message);
-      const now = Date.now();
-      return (c.data as Cat[]).map((cat) => {
-        const prices = (p.data as Price[]).filter((x) => x.category_id === cat.id);
-        const final = prices.find((x) => x.is_final && new Date(x.effective_from).getTime() <= now) ?? null;
-        const latest = prices[0] ?? null;
-        return { ...cat, prices, final, latest };
-      });
-    },
-  });
-}
-
-export function useDefaultProgram() {
-  const programs = useQuery(programsQuery);
-  const [program, setProgram] = useState("");
-  const value = program || programs.data?.find((p) => p.status === "open")?.id || programs.data?.[0]?.id || "";
-  return [value, setProgram] as const;
-}
+type Cat = CatalogCategory;
 
 function Page() {
   const { can } = useAdmin();

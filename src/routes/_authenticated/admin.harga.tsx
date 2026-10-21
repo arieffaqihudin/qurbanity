@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { rpc, useAdmin } from "@/lib/admin";
 import { quote } from "@/lib/pricing";
 import { formatRupiah, formatDate } from "@/lib/format";
-import { useCatalog, useDefaultProgram } from "./admin.sapi";
+import { useCatalog, useDefaultProgram } from "@/lib/admin-hooks";
 
 export const Route = createFileRoute("/_authenticated/admin/harga")({
   head: () => ({ meta: [{ title: "Harga & Riwayat | Admin qurbanity" }, { name: "robots", content: "noindex" }] }),
