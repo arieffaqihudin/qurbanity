@@ -31,7 +31,9 @@ import { Route as SiteTentangRouteImport } from './routes/_site.tentang'
 import { Route as SiteVerifikasiRouteImport } from './routes/_site.verifikasi'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminSectionRouteImport } from './routes/_authenticated/admin.$section'
+import { Route as AuthenticatedAdminAlokasiRouteImport } from './routes/_authenticated/admin.alokasi'
 import { Route as AuthenticatedAdminHargaRouteImport } from './routes/_authenticated/admin.harga'
+import { Route as AuthenticatedAdminPengumumanRouteImport } from './routes/_authenticated/admin.pengumuman'
 import { Route as AuthenticatedAdminProgramRouteImport } from './routes/_authenticated/admin.program'
 import { Route as AuthenticatedAdminSapiRouteImport } from './routes/_authenticated/admin.sapi'
 import { Route as AuthenticatedPortalIndexRouteImport } from './routes/_authenticated/portal.index'
@@ -152,11 +154,23 @@ const AuthenticatedAdminSectionRoute =
     path: '/$section',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminAlokasiRoute =
+  AuthenticatedAdminAlokasiRouteImport.update({
+    id: '/alokasi',
+    path: '/alokasi',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminHargaRoute = AuthenticatedAdminHargaRouteImport.update({
   id: '/harga',
   path: '/harga',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminPengumumanRoute =
+  AuthenticatedAdminPengumumanRouteImport.update({
+    id: '/pengumuman',
+    path: '/pengumuman',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminProgramRoute =
   AuthenticatedAdminProgramRouteImport.update({
     id: '/program',
@@ -236,7 +250,9 @@ export interface FileRoutesByFullPath {
   '/tentang': typeof SiteTentangRoute
   '/verifikasi': typeof SiteVerifikasiRoute
   '/admin/$section': typeof AuthenticatedAdminSectionRoute
+  '/admin/alokasi': typeof AuthenticatedAdminAlokasiRoute
   '/admin/harga': typeof AuthenticatedAdminHargaRoute
+  '/admin/pengumuman': typeof AuthenticatedAdminPengumumanRoute
   '/admin/program': typeof AuthenticatedAdminProgramRoute
   '/admin/sapi': typeof AuthenticatedAdminSapiRoute
   '/portal/$section': typeof AuthenticatedPortalSectionRoute
@@ -267,7 +283,9 @@ export interface FileRoutesByTo {
   '/tentang': typeof SiteTentangRoute
   '/verifikasi': typeof SiteVerifikasiRoute
   '/admin/$section': typeof AuthenticatedAdminSectionRoute
+  '/admin/alokasi': typeof AuthenticatedAdminAlokasiRoute
   '/admin/harga': typeof AuthenticatedAdminHargaRoute
+  '/admin/pengumuman': typeof AuthenticatedAdminPengumumanRoute
   '/admin/program': typeof AuthenticatedAdminProgramRoute
   '/admin/sapi': typeof AuthenticatedAdminSapiRoute
   '/portal/$section': typeof AuthenticatedPortalSectionRoute
@@ -303,7 +321,9 @@ export interface FileRoutesById {
   '/_site/verifikasi': typeof SiteVerifikasiRoute
   '/_site/': typeof SiteIndexRoute
   '/_authenticated/admin/$section': typeof AuthenticatedAdminSectionRoute
+  '/_authenticated/admin/alokasi': typeof AuthenticatedAdminAlokasiRoute
   '/_authenticated/admin/harga': typeof AuthenticatedAdminHargaRoute
+  '/_authenticated/admin/pengumuman': typeof AuthenticatedAdminPengumumanRoute
   '/_authenticated/admin/program': typeof AuthenticatedAdminProgramRoute
   '/_authenticated/admin/sapi': typeof AuthenticatedAdminSapiRoute
   '/_authenticated/portal/$section': typeof AuthenticatedPortalSectionRoute
@@ -338,7 +358,9 @@ export interface FileRouteTypes {
     | '/tentang'
     | '/verifikasi'
     | '/admin/$section'
+    | '/admin/alokasi'
     | '/admin/harga'
+    | '/admin/pengumuman'
     | '/admin/program'
     | '/admin/sapi'
     | '/portal/$section'
@@ -369,7 +391,9 @@ export interface FileRouteTypes {
     | '/tentang'
     | '/verifikasi'
     | '/admin/$section'
+    | '/admin/alokasi'
     | '/admin/harga'
+    | '/admin/pengumuman'
     | '/admin/program'
     | '/admin/sapi'
     | '/portal/$section'
@@ -404,7 +428,9 @@ export interface FileRouteTypes {
     | '/_site/verifikasi'
     | '/_site/'
     | '/_authenticated/admin/$section'
+    | '/_authenticated/admin/alokasi'
     | '/_authenticated/admin/harga'
+    | '/_authenticated/admin/pengumuman'
     | '/_authenticated/admin/program'
     | '/_authenticated/admin/sapi'
     | '/_authenticated/portal/$section'
@@ -583,11 +609,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSectionRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/alokasi': {
+      id: '/_authenticated/admin/alokasi'
+      path: '/alokasi'
+      fullPath: '/admin/alokasi'
+      preLoaderRoute: typeof AuthenticatedAdminAlokasiRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/harga': {
       id: '/_authenticated/admin/harga'
       path: '/harga'
       fullPath: '/admin/harga'
       preLoaderRoute: typeof AuthenticatedAdminHargaRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/pengumuman': {
+      id: '/_authenticated/admin/pengumuman'
+      path: '/pengumuman'
+      fullPath: '/admin/pengumuman'
+      preLoaderRoute: typeof AuthenticatedAdminPengumumanRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/program': {
@@ -665,7 +705,9 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminSectionRoute: typeof AuthenticatedAdminSectionRoute
+  AuthenticatedAdminAlokasiRoute: typeof AuthenticatedAdminAlokasiRoute
   AuthenticatedAdminHargaRoute: typeof AuthenticatedAdminHargaRoute
+  AuthenticatedAdminPengumumanRoute: typeof AuthenticatedAdminPengumumanRoute
   AuthenticatedAdminProgramRoute: typeof AuthenticatedAdminProgramRoute
   AuthenticatedAdminSapiRoute: typeof AuthenticatedAdminSapiRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
@@ -675,7 +717,9 @@ interface AuthenticatedAdminRouteChildren {
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminSectionRoute: AuthenticatedAdminSectionRoute,
+  AuthenticatedAdminAlokasiRoute: AuthenticatedAdminAlokasiRoute,
   AuthenticatedAdminHargaRoute: AuthenticatedAdminHargaRoute,
+  AuthenticatedAdminPengumumanRoute: AuthenticatedAdminPengumumanRoute,
   AuthenticatedAdminProgramRoute: AuthenticatedAdminProgramRoute,
   AuthenticatedAdminSapiRoute: AuthenticatedAdminSapiRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
