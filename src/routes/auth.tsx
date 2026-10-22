@@ -10,7 +10,7 @@ import { PasswordInput } from "@/components/auth/PasswordInput";
 import { supabase } from "@/integrations/supabase/client";
 import { authErrorMessage } from "@/lib/validation";
 
-const search = z.object({ redirect: z.string().optional(), verified: z.coerce.boolean().optional() });
+const search = z.object({ redirect: z.string().optional(), verified: z.coerce.boolean().optional(), activated: z.coerce.boolean().optional() });
 
 export const Route = createFileRoute("/auth")({
   validateSearch: search,
@@ -44,7 +44,7 @@ async function resolveDestination(redirect?: string): Promise<string> {
 }
 
 function LoginPage() {
-  const { redirect: dest, verified } = Route.useSearch();
+  const { redirect: dest, verified, activated } = Route.useSearch();
   const navigate = useNavigate();
   // SSR renders this page before the browser session is readable; re-check on the client
   // so an already-signed-in user (refresh or direct visit) is routed by role.
@@ -75,6 +75,7 @@ function LoginPage() {
     <AuthShell title="Masuk" subtitle="Lanjutkan perjalanan kurbanmu.">
       <form onSubmit={submit} className="space-y-4" noValidate>
         {verified && <FormAlert kind="success">Email berhasil diverifikasi. Silakan masuk.</FormAlert>}
+        {activated && <FormAlert kind="success">Akun berhasil diaktifkan. Silakan masuk menggunakan email dan kata sandi Anda.</FormAlert>}
         {error && <FormAlert kind="error">{error}</FormAlert>}
         <div>
           <Label htmlFor="email">Email</Label>

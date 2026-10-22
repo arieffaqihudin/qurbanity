@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as SiteRouteImport } from './routes/_site'
+import { Route as AktivasiAkunRouteImport } from './routes/aktivasi-akun'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as DaftarRouteImport } from './routes/daftar'
 import { Route as LupaPasswordRouteImport } from './routes/lupa-password'
@@ -60,6 +61,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 } as any)
 const SiteRoute = SiteRouteImport.update({
   id: '/_site',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AktivasiAkunRoute = AktivasiAkunRouteImport.update({
+  id: '/aktivasi-akun',
+  path: '/aktivasi-akun',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -294,6 +300,7 @@ const AuthenticatedPortalKurbanSayaIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof SiteIndexRoute
+  '/aktivasi-akun': typeof AktivasiAkunRoute
   '/auth': typeof AuthRoute
   '/daftar': typeof DaftarRoute
   '/lupa-password': typeof LupaPasswordRoute
@@ -338,6 +345,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof SiteIndexRoute
+  '/aktivasi-akun': typeof AktivasiAkunRoute
   '/auth': typeof AuthRoute
   '/daftar': typeof DaftarRoute
   '/lupa-password': typeof LupaPasswordRoute
@@ -382,6 +390,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/_site': typeof SiteRouteWithChildren
+  '/aktivasi-akun': typeof AktivasiAkunRoute
   '/auth': typeof AuthRoute
   '/daftar': typeof DaftarRoute
   '/lupa-password': typeof LupaPasswordRoute
@@ -429,6 +438,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/aktivasi-akun'
     | '/auth'
     | '/daftar'
     | '/lupa-password'
@@ -473,6 +483,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/aktivasi-akun'
     | '/auth'
     | '/daftar'
     | '/lupa-password'
@@ -516,6 +527,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_authenticated'
     | '/_site'
+    | '/aktivasi-akun'
     | '/auth'
     | '/daftar'
     | '/lupa-password'
@@ -563,6 +575,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   SiteRoute: typeof SiteRouteWithChildren
+  AktivasiAkunRoute: typeof AktivasiAkunRoute
   AuthRoute: typeof AuthRoute
   DaftarRoute: typeof DaftarRoute
   LupaPasswordRoute: typeof LupaPasswordRoute
@@ -583,6 +596,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof SiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/aktivasi-akun': {
+      id: '/aktivasi-akun'
+      path: '/aktivasi-akun'
+      fullPath: '/aktivasi-akun'
+      preLoaderRoute: typeof AktivasiAkunRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -997,6 +1017,7 @@ const SiteRouteWithChildren = SiteRoute._addFileChildren(SiteRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   SiteRoute: SiteRouteWithChildren,
+  AktivasiAkunRoute: AktivasiAkunRoute,
   AuthRoute: AuthRoute,
   DaftarRoute: DaftarRoute,
   LupaPasswordRoute: LupaPasswordRoute,
