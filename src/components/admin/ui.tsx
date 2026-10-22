@@ -1,17 +1,20 @@
-import { useState, type ReactNode } from "react";
+import { Fragment, useEffect, useState, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowUp, ArrowDown, ArrowUpDown, Loader2, ShieldAlert, AlertTriangle, Search, Plug, ChevronLeft, ChevronRight, Inbox } from "lucide-react";
+import { ArrowUp, ArrowDown, ArrowUpDown, Loader2, ShieldAlert, AlertTriangle, Search, Plug, ChevronLeft, ChevronRight, Inbox, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { adminItem, adminHubOf } from "@/lib/navigation";
 import { programsQuery, PROGRAM_STATUS_LABEL, useAdmin } from "@/lib/admin";
 import { cn } from "@/lib/utils";
 
-export function PageHead({ to, actions, children }: { to: string; actions?: ReactNode; children?: ReactNode }) {
+const num = (n: number) => new Intl.NumberFormat("id-ID").format(n);
+
+export function PageHead({ to, actions, count, children }: { to: string; actions?: ReactNode; count?: number; children?: ReactNode }) {
   const it = adminItem(to);
   const found = adminHubOf(to);
   const { can } = useAdmin();
@@ -28,7 +31,10 @@ export function PageHead({ to, actions, children }: { to: string; actions?: Reac
       )}
       <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-3 sm:flex sm:flex-wrap">
         <div className="min-w-0 flex-1">
-          <h1 className="text-xl font-extrabold text-burgundy-dark md:text-2xl">{title}</h1>
+          <h1 className="text-xl font-extrabold text-burgundy-dark md:text-2xl">
+            {title}
+            {count !== undefined && <span className="ml-2 align-middle text-sm font-semibold text-muted-foreground">(Total {num(count)})</span>}
+          </h1>
           <p className="text-sm text-muted-foreground">{it.description}</p>
           {children}
         </div>
@@ -69,7 +75,7 @@ export function Unauthorized() {
 
 export function Panel({ title, action, children, className, dense, id }: { title?: ReactNode; action?: ReactNode; children: ReactNode; className?: string; dense?: boolean; id?: string }) {
   return (
-    <section id={id} className={cn("rounded-xl border border-border bg-card", dense ? "p-3" : "p-4", className)}>
+    <section id={id} className={cn("rounded-2xl border border-border bg-card", dense ? "p-3" : "p-4", className)}>
       {(title || action) && (
         <div className="mb-3 flex flex-wrap items-center gap-2">
           {title && <h2 className="text-sm font-extrabold text-burgundy-dark md:text-base">{title}</h2>}
@@ -89,7 +95,7 @@ export function Kpi({ label, value, hint, to, tone }: { label: string; value: Re
       {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
     </>
   );
-  const cls = cn("block rounded-xl border bg-card p-3", tone === "attention" ? "border-warning/50 bg-warning/5" : "border-border");
+  const cls = cn("block rounded-2xl border bg-card p-3", tone === "attention" ? "border-warning/50 bg-warning/5" : "border-border");
   if (to) return <Link to={to} className={cn(cls, "transition-colors hover:border-primary/40 focus-visible:outline-2 focus-visible:outline-ring")}>{body}<span className="mt-1 block text-xs font-semibold text-primary">Lihat detail ›</span></Link>;
   return <div className={cls}>{body}</div>;
 }
@@ -130,7 +136,7 @@ export function Empty({ title, text }: { title: string; text?: string }) {
 
 export function PendingIntegration({ title, children }: { title: string; children?: ReactNode }) {
   return (
-    <div className="rounded-xl border-2 border-dashed border-burgundy/25 bg-card p-4">
+    <div className="rounded-2xl border-2 border-dashed border-burgundy/25 bg-card p-4">
       <div className="flex items-center gap-2">
         <Plug className="size-4 text-primary" />
         <p className="font-bold text-burgundy-dark">{title}</p>
@@ -141,11 +147,19 @@ export function PendingIntegration({ title, children }: { title: string; childre
   );
 }
 
+/** Debounced search field: onChange fires after the user stops typing. */
 export function SearchBox({ value, onChange, placeholder = "Cari…" }: { value: string; onChange: (v: string) => void; placeholder?: string }) {
+  const [v, setV] = useState(value);
+  useEffect(() => setV(value), [value]);
+  useEffect(() => {
+    if (v === value) return;
+    const t = setTimeout(() => onChange(v), 350);
+    return () => clearTimeout(t);
+  }, [v]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <div className="relative w-full sm:w-64">
       <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-      <Input value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} aria-label={placeholder} className="h-9 pl-8" />
+      <Input value={v} onChange={(e) => setV(e.target.value)} placeholder={placeholder} aria-label={placeholder} className="h-9 pl-8" />
     </div>
   );
 }
@@ -169,78 +183,209 @@ export function ProgramFilter({ value, onChange, allowAll = true }: { value: str
   );
 }
 
-export function Pager({ page, pageSize, total, onPage }: { page: number; pageSize: number; total: number; onPage: (p: number) => void }) {
+/** Standard pagination: displayed range, optional rows-per-page selector, prev/next. */
+export function Pager({ page, pageSize, total, onPage, onPageSize, sizes = [10, 25, 50, 100] }: {
+  page: number; pageSize: number; total: number; onPage: (p: number) => void; onPageSize?: (s: number) => void; sizes?: number[];
+}) {
   const pages = Math.max(1, Math.ceil(total / pageSize));
+  const from = total === 0 ? 0 : page * pageSize + 1;
+  const to = Math.min(total, (page + 1) * pageSize);
   return (
-    <div className="mt-3 flex items-center justify-between gap-2 text-xs text-muted-foreground">
-      <span>{total} data · halaman {page + 1} dari {pages}</span>
-      <div className="flex gap-1">
-        <Button size="icon" variant="outline" className="size-8" aria-label="Halaman sebelumnya" disabled={page === 0} onClick={() => onPage(page - 1)}><ChevronLeft className="size-4" /></Button>
-        <Button size="icon" variant="outline" className="size-8" aria-label="Halaman berikutnya" disabled={page + 1 >= pages} onClick={() => onPage(page + 1)}><ChevronRight className="size-4" /></Button>
+    <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 text-xs text-muted-foreground">
+      <span role="status">{num(from)}–{num(to)} dari {num(total)} data</span>
+      <div className="flex flex-wrap items-center gap-3">
+        {onPageSize && (
+          <label className="flex items-center gap-1.5">Tampilkan
+            <select aria-label="Baris per halaman" value={pageSize} onChange={(e) => onPageSize(Number(e.target.value))}
+              className="h-8 rounded-md border border-input bg-background px-1.5 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              {sizes.map((s) => <option key={s} value={s}>{s}</option>)}
+            </select>
+          </label>
+        )}
+        <span>Halaman {num(page + 1)} dari {num(pages)}</span>
+        <div className="flex gap-1">
+          <Button size="icon" variant="outline" className="size-8" aria-label="Halaman sebelumnya" disabled={page === 0} onClick={() => onPage(page - 1)}><ChevronLeft className="size-4" /></Button>
+          <Button size="icon" variant="outline" className="size-8" aria-label="Halaman berikutnya" disabled={page + 1 >= pages} onClick={() => onPage(page + 1)}><ChevronRight className="size-4" /></Button>
+        </div>
       </div>
     </div>
   );
 }
 
-/** Responsive table: real table on md+, stacked cards on phones (no sideways scrolling). */
-export function DataTable<T>({ rows, cols, rowKey, empty, onRowClick }: {
-  rows: T[]; rowKey: (r: T) => string; empty?: ReactNode; onRowClick?: (r: T) => void;
+/**
+ * Standard data table: white rounded-2xl card, uppercase muted headers, thin row
+ * separators, hover highlight, centered vertical alignment. `toolbar` renders above
+ * the table (search/filters), `footer` below it (pagination). On phones rows become
+ * stacked cards; `primary` marks the headline column, `hideOnMobile` drops a column.
+ */
+export function DataTable<T>({ rows, cols, rowKey, empty, onRowClick, toolbar, footer }: {
+  rows: T[]; rowKey: (r: T) => string; empty?: ReactNode; onRowClick?: (r: T) => void; toolbar?: ReactNode; footer?: ReactNode;
   cols: { label: string; cell: (r: T) => ReactNode; className?: string; primary?: boolean; sort?: (r: T) => string | number; hideOnMobile?: boolean }[];
 }) {
   const [sort, setSort] = useState<{ i: number; dir: 1 | -1 } | null>(null);
-  if (!rows.length) return <>{empty ?? <Empty title="Belum ada data" />}</>;
   const sorter = sort ? cols[sort.i]?.sort : undefined;
   const view = sorter && sort ? [...rows].sort((a, b) => { const x = sorter(a), y = sorter(b); return (x < y ? -1 : x > y ? 1 : 0) * sort.dir; }) : rows;
   const toggle = (i: number) => setSort((s) => (s?.i === i ? (s.dir === 1 ? { i, dir: -1 } : null) : { i, dir: 1 }));
   return (
-    <>
-      <div className="hidden md:block">
-        <table className="w-full text-sm">
-          <thead><tr className="border-b border-border text-left text-xs text-muted-foreground">{cols.map((c, i) => (
-            <th key={c.label} scope="col" aria-sort={sort?.i === i ? (sort.dir === 1 ? "ascending" : "descending") : undefined} className={cn("px-2 py-2 font-semibold", c.className)}>
-              {c.sort ? (
-                <button type="button" onClick={() => toggle(i)} className="inline-flex items-center gap-1 hover:text-foreground">
-                  {c.label}{sort?.i === i ? (sort.dir === 1 ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />) : <ArrowUpDown className="size-3 opacity-40" />}
-                </button>
-              ) : c.label}
-            </th>
-          ))}</tr></thead>
-          <tbody>{view.map((r) => (
-            <tr key={rowKey(r)} onClick={onRowClick ? (e) => { if (!(e.target as HTMLElement).closest("a,button,input,select")) onRowClick(r); } : undefined}
-              className={cn("border-b border-border/60 last:border-0 hover:bg-muted/40", onRowClick && "cursor-pointer")}>
-              {cols.map((c) => <td key={c.label} className={cn("px-2 py-2 align-top", c.className)}>{c.cell(r)}</td>)}
-            </tr>
-          ))}</tbody>
-        </table>
-      </div>
-      <div className="md:hidden">
-        {cols.some((c) => c.sort) && (
-          <label className="mb-2 flex items-center gap-2 text-xs font-semibold text-muted-foreground">Urutkan
-            <select className="h-9 rounded-md border border-input bg-card px-2 text-sm text-foreground" value={sort ? `${sort.i}:${sort.dir}` : ""}
-              onChange={(e) => { const [i, d] = e.target.value.split(":"); setSort(e.target.value ? { i: Number(i), dir: Number(d) as 1 | -1 } : null); }}>
-              <option value="">Bawaan</option>
-              {cols.map((c, i) => c.sort && [<option key={`${i}a`} value={`${i}:1`}>{c.label} ↑</option>, <option key={`${i}d`} value={`${i}:-1`}>{c.label} ↓</option>])}
-            </select>
-          </label>
-        )}
-        <ul className="space-y-2">
-          {view.map((r) => (
-            <li key={rowKey(r)} onClick={onRowClick ? (e) => { if (!(e.target as HTMLElement).closest("a,button")) onRowClick(r); } : undefined}
-              className={cn("rounded-lg border border-border bg-card p-3 text-sm", onRowClick && "cursor-pointer active:bg-muted/40")}>
-              {cols.filter((c) => !c.hideOnMobile).map((c) => c.primary
-                ? <div key={c.label} className="mb-1 font-bold text-burgundy-dark">{c.cell(r)}</div>
-                : <div key={c.label} className="flex justify-between gap-3 py-0.5"><span className="text-xs text-muted-foreground">{c.label}</span><span className="min-w-0 text-right">{c.cell(r)}</span></div>)}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </>
+    <div className="overflow-hidden rounded-2xl border border-border bg-card">
+      {toolbar && <div className="flex flex-wrap items-center gap-2 border-b border-border px-4 py-3">{toolbar}</div>}
+      {rows.length === 0 ? (empty ?? <Empty title="Belum ada data" />) : (
+        <>
+          <div className="hidden overflow-x-auto md:block">
+            <table className="w-full text-sm">
+              <thead><tr className="border-b border-border bg-muted/40 text-left">{cols.map((c, i) => (
+                <th key={c.label} scope="col" aria-sort={sort?.i === i ? (sort.dir === 1 ? "ascending" : "descending") : undefined}
+                  className={cn("px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground", c.className)}>
+                  {c.sort ? (
+                    <button type="button" onClick={() => toggle(i)} className="inline-flex items-center gap-1 uppercase tracking-wide hover:text-foreground">
+                      {c.label}{sort?.i === i ? (sort.dir === 1 ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />) : <ArrowUpDown className="size-3 opacity-40" />}
+                    </button>
+                  ) : c.label}
+                </th>
+              ))}</tr></thead>
+              <tbody>{view.map((r) => (
+                <tr key={rowKey(r)} onClick={onRowClick ? (e) => { if (!(e.target as HTMLElement).closest("a,button,input,select")) onRowClick(r); } : undefined}
+                  className={cn("border-b border-border/60 transition-colors last:border-0 hover:bg-muted/40", onRowClick && "cursor-pointer")}>
+                  {cols.map((c) => <td key={c.label} className={cn("px-4 py-3.5 align-middle", c.className)}>{c.cell(r)}</td>)}
+                </tr>
+              ))}</tbody>
+            </table>
+          </div>
+          <div className="p-3 md:hidden">
+            {cols.some((c) => c.sort) && (
+              <label className="mb-2 flex items-center gap-2 text-xs font-semibold text-muted-foreground">Urutkan
+                <select className="h-9 rounded-md border border-input bg-card px-2 text-sm text-foreground" value={sort ? `${sort.i}:${sort.dir}` : ""}
+                  onChange={(e) => { const [i, d] = e.target.value.split(":"); setSort(e.target.value ? { i: Number(i), dir: Number(d) as 1 | -1 } : null); }}>
+                  <option value="">Bawaan</option>
+                  {cols.map((c, i) => c.sort && [<option key={`${i}a`} value={`${i}:1`}>{c.label} ↑</option>, <option key={`${i}d`} value={`${i}:-1`}>{c.label} ↓</option>])}
+                </select>
+              </label>
+            )}
+            <ul className="space-y-2">
+              {view.map((r) => (
+                <li key={rowKey(r)} onClick={onRowClick ? (e) => { if (!(e.target as HTMLElement).closest("a,button")) onRowClick(r); } : undefined}
+                  className={cn("rounded-xl border border-border bg-card p-3 text-sm", onRowClick && "cursor-pointer active:bg-muted/40")}>
+                  {cols.filter((c) => !c.hideOnMobile).map((c) => c.primary
+                    ? <div key={c.label} className="mb-1 font-bold text-burgundy-dark">{c.cell(r)}</div>
+                    : <div key={c.label} className="flex items-center justify-between gap-3 py-0.5"><span className="text-xs text-muted-foreground">{c.label}</span><span className="min-w-0 text-right">{c.cell(r)}</span></div>)}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </>
+      )}
+      {footer && <div className="border-t border-border px-4 py-3">{footer}</div>}
+    </div>
   );
 }
 
-export function Tag({ children, tone = "muted" }: { children: ReactNode; tone?: "muted" | "primary" | "success" | "warning" | "danger" }) {
-  const t = { muted: "bg-muted text-muted-foreground", primary: "bg-primary/10 text-primary", success: "bg-success/15 text-success", warning: "bg-warning/20 text-burgundy-dark", danger: "bg-destructive/10 text-destructive" }[tone];
-  return <span className={cn("inline-flex whitespace-nowrap rounded-full px-2 py-0.5 text-[11px] font-bold", t)}>{children}</span>;
+const TAG_STYLE = {
+  muted: "bg-muted text-muted-foreground", primary: "bg-primary/10 text-primary",
+  success: "bg-success/15 text-success", warning: "bg-warning/20 text-burgundy-dark", danger: "bg-destructive/10 text-destructive",
+} as const;
+const TAG_DOT = {
+  muted: "bg-muted-foreground/60", primary: "bg-primary", success: "bg-success", warning: "bg-warning", danger: "bg-destructive",
+} as const;
+
+/** Compact status badge with a colored dot; the label carries the meaning, not the color alone. */
+export function Tag({ children, tone = "muted" }: { children: ReactNode; tone?: keyof typeof TAG_STYLE }) {
+  return (
+    <span className={cn("inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-0.5 text-[11px] font-bold", TAG_STYLE[tone])}>
+      <span aria-hidden className={cn("size-1.5 shrink-0 rounded-full", TAG_DOT[tone])} />{children}
+    </span>
+  );
+}
+
+export interface RowActionField { key: string; label: string; type?: "text" | "datetime-local" | "select"; placeholder?: string; value?: string; options?: { value: string; label: string }[] }
+export interface RowActionItem {
+  label: string;
+  onSelect?: () => void;
+  destructive?: boolean;
+  disabled?: boolean;
+  separatorBefore?: boolean;
+  confirm?: { title: string; description?: ReactNode; confirmLabel?: string; minReason?: number; fields?: RowActionField[] };
+  onConfirm?: (reason: string, values: Record<string, string>) => Promise<void>;
+}
+
+/** Standard "AKSI" column: outlined ellipsis button opening a menu of permitted actions. */
+export function RowActions({ items, label = "Aksi baris" }: { items: (RowActionItem | null | false | undefined)[]; label?: string }) {
+  const visible = items.filter((x): x is RowActionItem => !!x);
+  const [active, setActive] = useState<RowActionItem | null>(null);
+  const [reason, setReason] = useState("");
+  const [values, setValues] = useState<Record<string, string>>({});
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  if (!visible.length) return null;
+  const open = (it: RowActionItem) => {
+    setActive(it); setErr(null); setReason("");
+    setValues(Object.fromEntries((it.confirm?.fields ?? []).map((f) => [f.key, f.value ?? ""])));
+  };
+  const tooShort = !!active?.confirm?.minReason && reason.trim().length < active.confirm.minReason;
+  const run = async () => {
+    if (!active?.onConfirm) return;
+    if (tooShort) { setErr(`Alasan minimal ${active.confirm!.minReason} karakter`); return; }
+    setBusy(true); setErr(null);
+    try { await active.onConfirm(reason.trim(), values); setActive(null); }
+    catch (e) { setErr(e instanceof Error ? e.message : "Gagal"); }
+    finally { setBusy(false); }
+  };
+  return (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button size="icon" variant="outline" className="size-8" aria-label={label}><MoreHorizontal className="size-4" /></Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          {visible.map((it, i) => (
+            <Fragment key={it.label}>
+              {it.separatorBefore && i > 0 && <DropdownMenuSeparator />}
+              <DropdownMenuItem disabled={it.disabled} className={cn(it.destructive && "text-destructive focus:text-destructive")}
+                onSelect={() => (it.confirm ? open(it) : it.onSelect?.())}>
+                {it.label}
+              </DropdownMenuItem>
+            </Fragment>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <Dialog open={!!active} onOpenChange={(o) => !busy && !o && setActive(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{active?.confirm?.title}</DialogTitle>
+            {active?.confirm?.description && <DialogDescription asChild><div>{active.confirm.description}</div></DialogDescription>}
+          </DialogHeader>
+          <div className="space-y-3">
+            {(active?.confirm?.fields ?? []).map((f) => (
+              <div key={f.key} className="space-y-1">
+                <Label htmlFor={`ra-${f.key}`} className="text-xs font-semibold">{f.label}</Label>
+                {f.type === "select" ? (
+                  <select id={`ra-${f.key}`} value={values[f.key] ?? ""} onChange={(e) => setValues({ ...values, [f.key]: e.target.value })}
+                    className="h-9 w-full rounded-md border border-input bg-background px-2 text-sm">
+                    {!f.value && <option value="">Pilih…</option>}
+                    {(f.options ?? []).map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+                  </select>
+                ) : (
+                  <Input id={`ra-${f.key}`} type={f.type ?? "text"} placeholder={f.placeholder} value={values[f.key] ?? ""} onChange={(e) => setValues({ ...values, [f.key]: e.target.value })} />
+                )}
+              </div>
+            ))}
+            {!!active?.confirm?.minReason && (
+              <div className="space-y-1">
+                <Label htmlFor="ra-reason" className="text-xs font-semibold">Alasan (wajib, min. {active.confirm.minReason} karakter)</Label>
+                <Textarea id="ra-reason" value={reason} onChange={(e) => setReason(e.target.value)} rows={3} aria-invalid={!!err} />
+              </div>
+            )}
+            {err && <p role="alert" className="text-sm text-destructive">{err}</p>}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setActive(null)} disabled={busy}>Batal</Button>
+            <Button variant={active?.destructive ? "destructive" : "default"} onClick={run} disabled={busy}>
+              {busy && <Loader2 className="size-4 animate-spin" />}{active?.confirm?.confirmLabel ?? "Konfirmasi"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
 }
 
 /** Confirmation dialog for sensitive actions. When minReason > 0 a reason is required. */
@@ -293,3 +438,6 @@ export function Field({ label, htmlFor, children, error, hint }: { label: string
     </div>
   );
 }
+
+// Spec-named aliases of the shared admin table system.
+export { PageHead as AdminPageHeader, DataTable as AdminDataTable, Pager as AdminTablePagination, Empty as AdminTableEmptyState, Loading as AdminTableSkeleton, Tag as AdminStatusBadge };
