@@ -3,7 +3,7 @@ import {
   LayoutDashboard, HeartHandshake, Wallet, History, Camera, FileText, UserCircle,
   Users, CreditCard, BadgeCheck, XCircle, KeyRound, PawPrint, Tags, Split, Megaphone,
   Route as RouteIcon, Landmark, BarChart3, ScrollText, Settings, ShieldCheck,
-  CalendarRange, Building2, Sparkles, Coins, Bell,
+  CalendarRange, Building2, Sparkles, Coins, Bell, UserCog,
 } from "lucide-react";
 
 export const PUBLIC_NAV = [
@@ -59,14 +59,15 @@ const P = {
   keuangan: { to: "/admin/keuangan", label: "Rekonsiliasi", icon: Landmark, description: "Saldo per akun ledger untuk dicocokkan dengan rekening.", perms: ["finance.view"] },
   sedekah: { to: "/admin/sedekah", label: "Pengelolaan Dana", icon: HeartHandshake, description: "Kelebihan dana, sedekah, dan pengembalian.", perms: ["finance.view"] },
   laporan: { to: "/admin/laporan", label: "Laporan", icon: BarChart3, description: "Pilih jenis laporan, atur filter, pratinjau, lalu unduh.", perms: ["reports.view"] },
-  audit: { to: "/admin/audit", label: "Audit Aktivitas", icon: ScrollText, description: "Jejak seluruh aksi penting, tidak dapat diubah.", perms: ["audit.view"] },
+  logAktivitas: { to: "/admin/log-aktivitas", label: "Log Aktivitas", icon: ScrollText, description: "Jejak audit lengkap seluruh aksi penting; tidak dapat diubah atau dihapus.", perms: ["audit.view"] },
   program: { to: "/admin/program", label: "Program & Akad", icon: CalendarRange, description: "Periode program, tanggal penting, dan versi akad.", perms: ["program.view"] },
   identitas: { to: "/admin/identitas", label: "Identitas", icon: Building2, description: "Profil organisasi dan penerbit dokumen.", perms: ["settings.view"] },
   konten: { to: "/admin/konten", label: "Konten Website", icon: FileText, description: "Teks beranda, kontak, dan info program.", perms: ["content.manage", "settings.view"] },
   website: { to: "/admin/pengaturan-website", label: "Tampilan Website", icon: Settings, description: "Mode pemeliharaan dan elemen yang tampil di situs.", perms: ["settings.view"] },
   karakter: { to: "/admin/karakter-hewan", label: "Karakter Hewan", icon: Sparkles, description: "Nama karakter di Padang Kurban peserta.", perms: ["settings.view", "characters.manage"] },
-  notifikasi: { to: "/admin/notifikasi", label: "Notifikasi", icon: Bell, description: "Templat pesan dan kanal pengiriman.", perms: ["notifications.manage", "settings.view"] },
-  admins: { to: "/admin/manajemen-admin", label: "Pengguna & Hak Akses", icon: ShieldCheck, description: "Akun admin dan perannya (khusus SUPERADMIN).", perms: ["admins.manage"] },
+  notifikasi: { to: "/admin/notifikasi", label: "Templat Notifikasi", icon: Bell, description: "Templat pesan dan kanal pengiriman.", perms: ["notifications.manage", "settings.view"] },
+  hakAkses: { to: "/admin/hak-akses", label: "Hak Akses", icon: ShieldCheck, description: "Grup pengguna dan matriks hak akses untuk setiap menu (khusus SUPERADMIN).", perms: ["access.manage"] },
+  pengguna: { to: "/admin/pengguna", label: "Pengguna", icon: UserCog, description: "Akun admin: undangan, penugasan grup, dan status akses (khusus SUPERADMIN).", perms: ["users.manage"] },
 } satisfies Record<string, AdminNavItem>;
 
 /** A sidebar entry. `tabs` (≥2) are sibling pages shown as tabs inside the workspace. */
@@ -88,11 +89,11 @@ export const ADMIN_GROUPS: AdminNavGroup[] = [
     one(P.alokasi), one(P.penyaluran), one(P.pengumuman),
   ] },
   { label: "Keuangan", items: [one(P.keuangan), one(P.sedekah)] },
-  { label: "Laporan", items: [one(P.laporan), one(P.audit)] },
+  { label: "Laporan", items: [one(P.laporan)] },
   { label: "Pengaturan", items: [
     one(P.program),
-    hub("Identitas & Website", Building2, "Identitas organisasi, konten, tampilan situs, dan karakter hewan.", P.identitas, P.konten, P.website, P.karakter),
-    one(P.notifikasi), one(P.admins),
+    hub("Pengaturan Umum", Building2, "Identitas organisasi, konten, tampilan situs, karakter hewan, dan templat notifikasi.", P.identitas, P.konten, P.website, P.karakter, P.notifikasi),
+    one(P.hakAkses), one(P.pengguna), one(P.logAktivitas),
   ] },
 ];
 

@@ -17,3 +17,16 @@ export function formatDate(d: Date, opts: Intl.DateTimeFormatOptions = { dateSty
 export function formatNumber(n: number) {
   return new Intl.NumberFormat("id-ID").format(n);
 }
+
+/** Waktu relatif Bahasa Indonesia, mis. "5 menit lalu". */
+export function formatRelativeTime(iso: string) {
+  const diff = Date.now() - new Date(iso).getTime();
+  const m = Math.floor(diff / 60000);
+  if (m < 1) return "baru saja";
+  if (m < 60) return `${m} menit lalu`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h} jam lalu`;
+  const d = Math.floor(h / 24);
+  if (d < 30) return `${d} hari lalu`;
+  return formatDate(new Date(iso), { dateStyle: "medium" });
+}
