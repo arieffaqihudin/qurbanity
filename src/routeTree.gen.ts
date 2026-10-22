@@ -33,6 +33,7 @@ import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminSectionRouteImport } from './routes/_authenticated/admin.$section'
 import { Route as AuthenticatedAdminAlokasiRouteImport } from './routes/_authenticated/admin.alokasi'
 import { Route as AuthenticatedAdminAuditRouteImport } from './routes/_authenticated/admin.audit'
+import { Route as AuthenticatedAdminHakAksesRouteImport } from './routes/_authenticated/admin.hak-akses'
 import { Route as AuthenticatedAdminHargaRouteImport } from './routes/_authenticated/admin.harga'
 import { Route as AuthenticatedAdminKeuanganRouteImport } from './routes/_authenticated/admin.keuangan'
 import { Route as AuthenticatedAdminLaporanRouteImport } from './routes/_authenticated/admin.laporan'
@@ -171,6 +172,12 @@ const AuthenticatedAdminAuditRoute = AuthenticatedAdminAuditRouteImport.update({
   path: '/audit',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminHakAksesRoute =
+  AuthenticatedAdminHakAksesRouteImport.update({
+    id: '/hak-akses',
+    path: '/hak-akses',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminHargaRoute = AuthenticatedAdminHargaRouteImport.update({
   id: '/harga',
   path: '/harga',
@@ -293,6 +300,7 @@ export interface FileRoutesByFullPath {
   '/admin/$section': typeof AuthenticatedAdminSectionRoute
   '/admin/alokasi': typeof AuthenticatedAdminAlokasiRoute
   '/admin/audit': typeof AuthenticatedAdminAuditRoute
+  '/admin/hak-akses': typeof AuthenticatedAdminHakAksesRoute
   '/admin/harga': typeof AuthenticatedAdminHargaRoute
   '/admin/keuangan': typeof AuthenticatedAdminKeuanganRoute
   '/admin/laporan': typeof AuthenticatedAdminLaporanRoute
@@ -332,6 +340,7 @@ export interface FileRoutesByTo {
   '/admin/$section': typeof AuthenticatedAdminSectionRoute
   '/admin/alokasi': typeof AuthenticatedAdminAlokasiRoute
   '/admin/audit': typeof AuthenticatedAdminAuditRoute
+  '/admin/hak-akses': typeof AuthenticatedAdminHakAksesRoute
   '/admin/harga': typeof AuthenticatedAdminHargaRoute
   '/admin/keuangan': typeof AuthenticatedAdminKeuanganRoute
   '/admin/laporan': typeof AuthenticatedAdminLaporanRoute
@@ -376,6 +385,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/$section': typeof AuthenticatedAdminSectionRoute
   '/_authenticated/admin/alokasi': typeof AuthenticatedAdminAlokasiRoute
   '/_authenticated/admin/audit': typeof AuthenticatedAdminAuditRoute
+  '/_authenticated/admin/hak-akses': typeof AuthenticatedAdminHakAksesRoute
   '/_authenticated/admin/harga': typeof AuthenticatedAdminHargaRoute
   '/_authenticated/admin/keuangan': typeof AuthenticatedAdminKeuanganRoute
   '/_authenticated/admin/laporan': typeof AuthenticatedAdminLaporanRoute
@@ -419,6 +429,7 @@ export interface FileRouteTypes {
     | '/admin/$section'
     | '/admin/alokasi'
     | '/admin/audit'
+    | '/admin/hak-akses'
     | '/admin/harga'
     | '/admin/keuangan'
     | '/admin/laporan'
@@ -458,6 +469,7 @@ export interface FileRouteTypes {
     | '/admin/$section'
     | '/admin/alokasi'
     | '/admin/audit'
+    | '/admin/hak-akses'
     | '/admin/harga'
     | '/admin/keuangan'
     | '/admin/laporan'
@@ -501,6 +513,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/$section'
     | '/_authenticated/admin/alokasi'
     | '/_authenticated/admin/audit'
+    | '/_authenticated/admin/hak-akses'
     | '/_authenticated/admin/harga'
     | '/_authenticated/admin/keuangan'
     | '/_authenticated/admin/laporan'
@@ -700,6 +713,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAuditRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/hak-akses': {
+      id: '/_authenticated/admin/hak-akses'
+      path: '/hak-akses'
+      fullPath: '/admin/hak-akses'
+      preLoaderRoute: typeof AuthenticatedAdminHakAksesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/harga': {
       id: '/_authenticated/admin/harga'
       path: '/harga'
@@ -826,6 +846,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminSectionRoute: typeof AuthenticatedAdminSectionRoute
   AuthenticatedAdminAlokasiRoute: typeof AuthenticatedAdminAlokasiRoute
   AuthenticatedAdminAuditRoute: typeof AuthenticatedAdminAuditRoute
+  AuthenticatedAdminHakAksesRoute: typeof AuthenticatedAdminHakAksesRoute
   AuthenticatedAdminHargaRoute: typeof AuthenticatedAdminHargaRoute
   AuthenticatedAdminKeuanganRoute: typeof AuthenticatedAdminKeuanganRoute
   AuthenticatedAdminLaporanRoute: typeof AuthenticatedAdminLaporanRoute
@@ -844,6 +865,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminSectionRoute: AuthenticatedAdminSectionRoute,
   AuthenticatedAdminAlokasiRoute: AuthenticatedAdminAlokasiRoute,
   AuthenticatedAdminAuditRoute: AuthenticatedAdminAuditRoute,
+  AuthenticatedAdminHakAksesRoute: AuthenticatedAdminHakAksesRoute,
   AuthenticatedAdminHargaRoute: AuthenticatedAdminHargaRoute,
   AuthenticatedAdminKeuanganRoute: AuthenticatedAdminKeuanganRoute,
   AuthenticatedAdminLaporanRoute: AuthenticatedAdminLaporanRoute,
