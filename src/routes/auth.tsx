@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -14,12 +14,33 @@ const search = z.object({ redirect: z.string().optional(), verified: z.coerce.bo
 
 export const Route = createFileRoute("/auth")({
   validateSearch: search,
+  beforeLoad: async ({ search }) => {
+    // Already signed in (fresh login, refresh, or direct visit): route by role immediately.
+    const { data } = await supabase.auth.getUser();
+    if (data.user) throw redirect({ to: await resolveDestination(search.redirect) });
+  },
   head: () => ({ meta: [{ title: "Masuk | qurbanity" }, { name: "description", content: "Masuk ke portal peserta qurbanity." }, { name: "robots", content: "noindex" }] }),
   component: LoginPage,
 });
 
 function safePath(p?: string) {
   return p && p.startsWith("/") && !p.startsWith("//") ? p : "/portal";
+}
+
+/** Role-aware post-login destination. Admin roles land on /admin; everyone else on /portal.
+ * Resolves from the server-side admin_members mapping (never from editable profile fields).
+ * Fails closed: if the admin check cannot be verified, the user is treated as a participant. */
+async function resolveDestination(redirect?: string): Promise<string> {
+  const dest = safePath(redirect);
+  let admin = false;
+  try {
+    const { data } = await supabase.rpc("my_admin_access");
+    admin = !!data;
+  } catch {
+    admin = false;
+  }
+  if (admin) return dest.startsWith("/admin") ? dest : "/admin";
+  return dest.startsWith("/admin") ? "/portal" : dest;
 }
 
 function LoginPage() {
@@ -38,7 +59,7 @@ function LoginPage() {
     const { error } = await supabase.auth.signInWithPassword({ email: email.trim().toLowerCase(), password });
     setLoading(false);
     if (error) return setError(authErrorMessage(error.message));
-    navigate({ to: safePath(redirect), replace: true });
+    navigate({ to: await resolveDestination(redirect), replace: true });
   };
 
   return (
