@@ -89,7 +89,7 @@ function Page() {
                   confirm: {
                     title: `${r.is_active ? "Nonaktifkan" : "Aktifkan"} akses admin ${r.full_name}?`,
                     description: r.is_active ? "Orang ini kehilangan akses admin, tetapi akun peserta dan datanya tetap ada." : "Akses admin dipulihkan sesuai grupnya.",
-                    confirmLabel: r.is_active ? "Nonaktifkan" : "Aktifkan", minReason: 5, destructive: r.is_active,
+                    confirmLabel: r.is_active ? "Nonaktifkan" : "Aktifkan", minReason: 5,
                   },
                   onConfirm: async (reason) => {
                     await rpc("admin_update_user", { p_user_id: r.user_id, p_full_name: null, p_group_id: r.group?.id ?? groups.data?.find((g) => g.role === r.role)?.id, p_active: !r.is_active, p_reason: reason });

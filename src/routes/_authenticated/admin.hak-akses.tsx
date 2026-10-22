@@ -57,12 +57,12 @@ function Page() {
                 onConfirm: async (reason) => { await rpc("admin_duplicate_group", { p_id: r.id, p_reason: reason }); toast.success("Grup diduplikasi"); refresh(); } },
               r.slug !== "superadmin" && {
                 label: r.is_active ? "Nonaktifkan" : "Aktifkan",
-                confirm: { title: `${r.is_active ? "Nonaktifkan" : "Aktifkan"} grup ${r.name}?`, description: r.is_active ? "Pengguna dalam grup ini kehilangan hak akses dari grup sampai diaktifkan kembali." : undefined, confirmLabel: r.is_active ? "Nonaktifkan" : "Aktifkan", minReason: 5, destructive: r.is_active },
+                confirm: { title: `${r.is_active ? "Nonaktifkan" : "Aktifkan"} grup ${r.name}?`, description: r.is_active ? "Pengguna dalam grup ini kehilangan hak akses dari grup sampai diaktifkan kembali." : undefined, confirmLabel: r.is_active ? "Nonaktifkan" : "Aktifkan", minReason: 5 },
                 onConfirm: async (reason) => { await rpc("admin_save_group", { p_id: r.id, p: { name: r.name, description: r.description, is_active: !r.is_active, permissions: r.permissions }, p_reason: reason }); toast.success("Status grup diperbarui"); refresh(); },
               },
               !r.is_system && {
                 label: "Hapus", destructive: true, separatorBefore: true,
-                confirm: { title: `Hapus grup ${r.name}?`, description: "Hanya grup tanpa pengguna aktif yang dapat dihapus. Tindakan ini tidak dapat dibatalkan.", confirmLabel: "Hapus grup", minReason: 5, destructive: true },
+                confirm: { title: `Hapus grup ${r.name}?`, description: "Hanya grup tanpa pengguna aktif yang dapat dihapus. Tindakan ini tidak dapat dibatalkan.", confirmLabel: "Hapus grup", minReason: 5 },
                 onConfirm: async (reason) => { await rpc("admin_delete_group", { p_id: r.id, p_reason: reason }); toast.success("Grup dihapus"); refresh(); },
               },
             ]} />
