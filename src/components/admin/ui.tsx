@@ -265,9 +265,9 @@ export function DataTable<T>({ rows, cols, rowKey, empty, onRowClick, toolbar, f
               {view.map((r) => (
                 <li key={rowKey(r)} onClick={onRowClick ? (e) => { if (!(e.target as HTMLElement).closest("a,button")) onRowClick(r); } : undefined}
                   className={cn("rounded-xl border border-border bg-card p-3 text-sm", onRowClick && "cursor-pointer active:bg-muted/40")}>
-                  {cols.filter((c) => !c.hideOnMobile).map((c) => c.primary
-                    ? <div key={c.label} className="mb-1 font-bold text-burgundy-dark">{c.cell(r)}</div>
-                    : <div key={c.label} className="flex items-center justify-between gap-3 py-0.5"><span className="text-xs text-muted-foreground">{c.label}</span><span className="min-w-0 text-right">{c.cell(r)}</span></div>)}
+                  {cols.filter((c) => !c.hideOnMobile).map((c, i) => c.primary
+                    ? <div key={i} className="mb-1 font-bold text-burgundy-dark">{c.cell(r)}</div>
+                    : <div key={i} className="flex items-center justify-between gap-3 py-0.5"><span className="text-xs text-muted-foreground">{c.label}</span><span className="min-w-0 text-right">{c.cell(r)}</span></div>)}
                 </li>
               ))}
             </ul>
