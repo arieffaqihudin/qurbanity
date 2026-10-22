@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/site/Logo";
 import symbol from "@/assets/qurbanity-symbol.png";
 import { ADMIN_GROUPS, adminHubOf, type AdminHub } from "@/lib/navigation";
+import { NotificationBell } from "@/components/admin/NotificationBell";
 import { can, ROLE_LABEL, type AdminAccess } from "@/lib/admin";
 import { cn } from "@/lib/utils";
 
@@ -188,7 +189,8 @@ export function AdminShell({ access }: { access: AdminAccess }) {
           <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-ivory/90 px-3 backdrop-blur md:px-6">
             <Button variant="ghost" size="icon" className="min-h-11 min-w-11 md:hidden" aria-label="Buka menu" aria-expanded={drawer} onClick={() => setDrawer(true)}><Menu /></Button>
             <p className="truncate font-bold text-burgundy-dark">{activeHub ?? "Dashboard Admin"}</p>
-            <span className="ml-auto shrink-0 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-bold text-primary">{ROLE_LABEL[access.role]}</span>
+            <span className="ml-auto shrink-0"><NotificationBell /></span>
+            <span className="shrink-0 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-bold text-primary">{ROLE_LABEL[access.role]}</span>
           </header>
           <main id="admin-main" className="flex-1 p-3 md:p-6"><Outlet /></main>
         </div>
