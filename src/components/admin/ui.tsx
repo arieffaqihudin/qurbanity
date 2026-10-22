@@ -234,7 +234,7 @@ export function DataTable<T>({ rows, cols, rowKey, empty, onRowClick, toolbar, f
           <div className="hidden overflow-x-auto md:block">
             <table className="w-full text-sm">
               <thead><tr className="border-b border-border bg-muted/40 text-left">{cols.map((c, i) => (
-                <th key={c.label} scope="col" aria-sort={sort?.i === i ? (sort.dir === 1 ? "ascending" : "descending") : undefined}
+                <th key={i} scope="col" aria-sort={sort?.i === i ? (sort.dir === 1 ? "ascending" : "descending") : undefined}
                   className={cn("px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground", c.className)}>
                   {c.sort ? (
                     <button type="button" onClick={() => toggle(i)} className="inline-flex items-center gap-1 uppercase tracking-wide hover:text-foreground">
@@ -246,7 +246,7 @@ export function DataTable<T>({ rows, cols, rowKey, empty, onRowClick, toolbar, f
               <tbody>{view.map((r) => (
                 <tr key={rowKey(r)} onClick={onRowClick ? (e) => { if (!(e.target as HTMLElement).closest("a,button,input,select")) onRowClick(r); } : undefined}
                   className={cn("border-b border-border/60 transition-colors last:border-0 hover:bg-muted/40", onRowClick && "cursor-pointer")}>
-                  {cols.map((c) => <td key={c.label} className={cn("px-4 py-3.5 align-middle", c.className)}>{c.cell(r)}</td>)}
+                  {cols.map((c, i) => <td key={i} className={cn("px-4 py-3.5 align-middle", c.className)}>{c.cell(r)}</td>)}
                 </tr>
               ))}</tbody>
             </table>
