@@ -52,7 +52,7 @@ function Page() {
                 label: "Ubah status", separatorBefore: true,
                 confirm: { title: `Ubah status ${p.name}?`, confirmLabel: "Ubah status", minReason: 5, description: "Hanya satu periode boleh berstatus Dibuka. Komitmen baru hanya diterima saat Dibuka dan sebelum batas pelunasan.",
                   fields: [{ key: "status", label: "Status baru", type: "select", value: p.status, options: Object.entries(PROGRAM_STATUS_LABEL).map(([k, v]) => ({ value: k, label: v })) }] },
-                onConfirm: async (reason, v) => { await rpc("admin_set_program_status", { p_id: p.id, p_status: v.status || p.status, p_reason: reason }); toast.success("Status periode diperbarui"); refresh(); },
+                onConfirm: async (reason, v) => { await rpc("admin_set_program_status", { p_id: p.id, p_status: v["status"] || p.status, p_reason: reason }); toast.success("Status periode diperbarui"); refresh(); },
               },
             ]} /> },
           ]} />
@@ -139,7 +139,7 @@ function Contracts({ programId }: { programId: string }) {
               confirm: { title: "Setujui versi akad?", confirmLabel: "Setujui & aktifkan", minReason: 5,
                 description: "Versi aktif sebelumnya untuk jenis akad yang sama akan dinonaktifkan (tetap tersimpan). Isi akad terkunci setelah disetujui.",
                 fields: [{ key: "sharia", label: "Nama peninjau syariah (DPS)", placeholder: "Nama peninjau syariah" }, { key: "legal", label: "Nama peninjau hukum", placeholder: "Nama peninjau hukum" }] },
-              onConfirm: async (notes, v) => { await rpc("admin_approve_contract", { p_id: c.id, p_sharia_reviewer: v.sharia ?? "", p_legal_reviewer: v.legal ?? "", p_notes: notes }); toast.success("Akad disetujui"); refresh(); },
+              onConfirm: async (notes, v) => { await rpc("admin_approve_contract", { p_id: c.id, p_sharia_reviewer: v["sharia"] ?? "", p_legal_reviewer: v["legal"] ?? "", p_notes: notes }); toast.success("Akad disetujui"); refresh(); },
             },
           ]} /> },
         ]} />

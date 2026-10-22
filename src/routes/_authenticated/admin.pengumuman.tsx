@@ -79,7 +79,7 @@ function Page() {
                   label: "Jadwalkan publikasi",
                   confirm: { title: "Jadwalkan publikasi", confirmLabel: "Jadwalkan", description: "Pengumuman otomatis terlihat publik pada waktu ini (WIB).",
                     fields: [{ key: "at", label: "Waktu publikasi (WIB)", type: "datetime-local" }] },
-                  onConfirm: async (_r, v) => { if (!v.at) throw new Error("Pilih waktu publikasi"); await move(a.id, "scheduled", { p_scheduled_at: `${v.at}:00+07:00` })(""); },
+                  onConfirm: async (_r, v) => { if (!v["at"]) throw new Error("Pilih waktu publikasi"); await move(a.id, "scheduled", { p_scheduled_at: `${v["at"]}:00+07:00` })(""); },
                 },
                 can("announcement.manage") && ["approved", "scheduled"].includes(a.status) && {
                   label: "Publikasikan sekarang",

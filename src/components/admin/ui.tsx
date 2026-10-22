@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 
 const num = (n: number) => new Intl.NumberFormat("id-ID").format(n);
 
-export function PageHead({ to, actions, count, children }: { to: string; actions?: ReactNode; count?: number; children?: ReactNode }) {
+export function PageHead({ to, actions, count, children }: { to: string; actions?: ReactNode; count?: number | undefined; children?: ReactNode }) {
   const it = adminItem(to);
   const found = adminHubOf(to);
   const { can } = useAdmin();
@@ -339,7 +339,7 @@ export function RowActions({ items, label = "Aksi baris" }: { items: (RowActionI
           {visible.map((it, i) => (
             <Fragment key={it.label}>
               {it.separatorBefore && i > 0 && <DropdownMenuSeparator />}
-              <DropdownMenuItem disabled={it.disabled} className={cn(it.destructive && "text-destructive focus:text-destructive")}
+              <DropdownMenuItem disabled={!!it.disabled} className={cn(it.destructive && "text-destructive focus:text-destructive")}
                 onSelect={() => (it.confirm ? open(it) : it.onSelect?.())}>
                 {it.label}
               </DropdownMenuItem>
