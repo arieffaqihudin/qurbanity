@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
 import { Loader2 } from "lucide-react";
@@ -44,8 +44,17 @@ async function resolveDestination(redirect?: string): Promise<string> {
 }
 
 function LoginPage() {
-  const { redirect, verified } = Route.useSearch();
+  const { redirect: dest, verified } = Route.useSearch();
   const navigate = useNavigate();
+  // SSR renders this page before the browser session is readable; re-check on the client
+  // so an already-signed-in user (refresh or direct visit) is routed by role.
+  useEffect(() => {
+    let active = true;
+    supabase.auth.getUser().then(async ({ data }) => {
+      if (active && data.user) navigate({ to: await resolveDestination(dest), replace: true });
+    });
+    return () => { active = false; };
+  }, [dest, navigate]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -59,7 +68,7 @@ function LoginPage() {
     const { error } = await supabase.auth.signInWithPassword({ email: email.trim().toLowerCase(), password });
     setLoading(false);
     if (error) return setError(authErrorMessage(error.message));
-    navigate({ to: await resolveDestination(redirect), replace: true });
+    navigate({ to: await resolveDestination(dest), replace: true });
   };
 
   return (
