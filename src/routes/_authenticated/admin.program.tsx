@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Plus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { PageHead, Panel, Guard, Loading, Failure, Tag, Field, ConfirmAction, Empty, NativeSelect } from "@/components/admin/ui";
+import { PageHead, Panel, Guard, Loading, Failure, Tag, Field, ConfirmAction, Empty, DataTable, RowActions } from "@/components/admin/ui";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -34,40 +34,32 @@ function Page() {
   const current = selected || q.data?.find((p) => p.status === "open")?.id || q.data?.[0]?.id || "";
   return (
     <div className="mx-auto max-w-6xl space-y-3">
-      <PageHead to="/admin/program" actions={can("program.manage") && <Button size="sm" onClick={() => setEditing("new")}><Plus className="size-4" /> Periode baru</Button>} />
+      <PageHead to="/admin/program" count={q.data?.length} actions={can("program.manage") && <Button size="sm" onClick={() => setEditing("new")}><Plus className="size-4" /> Periode baru</Button>} />
       {editing && <ProgramForm program={editing === "new" ? null : editing} onClose={() => setEditing(null)} onSaved={refresh} />}
-      <Panel title="Periode program">
-        {q.isPending ? <Loading /> : q.isError ? <Failure error={q.error} /> : q.data.length === 0 ? <Empty title="Belum ada periode" /> : (
-          <ul className="divide-y divide-border">
-            {q.data.map((p) => (
-              <li key={p.id} className="flex flex-wrap items-center gap-2 py-2 text-sm">
-                <button type="button" onClick={() => setSelected(p.id)} className={`font-bold ${current === p.id ? "text-primary underline" : "text-burgundy-dark"}`}>{p.name}</button>
-                <Tag tone={p.status === "open" ? "success" : "muted"}>{PROGRAM_STATUS_LABEL[p.status]}</Tag>
-                <span className="text-muted-foreground">Iduladha {formatDate(new Date(p.iduladha_date), { dateStyle: "medium" })} ({p.date_status === "official" ? "RESMI" : "PERKIRAAN"}) · batas {formatDate(new Date(p.payment_deadline), { dateStyle: "medium" })} · min. {formatRupiah(p.minimum_payment)} · H-{p.announcement_days}</span>
-                {can("program.manage") && (
-                  <div className="ml-auto flex gap-2">
-                    <button type="button" className="text-xs font-semibold text-primary underline" onClick={() => setEditing(p)}>Ubah</button>
-                    <StatusChanger program={p} onDone={refresh} />
-                  </div>
-                )}
-              </li>
-            ))}
-          </ul>
-        )}
-      </Panel>
+      {q.isPending ? <Panel><Loading /></Panel> : q.isError ? <Panel><Failure error={q.error} /></Panel> : (
+        <>
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Periode program · klik baris untuk melihat versi akadnya</p>
+          <DataTable rows={q.data} rowKey={(r) => r.id} empty={<Empty title="Belum ada periode" />} onRowClick={(p) => setSelected(p.id)} cols={[
+            { label: "Program", primary: true, sort: (r) => r.name.toLowerCase(), cell: (p) => <span className={`font-bold ${current === p.id ? "text-primary underline" : "text-burgundy-dark"}`}>{p.name}</span> },
+            { label: "Status", cell: (p) => <Tag tone={p.status === "open" ? "success" : "muted"}>{PROGRAM_STATUS_LABEL[p.status]}</Tag> },
+            { label: "Iduladha", cell: (p) => <>{formatDate(new Date(p.iduladha_date), { dateStyle: "medium" })} <span className="text-xs text-muted-foreground">({p.date_status === "official" ? "RESMI" : "PERKIRAAN"})</span></> },
+            { label: "Batas pelunasan", hideOnMobile: true, className: "hidden xl:table-cell", cell: (p) => formatDate(new Date(p.payment_deadline), { dateStyle: "medium" }) },
+            { label: "Min. pembayaran", className: "text-right tabular-nums", cell: (p) => formatRupiah(p.minimum_payment) },
+            { label: "Pengumuman", className: "hidden text-right tabular-nums lg:table-cell", hideOnMobile: true, cell: (p) => `H-${p.announcement_days}` },
+            { label: "Aksi", cell: (p) => <RowActions label={`Aksi untuk ${p.name}`} items={[
+              can("program.manage") && { label: "Ubah data", onSelect: () => setEditing(p) },
+              can("program.manage") && {
+                label: "Ubah status", separatorBefore: true,
+                confirm: { title: `Ubah status ${p.name}?`, confirmLabel: "Ubah status", minReason: 5, description: "Hanya satu periode boleh berstatus Dibuka. Komitmen baru hanya diterima saat Dibuka dan sebelum batas pelunasan.",
+                  fields: [{ key: "status", label: "Status baru", type: "select", value: p.status, options: Object.entries(PROGRAM_STATUS_LABEL).map(([k, v]) => ({ value: k, label: v })) }] },
+                onConfirm: async (reason, v) => { await rpc("admin_set_program_status", { p_id: p.id, p_status: v["status"] || p.status, p_reason: reason }); toast.success("Status periode diperbarui"); refresh(); },
+              },
+            ]} /> },
+          ]} />
+        </>
+      )}
       {current && <Contracts programId={current} />}
     </div>
-  );
-}
-
-function StatusChanger({ program, onDone }: { program: Program; onDone: () => void }) {
-  const [to, setTo] = useState<Program["status"]>(program.status);
-  return (
-    <ConfirmAction title={`Ubah status ${program.name}?`} minReason={5} confirmLabel="Ubah status"
-      description={<div className="space-y-2"><p>Hanya satu periode boleh berstatus Dibuka. Komitmen baru hanya diterima saat Dibuka dan sebelum batas pelunasan.</p>
-        <NativeSelect label="Status baru" value={to} onChange={(v) => setTo(v as Program["status"])}>{Object.entries(PROGRAM_STATUS_LABEL).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</NativeSelect></div>}
-      onConfirm={async (reason) => { await rpc("admin_set_program_status", { p_id: program.id, p_status: to, p_reason: reason }); toast.success("Status periode diperbarui"); onDone(); }}
-      trigger={(o) => <button type="button" className="text-xs font-semibold text-primary underline" onClick={o}>Status</button>} />
   );
 }
 
@@ -134,40 +126,26 @@ function Contracts({ programId }: { programId: string }) {
         </div>
       )}
       {q.isPending ? <Loading /> : q.isError ? <Failure error={q.error} /> : (
-        <ul className="divide-y divide-border text-sm">
-          {q.data.map((c) => (
-            <li key={c.id} className="flex flex-wrap items-center gap-2 py-2">
-              <span className="font-semibold">{TYPE_LABEL[c.contract_code]}</span><span className="text-muted-foreground">v{c.version}</span>
-              {c.status === "approved" ? <Tag tone="success">Disetujui</Tag> : c.status === "draft" ? <Tag tone="warning">Draf</Tag> : <Tag>Pensiun</Tag>}
-              {c.is_active && <Tag tone="primary">Aktif</Tag>}
-              {c.status === "approved" && <span className="text-xs text-muted-foreground">Syariah: {c.sharia_reviewer} · Hukum: {c.legal_reviewer} · {c.approved_at && formatDate(new Date(c.approved_at), { dateStyle: "medium", timeStyle: "short" })}</span>}
-              <div className="ml-auto flex gap-2">
-                <button type="button" className="text-xs font-semibold text-primary underline" onClick={() => setPreview(preview?.id === c.id ? null : c)}>Pratinjau</button>
-                {can("program.manage") && c.status === "draft" && <>
-                  <button type="button" className="text-xs font-semibold text-primary underline" onClick={() => setEditing(c)}>Ubah</button>
-                  <Approve contract={c} onDone={refresh} />
-                </>}
-              </div>
-              {preview?.id === c.id && <div className="w-full whitespace-pre-wrap rounded-lg bg-muted/60 p-3 text-xs"><p className="font-bold">{c.title}</p><p className="italic">{c.summary}</p><p className="mt-2">{c.body}</p></div>}
-            </li>
-          ))}
-        </ul>
+        <DataTable rows={q.data} rowKey={(c) => c.id} empty={<Empty title="Belum ada versi akad" text="Buat draf baru untuk jenis akad yang diperlukan." />} cols={[
+          { label: "Jenis akad", primary: true, sort: (c) => c.contract_code, cell: (c) => <span className="font-semibold">{TYPE_LABEL[c.contract_code]}</span> },
+          { label: "Versi", className: "tabular-nums", cell: (c) => `v${c.version}` },
+          { label: "Status", cell: (c) => <span className="inline-flex flex-wrap gap-1">{c.status === "approved" ? <Tag tone="success">Disetujui</Tag> : c.status === "draft" ? <Tag tone="warning">Draf</Tag> : <Tag>Pensiun</Tag>}{c.is_active && <Tag tone="primary">Aktif</Tag>}</span> },
+          { label: "Peninjau", hideOnMobile: true, cell: (c) => c.status === "approved" ? <span className="text-xs text-muted-foreground">Syariah: {c.sharia_reviewer} · Hukum: {c.legal_reviewer} · {c.approved_at && formatDate(new Date(c.approved_at), { dateStyle: "medium", timeStyle: "short" })}</span> : <span className="text-xs text-muted-foreground">—</span> },
+          { label: "Aksi", cell: (c) => <RowActions label={`Aksi untuk ${TYPE_LABEL[c.contract_code]} v${c.version}`} items={[
+            { label: preview?.id === c.id ? "Tutup pratinjau" : "Pratinjau", onSelect: () => setPreview(preview?.id === c.id ? null : c) },
+            can("program.manage") && c.status === "draft" && { label: "Ubah draf", onSelect: () => setEditing(c) },
+            can("program.manage") && c.status === "draft" && {
+              label: "Setujui & aktifkan", separatorBefore: true,
+              confirm: { title: "Setujui versi akad?", confirmLabel: "Setujui & aktifkan", minReason: 5,
+                description: "Versi aktif sebelumnya untuk jenis akad yang sama akan dinonaktifkan (tetap tersimpan). Isi akad terkunci setelah disetujui.",
+                fields: [{ key: "sharia", label: "Nama peninjau syariah (DPS)", placeholder: "Nama peninjau syariah" }, { key: "legal", label: "Nama peninjau hukum", placeholder: "Nama peninjau hukum" }] },
+              onConfirm: async (notes, v) => { await rpc("admin_approve_contract", { p_id: c.id, p_sharia_reviewer: v["sharia"] ?? "", p_legal_reviewer: v["legal"] ?? "", p_notes: notes }); toast.success("Akad disetujui"); refresh(); },
+            },
+          ]} /> },
+        ]} />
       )}
+      {preview && <div className="mt-3 whitespace-pre-wrap rounded-lg bg-muted/60 p-3 text-xs"><p className="font-bold">{preview.title}</p><p className="italic">{preview.summary}</p><p className="mt-2">{preview.body}</p></div>}
     </Panel>
-  );
-}
-
-function Approve({ contract, onDone }: { contract: Contract; onDone: () => void }) {
-  const [sharia, setSharia] = useState("");
-  const [legal, setLegal] = useState("");
-  return (
-    <ConfirmAction title="Setujui versi akad?" confirmLabel="Setujui & aktifkan"
-      description={<div className="space-y-2"><p>Versi aktif sebelumnya untuk jenis akad yang sama akan dinonaktifkan (tetap tersimpan). Isi akad terkunci setelah disetujui.</p>
-        <Input aria-label="Nama peninjau syariah" placeholder="Nama peninjau syariah (DPS)" value={sharia} onChange={(e) => setSharia(e.target.value)} />
-        <Input aria-label="Nama peninjau hukum" placeholder="Nama peninjau hukum" value={legal} onChange={(e) => setLegal(e.target.value)} /></div>}
-      minReason={5}
-      onConfirm={async (notes) => { await rpc("admin_approve_contract", { p_id: contract.id, p_sharia_reviewer: sharia, p_legal_reviewer: legal, p_notes: notes }); toast.success("Akad disetujui"); onDone(); }}
-      trigger={(o) => <button type="button" className="text-xs font-semibold text-primary underline" onClick={o}>Setujui</button>} />
   );
 }
 

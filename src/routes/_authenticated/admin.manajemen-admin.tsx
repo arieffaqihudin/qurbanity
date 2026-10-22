@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { PageHead, Panel, Guard, Loading, Failure, Tag, Field, ConfirmAction, Empty, NativeSelect, DataTable } from "@/components/admin/ui";
+import { PageHead, Panel, Guard, Loading, Failure, Tag, Field, ConfirmAction, Empty, NativeSelect, DataTable, RowActions } from "@/components/admin/ui";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { rpc, ROLE_LABEL, type AdminRole } from "@/lib/admin";
@@ -42,24 +42,24 @@ function Page() {
   const refresh = () => { qc.invalidateQueries({ queryKey: ["admin", "members"] }); qc.invalidateQueries({ queryKey: ["admin", "member-activity"] }); };
   return (
     <div className="mx-auto max-w-6xl space-y-3">
-      <PageHead to="/admin/manajemen-admin"><p className="mt-1 text-xs text-muted-foreground">Calon admin harus mendaftar akun terlebih dahulu. Kamu tidak dapat mengubah peranmu sendiri, dan minimal satu SUPERADMIN harus tetap aktif. Semua perubahan tercatat di audit log.</p></PageHead>
+      <PageHead to="/admin/manajemen-admin" count={q.data?.length}><p className="mt-1 text-xs text-muted-foreground">Calon admin harus mendaftar akun terlebih dahulu. Kamu tidak dapat mengubah peranmu sendiri, dan minimal satu SUPERADMIN harus tetap aktif. Semua perubahan tercatat di audit log.</p></PageHead>
       <MemberForm onDone={refresh} />
-      <Panel title="Daftar admin">
-        {q.isPending ? <Loading /> : q.isError ? <Failure error={q.error} /> : (
-          <DataTable rows={q.data} rowKey={(r) => r.user_id} empty={<Empty title="Belum ada admin" />} cols={[
-            { label: "Nama", primary: true, cell: (r) => r.profile?.full_name ?? "—" },
-            { label: "Email", cell: (r) => <span className="break-all">{r.profile?.email}</span> },
-            { label: "Peran", cell: (r) => <Tag tone="primary">{ROLE_LABEL[r.role]}</Tag> },
-            { label: "Status", cell: (r) => (r.is_active ? <Tag tone="success">Aktif</Tag> : <Tag tone="danger">Nonaktif</Tag>) },
-            { label: "Sejak", cell: (r) => formatDate(new Date(r.created_at), { dateStyle: "medium" }) },
-            { label: "Aksi", cell: (r) => r.profile && (
-              <ConfirmAction title={r.is_active ? `Nonaktifkan ${r.profile.full_name}?` : `Aktifkan ${r.profile.full_name}?`} minReason={5} destructive={r.is_active} confirmLabel={r.is_active ? "Nonaktifkan" : "Aktifkan"}
-                onConfirm={async (reason) => { await rpc("admin_set_member", { p_email: r.profile!.email, p_role: r.role, p_active: !r.is_active, p_reason: reason }); toast.success("Status admin diperbarui"); refresh(); }}
-                trigger={(o) => <button type="button" className="text-xs font-semibold text-primary underline" onClick={o}>{r.is_active ? "Nonaktifkan" : "Aktifkan"}</button>} />
-            ) },
-          ]} />
-        )}
-      </Panel>
+      {q.isPending ? <Panel><Loading /></Panel> : q.isError ? <Panel><Failure error={q.error} /></Panel> : (
+        <DataTable rows={q.data} rowKey={(r) => r.user_id} empty={<Empty title="Belum ada admin" />} cols={[
+          { label: "Nama", primary: true, sort: (r) => (r.profile?.full_name ?? "").toLowerCase(), cell: (r) => <span className="font-semibold">{r.profile?.full_name ?? "—"}</span> },
+          { label: "Email", cell: (r) => <span className="break-all">{r.profile?.email}</span> },
+          { label: "Peran", cell: (r) => <Tag tone="primary">{ROLE_LABEL[r.role]}</Tag> },
+          { label: "Status", cell: (r) => (r.is_active ? <Tag tone="success">Aktif</Tag> : <Tag tone="danger">Nonaktif</Tag>) },
+          { label: "Sejak", sort: (r) => r.created_at, hideOnMobile: true, cell: (r) => formatDate(new Date(r.created_at), { dateStyle: "medium" }) },
+          { label: "Aksi", cell: (r) => r.profile && (
+            <RowActions label={`Aksi untuk ${r.profile.full_name}`} items={[{
+              label: r.is_active ? "Nonaktifkan" : "Aktifkan", destructive: r.is_active, separatorBefore: true,
+              confirm: { title: r.is_active ? `Nonaktifkan ${r.profile.full_name}?` : `Aktifkan ${r.profile.full_name}?`, confirmLabel: r.is_active ? "Nonaktifkan" : "Aktifkan", minReason: 5 },
+              onConfirm: async (reason) => { await rpc("admin_set_member", { p_email: r.profile!.email, p_role: r.role, p_active: !r.is_active, p_reason: reason }); toast.success("Status admin diperbarui"); refresh(); },
+            }]} />
+          ) },
+        ]} />
+      )}
       <Panel title="Aktivitas perubahan peran">
         {activity.isPending ? <Loading /> : activity.isError ? <Failure error={activity.error} /> : !activity.data.length ? <Empty title="Belum ada perubahan" /> : (
           <ul className="divide-y divide-border text-sm">{activity.data.map((a) => {

@@ -203,8 +203,8 @@ function LockReview({ unit, cap, used, rows }: { unit: string; cap: number; used
       <p>Tinjau isi unit <b>{unit}</b> sebelum mengunci. Penguncian bersifat final dan memposting ledger: dana komitmen → Pembelian Hewan &amp; Operasional. Sistem menolak bila dana terverifikasi belum mencukupi.</p>
       <ul className="space-y-1">{checks.map((c) => <li key={c.text} className={c.ok ? "text-success" : "font-semibold text-destructive"}>{c.ok ? "✓" : "✕"} {c.text}</li>)}</ul>
       <div className="max-h-48 overflow-y-auto rounded-lg border border-border">
-        <table className="w-full text-xs"><thead className="bg-muted/60 text-left"><tr><th className="p-2">Komitmen</th><th className="p-2">Bagian</th><th className="p-2">Shahibul</th></tr></thead>
-          <tbody>{rows.map((r) => <tr key={r.code} className="border-t border-border"><td className="p-2 font-semibold">{r.code}</td><td className="p-2">{r.shares}</td><td className="p-2">{r.names.join(", ") || "—"}</td></tr>)}</tbody></table>
+        <table className="w-full text-xs"><thead className="bg-muted/40 text-left"><tr><th className="px-3 py-2 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Komitmen</th><th className="px-3 py-2 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Bagian</th><th className="px-3 py-2 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Shahibul</th></tr></thead>
+          <tbody>{rows.map((r) => <tr key={r.code} className="border-t border-border/60"><td className="px-3 py-2 font-semibold">{r.code}</td><td className="px-3 py-2 tabular-nums">{r.shares}</td><td className="px-3 py-2">{r.names.join(", ") || "—"}</td></tr>)}</tbody></table>
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Plus } from "lucide-react";
-import { PageHead, Panel, Guard, Loading, Failure, ProgramFilter, DataTable, Tag, Field, ConfirmAction } from "@/components/admin/ui";
+import { PageHead, Panel, Guard, Loading, Failure, ProgramFilter, DataTable, Tag, Field, ConfirmAction, RowActions } from "@/components/admin/ui";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -28,26 +28,24 @@ function Page() {
   const refresh = () => qc.invalidateQueries({ queryKey: ["admin", "catalog"] });
   return (
     <div className="mx-auto max-w-6xl">
-      <PageHead to="/admin/sapi" actions={<>
+      <PageHead to="/admin/sapi" count={q.data?.length} actions={<>
         <ProgramFilter value={program} onChange={setProgram} allowAll={false} />
         {can("catalog.manage") && program && <Button size="sm" onClick={() => setEditing("new")}><Plus className="size-4" /> Kategori</Button>}
       </>} />
       {editing && <CategoryForm program={program} cat={editing === "new" ? null : editing} onClose={() => setEditing(null)} onSaved={refresh} />}
-      <Panel>
-        {!program ? <p className="text-sm text-muted-foreground">Belum ada program.</p> : q.isPending ? <Loading /> : q.isError ? <Failure error={q.error} onRetry={() => q.refetch()} /> : (
-          <DataTable rows={q.data} rowKey={(r) => r.id} cols={[
-            { label: "Kategori", primary: true, cell: (r) => <span className="font-semibold">{r.name}</span> },
-            { label: "Jenis", cell: (r) => (r.kind === "sapi" ? "Sapi · 7 bagian" : "Kambing · 1 ekor") },
-            { label: "Perkiraan bobot", cell: (r) => r.weight_range ?? "—" },
-            { label: "Harga hewan", className: "text-right tabular-nums", cell: (r) => (r.final ? formatRupiah(r.final.animal_cost) : "—") },
-            { label: "Operasional", className: "text-right tabular-nums", cell: (r) => (r.final ? formatRupiah(r.final.operational_cost) : "—") },
-            { label: "Status harga", cell: (r) => r.final ? <Tag tone="success">FINAL</Tag> : r.latest ? <Tag tone="warning">DRAFT</Tag> : <Tag>Belum ada</Tag> },
-            { label: "Ketersediaan", cell: (r) => (r.final && r.is_available ? <Tag tone="success">Dapat dipilih</Tag> : <Tag tone="danger">Tidak dapat dipilih</Tag>) },
-            { label: "Aksi", cell: (r) => can("catalog.manage") ? <button type="button" className="text-xs font-semibold text-primary underline" onClick={() => setEditing(r)}>Ubah</button> : null },
-          ]} />
-        )}
-        <p className="mt-3 text-xs text-muted-foreground">Kategori tanpa harga FINAL, atau yang dinonaktifkan, tidak bisa dipilih peserta. Harga diatur di menu Harga &amp; Riwayat.</p>
-      </Panel>
+      {!program ? <Panel><p className="text-sm text-muted-foreground">Belum ada program.</p></Panel> : q.isPending ? <Panel><Loading /></Panel> : q.isError ? <Panel><Failure error={q.error} onRetry={() => q.refetch()} /></Panel> : (
+        <DataTable rows={q.data} rowKey={(r) => r.id} cols={[
+          { label: "Kategori", primary: true, sort: (r) => r.name.toLowerCase(), cell: (r) => <span className="font-semibold">{r.name}</span> },
+          { label: "Jenis", cell: (r) => (r.kind === "sapi" ? "Sapi · 7 bagian" : "Kambing · 1 ekor") },
+          { label: "Perkiraan bobot", hideOnMobile: true, cell: (r) => r.weight_range ?? "—" },
+          { label: "Harga hewan", className: "text-right tabular-nums", cell: (r) => (r.final ? formatRupiah(r.final.animal_cost) : "—") },
+          { label: "Operasional", className: "text-right tabular-nums", hideOnMobile: true, cell: (r) => (r.final ? formatRupiah(r.final.operational_cost) : "—") },
+          { label: "Status harga", cell: (r) => r.final ? <Tag tone="success">FINAL</Tag> : r.latest ? <Tag tone="warning">DRAFT</Tag> : <Tag>Belum ada</Tag> },
+          { label: "Ketersediaan", cell: (r) => (r.final && r.is_available ? <Tag tone="success">Dapat dipilih</Tag> : <Tag tone="danger">Tidak dapat dipilih</Tag>) },
+          { label: "Aksi", cell: (r) => <RowActions label={`Aksi untuk ${r.name}`} items={[can("catalog.manage") && { label: "Ubah kategori", onSelect: () => setEditing(r) }]} /> },
+        ]} />
+      )}
+      <p className="mt-3 text-xs text-muted-foreground">Kategori tanpa harga FINAL, atau yang dinonaktifkan, tidak bisa dipilih peserta. Harga diatur di menu Harga &amp; Riwayat.</p>
     </div>
   );
 }
