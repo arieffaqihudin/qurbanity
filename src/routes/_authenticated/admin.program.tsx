@@ -43,9 +43,9 @@ function Page() {
             { label: "Program", primary: true, sort: (r) => r.name.toLowerCase(), cell: (p) => <span className={`font-bold ${current === p.id ? "text-primary underline" : "text-burgundy-dark"}`}>{p.name}</span> },
             { label: "Status", cell: (p) => <Tag tone={p.status === "open" ? "success" : "muted"}>{PROGRAM_STATUS_LABEL[p.status]}</Tag> },
             { label: "Iduladha", cell: (p) => <>{formatDate(new Date(p.iduladha_date), { dateStyle: "medium" })} <span className="text-xs text-muted-foreground">({p.date_status === "official" ? "RESMI" : "PERKIRAAN"})</span></> },
-            { label: "Batas pelunasan", hideOnMobile: true, cell: (p) => formatDate(new Date(p.payment_deadline), { dateStyle: "medium" }) },
+            { label: "Batas pelunasan", hideOnMobile: true, className: "hidden xl:table-cell", cell: (p) => formatDate(new Date(p.payment_deadline), { dateStyle: "medium" }) },
             { label: "Min. pembayaran", className: "text-right tabular-nums", cell: (p) => formatRupiah(p.minimum_payment) },
-            { label: "Pengumuman", className: "text-right tabular-nums", hideOnMobile: true, cell: (p) => `H-${p.announcement_days}` },
+            { label: "Pengumuman", className: "hidden text-right tabular-nums lg:table-cell", hideOnMobile: true, cell: (p) => `H-${p.announcement_days}` },
             { label: "Aksi", cell: (p) => <RowActions label={`Aksi untuk ${p.name}`} items={[
               can("program.manage") && { label: "Ubah data", onSelect: () => setEditing(p) },
               can("program.manage") && {
