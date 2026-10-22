@@ -14,6 +14,11 @@ const search = z.object({ redirect: z.string().optional(), verified: z.coerce.bo
 
 export const Route = createFileRoute("/auth")({
   validateSearch: search,
+  beforeLoad: async ({ search }) => {
+    // Already signed in (fresh login, refresh, or direct visit): route by role immediately.
+    const { data } = await supabase.auth.getUser();
+    if (data.user) throw redirect({ to: await resolveDestination(search.redirect) });
+  },
   head: () => ({ meta: [{ title: "Masuk | qurbanity" }, { name: "description", content: "Masuk ke portal peserta qurbanity." }, { name: "robots", content: "noindex" }] }),
   component: LoginPage,
 });
