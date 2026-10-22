@@ -126,40 +126,26 @@ function Contracts({ programId }: { programId: string }) {
         </div>
       )}
       {q.isPending ? <Loading /> : q.isError ? <Failure error={q.error} /> : (
-        <ul className="divide-y divide-border text-sm">
-          {q.data.map((c) => (
-            <li key={c.id} className="flex flex-wrap items-center gap-2 py-2">
-              <span className="font-semibold">{TYPE_LABEL[c.contract_code]}</span><span className="text-muted-foreground">v{c.version}</span>
-              {c.status === "approved" ? <Tag tone="success">Disetujui</Tag> : c.status === "draft" ? <Tag tone="warning">Draf</Tag> : <Tag>Pensiun</Tag>}
-              {c.is_active && <Tag tone="primary">Aktif</Tag>}
-              {c.status === "approved" && <span className="text-xs text-muted-foreground">Syariah: {c.sharia_reviewer} · Hukum: {c.legal_reviewer} · {c.approved_at && formatDate(new Date(c.approved_at), { dateStyle: "medium", timeStyle: "short" })}</span>}
-              <div className="ml-auto flex gap-2">
-                <button type="button" className="text-xs font-semibold text-primary underline" onClick={() => setPreview(preview?.id === c.id ? null : c)}>Pratinjau</button>
-                {can("program.manage") && c.status === "draft" && <>
-                  <button type="button" className="text-xs font-semibold text-primary underline" onClick={() => setEditing(c)}>Ubah</button>
-                  <Approve contract={c} onDone={refresh} />
-                </>}
-              </div>
-              {preview?.id === c.id && <div className="w-full whitespace-pre-wrap rounded-lg bg-muted/60 p-3 text-xs"><p className="font-bold">{c.title}</p><p className="italic">{c.summary}</p><p className="mt-2">{c.body}</p></div>}
-            </li>
-          ))}
-        </ul>
+        <DataTable rows={q.data} rowKey={(c) => c.id} empty={<Empty title="Belum ada versi akad" text="Buat draf baru untuk jenis akad yang diperlukan." />} cols={[
+          { label: "Jenis akad", primary: true, sort: (c) => c.contract_code, cell: (c) => <span className="font-semibold">{TYPE_LABEL[c.contract_code]}</span> },
+          { label: "Versi", className: "tabular-nums", cell: (c) => `v${c.version}` },
+          { label: "Status", cell: (c) => <span className="inline-flex flex-wrap gap-1">{c.status === "approved" ? <Tag tone="success">Disetujui</Tag> : c.status === "draft" ? <Tag tone="warning">Draf</Tag> : <Tag>Pensiun</Tag>}{c.is_active && <Tag tone="primary">Aktif</Tag>}</span> },
+          { label: "Peninjau", hideOnMobile: true, cell: (c) => c.status === "approved" ? <span className="text-xs text-muted-foreground">Syariah: {c.sharia_reviewer} · Hukum: {c.legal_reviewer} · {c.approved_at && formatDate(new Date(c.approved_at), { dateStyle: "medium", timeStyle: "short" })}</span> : <span className="text-xs text-muted-foreground">—</span> },
+          { label: "Aksi", cell: (c) => <RowActions label={`Aksi untuk ${TYPE_LABEL[c.contract_code]} v${c.version}`} items={[
+            { label: preview?.id === c.id ? "Tutup pratinjau" : "Pratinjau", onSelect: () => setPreview(preview?.id === c.id ? null : c) },
+            can("program.manage") && c.status === "draft" && { label: "Ubah draf", onSelect: () => setEditing(c) },
+            can("program.manage") && c.status === "draft" && {
+              label: "Setujui & aktifkan", separatorBefore: true,
+              confirm: { title: "Setujui versi akad?", confirmLabel: "Setujui & aktifkan", minReason: 5,
+                description: "Versi aktif sebelumnya untuk jenis akad yang sama akan dinonaktifkan (tetap tersimpan). Isi akad terkunci setelah disetujui.",
+                fields: [{ key: "sharia", label: "Nama peninjau syariah (DPS)", placeholder: "Nama peninjau syariah" }, { key: "legal", label: "Nama peninjau hukum", placeholder: "Nama peninjau hukum" }] },
+              onConfirm: async (notes, v) => { await rpc("admin_approve_contract", { p_id: c.id, p_sharia_reviewer: v.sharia ?? "", p_legal_reviewer: v.legal ?? "", p_notes: notes }); toast.success("Akad disetujui"); refresh(); },
+            },
+          ]} /> },
+        ]} />
       )}
+      {preview && <div className="mt-3 whitespace-pre-wrap rounded-lg bg-muted/60 p-3 text-xs"><p className="font-bold">{preview.title}</p><p className="italic">{preview.summary}</p><p className="mt-2">{preview.body}</p></div>}
     </Panel>
-  );
-}
-
-function Approve({ contract, onDone }: { contract: Contract; onDone: () => void }) {
-  const [sharia, setSharia] = useState("");
-  const [legal, setLegal] = useState("");
-  return (
-    <ConfirmAction title="Setujui versi akad?" confirmLabel="Setujui & aktifkan"
-      description={<div className="space-y-2"><p>Versi aktif sebelumnya untuk jenis akad yang sama akan dinonaktifkan (tetap tersimpan). Isi akad terkunci setelah disetujui.</p>
-        <Input aria-label="Nama peninjau syariah" placeholder="Nama peninjau syariah (DPS)" value={sharia} onChange={(e) => setSharia(e.target.value)} />
-        <Input aria-label="Nama peninjau hukum" placeholder="Nama peninjau hukum" value={legal} onChange={(e) => setLegal(e.target.value)} /></div>}
-      minReason={5}
-      onConfirm={async (notes) => { await rpc("admin_approve_contract", { p_id: contract.id, p_sharia_reviewer: sharia, p_legal_reviewer: legal, p_notes: notes }); toast.success("Akad disetujui"); onDone(); }}
-      trigger={(o) => <button type="button" className="text-xs font-semibold text-primary underline" onClick={o}>Setujui</button>} />
   );
 }
 
