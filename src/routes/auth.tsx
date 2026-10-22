@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
 import { Loader2 } from "lucide-react";
@@ -68,7 +68,7 @@ function LoginPage() {
     const { error } = await supabase.auth.signInWithPassword({ email: email.trim().toLowerCase(), password });
     setLoading(false);
     if (error) return setError(authErrorMessage(error.message));
-    navigate({ to: await resolveDestination(redirect), replace: true });
+    navigate({ to: await resolveDestination(dest), replace: true });
   };
 
   return (
