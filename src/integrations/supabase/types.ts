@@ -14,10 +14,70 @@ export type Database = {
   }
   public: {
     Tables: {
+      access_group_permissions: {
+        Row: {
+          group_id: string
+          permission: string
+        }
+        Insert: {
+          group_id: string
+          permission: string
+        }
+        Update: {
+          group_id?: string
+          permission?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "access_group_permissions_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "access_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      access_groups: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          is_active: boolean
+          is_system: boolean
+          name: string
+          role: Database["public"]["Enums"]["admin_role"] | null
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          id?: string
+          is_active?: boolean
+          is_system?: boolean
+          name: string
+          role?: Database["public"]["Enums"]["admin_role"] | null
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          is_active?: boolean
+          is_system?: boolean
+          name?: string
+          role?: Database["public"]["Enums"]["admin_role"] | null
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       admin_members: {
         Row: {
           created_at: string
           created_by: string | null
+          group_id: string | null
           is_active: boolean
           role: Database["public"]["Enums"]["admin_role"]
           updated_at: string
@@ -26,6 +86,7 @@ export type Database = {
         Insert: {
           created_at?: string
           created_by?: string | null
+          group_id?: string | null
           is_active?: boolean
           role: Database["public"]["Enums"]["admin_role"]
           updated_at?: string
@@ -34,12 +95,20 @@ export type Database = {
         Update: {
           created_at?: string
           created_by?: string | null
+          group_id?: string | null
           is_active?: boolean
           role?: Database["public"]["Enums"]["admin_role"]
           updated_at?: string
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "admin_members_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "access_groups"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "admin_members_user_id_fkey"
             columns: ["user_id"]

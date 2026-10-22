@@ -22,6 +22,13 @@
       "when": 1792573450572,
       "tag": "0002_phase3_admin",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792673952041,
+      "tag": "0003_access_groups_and_permission_resolution",
+      "breakpoints": true
     }
   ]
 }
