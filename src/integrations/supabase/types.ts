@@ -1242,6 +1242,21 @@ export type Database = {
           entries: number
         }[]
       }
+      admin_list_audit: {
+        Args: {
+          p_entity?: string
+          p_from?: string
+          p_group?: string
+          p_limit?: number
+          p_offset?: number
+          p_result?: string
+          p_search?: string
+          p_source?: string
+          p_to?: string
+          p_user?: string
+        }
+        Returns: Json
+      }
       admin_list_groups: { Args: never; Returns: Json }
       admin_list_users: {
         Args: {

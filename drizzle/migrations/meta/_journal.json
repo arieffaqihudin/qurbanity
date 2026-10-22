@@ -36,6 +36,13 @@
       "when": 1792673996729,
       "tag": "0004_notifications_and_admin_user_rpcs",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1792674076441,
+      "tag": "0005_admin_invite_signup_path_and_audit_query",
+      "breakpoints": true
     }
   ]
 }
