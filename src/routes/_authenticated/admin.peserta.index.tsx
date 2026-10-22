@@ -52,13 +52,13 @@ function Page() {
           footer={<Pager page={page} pageSize={pageSize} total={q.data.total} onPage={setPage} onPageSize={(s) => set({ size: s === 25 ? undefined : s, page: undefined })} />}
           empty={<Empty title="Tidak ada peserta" text="Coba ubah kata kunci atau filter." />} cols={[
             { label: "Nama Peserta", primary: true, sort: (r) => r.full_name.toLowerCase(), cell: (r) => <Link to="/admin/peserta/$id" params={{ id: r.id }} search={sp} className="font-semibold text-primary hover:underline">{r.full_name}</Link> },
-            { label: "Email", hideOnMobile: true, cell: (r) => <span className="break-all">{r.email}</span> },
+            { label: "Email", hideOnMobile: true, className: "hidden xl:table-cell", cell: (r) => <span className="break-all">{r.email}</span> },
             { label: "WhatsApp", cell: (r) => r.whatsapp },
             { label: "Komitmen", sort: (r) => r.commitments, className: "text-right tabular-nums", cell: (r) => r.commitments },
             { label: "Nilai Komitmen", sort: (r) => r.total, className: "text-right tabular-nums", cell: (r) => formatRupiah(r.total) },
             { label: "Terverifikasi", sort: (r) => r.paid, className: "text-right tabular-nums", cell: (r) => formatRupiah(r.paid) },
             { label: "Status", cell: (r) => <Tag tone={STATUS[r.status]?.tone ?? "muted"}>{STATUS[r.status]?.label ?? r.status}</Tag> },
-            { label: "Bergabung", sort: (r) => r.created_at, hideOnMobile: true, cell: (r) => formatDate(new Date(r.created_at), { dateStyle: "medium" }) },
+            { label: "Bergabung", sort: (r) => r.created_at, hideOnMobile: true, className: "hidden xl:table-cell", cell: (r) => formatDate(new Date(r.created_at), { dateStyle: "medium" }) },
             { label: "Aksi", hideOnMobile: true, cell: (r) => <RowActions label={`Aksi untuk ${r.full_name}`} items={[{ label: "Lihat detail", onSelect: () => nav({ to: "/admin/peserta/$id", params: { id: r.id }, search: sp }) }]} /> },
           ]} />
       )}
