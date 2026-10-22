@@ -81,7 +81,7 @@ function Page() {
                 { label: "Lihat Detail", onSelect: () => setDetail(r) },
                 { label: "Edit", onSelect: () => setEditing(r) },
                 { label: "Kirim Ulang Email Pengaturan", onSelect: async () => {
-                    try { await resendSetup({ data: { email: r.email } }); toast.success("Email pengaturan akun dikirim"); }
+                    try { await resendAdminSetupEmail({ data: { email: r.email } }); toast.success("Email pengaturan akun dikirim"); }
                     catch (e) { toast.error(e instanceof Error ? e.message : "Gagal mengirim email"); }
                   } },
                 {
@@ -105,11 +105,6 @@ function Page() {
       {detail && <UserDetailSheet user={detail} groups={groups.data ?? []} onClose={() => setDetail(null)} />}
     </div>
   );
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks -- didefinisikan sekali per render halaman
-  function resendSetup(args: { data: { email: string } }) {
-    return resendAdminSetupEmail(args);
-  }
 }
 
 function AddUserDialog({ groups, onClose }: { groups: AccessGroup[]; onClose: (saved: boolean) => void }) {

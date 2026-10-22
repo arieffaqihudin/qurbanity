@@ -38,6 +38,7 @@ import { Route as AuthenticatedAdminHargaRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminKeuanganRouteImport } from './routes/_authenticated/admin.keuangan'
 import { Route as AuthenticatedAdminLaporanRouteImport } from './routes/_authenticated/admin.laporan'
 import { Route as AuthenticatedAdminManajemenAdminRouteImport } from './routes/_authenticated/admin.manajemen-admin'
+import { Route as AuthenticatedAdminPenggunaRouteImport } from './routes/_authenticated/admin.pengguna'
 import { Route as AuthenticatedAdminPengumumanRouteImport } from './routes/_authenticated/admin.pengumuman'
 import { Route as AuthenticatedAdminPenyaluranRouteImport } from './routes/_authenticated/admin.penyaluran'
 import { Route as AuthenticatedAdminProgramRouteImport } from './routes/_authenticated/admin.program'
@@ -201,6 +202,12 @@ const AuthenticatedAdminManajemenAdminRoute =
     path: '/manajemen-admin',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminPenggunaRoute =
+  AuthenticatedAdminPenggunaRouteImport.update({
+    id: '/pengguna',
+    path: '/pengguna',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminPengumumanRoute =
   AuthenticatedAdminPengumumanRouteImport.update({
     id: '/pengumuman',
@@ -305,6 +312,7 @@ export interface FileRoutesByFullPath {
   '/admin/keuangan': typeof AuthenticatedAdminKeuanganRoute
   '/admin/laporan': typeof AuthenticatedAdminLaporanRoute
   '/admin/manajemen-admin': typeof AuthenticatedAdminManajemenAdminRoute
+  '/admin/pengguna': typeof AuthenticatedAdminPenggunaRoute
   '/admin/pengumuman': typeof AuthenticatedAdminPengumumanRoute
   '/admin/penyaluran': typeof AuthenticatedAdminPenyaluranRoute
   '/admin/program': typeof AuthenticatedAdminProgramRoute
@@ -345,6 +353,7 @@ export interface FileRoutesByTo {
   '/admin/keuangan': typeof AuthenticatedAdminKeuanganRoute
   '/admin/laporan': typeof AuthenticatedAdminLaporanRoute
   '/admin/manajemen-admin': typeof AuthenticatedAdminManajemenAdminRoute
+  '/admin/pengguna': typeof AuthenticatedAdminPenggunaRoute
   '/admin/pengumuman': typeof AuthenticatedAdminPengumumanRoute
   '/admin/penyaluran': typeof AuthenticatedAdminPenyaluranRoute
   '/admin/program': typeof AuthenticatedAdminProgramRoute
@@ -390,6 +399,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/keuangan': typeof AuthenticatedAdminKeuanganRoute
   '/_authenticated/admin/laporan': typeof AuthenticatedAdminLaporanRoute
   '/_authenticated/admin/manajemen-admin': typeof AuthenticatedAdminManajemenAdminRoute
+  '/_authenticated/admin/pengguna': typeof AuthenticatedAdminPenggunaRoute
   '/_authenticated/admin/pengumuman': typeof AuthenticatedAdminPengumumanRoute
   '/_authenticated/admin/penyaluran': typeof AuthenticatedAdminPenyaluranRoute
   '/_authenticated/admin/program': typeof AuthenticatedAdminProgramRoute
@@ -434,6 +444,7 @@ export interface FileRouteTypes {
     | '/admin/keuangan'
     | '/admin/laporan'
     | '/admin/manajemen-admin'
+    | '/admin/pengguna'
     | '/admin/pengumuman'
     | '/admin/penyaluran'
     | '/admin/program'
@@ -474,6 +485,7 @@ export interface FileRouteTypes {
     | '/admin/keuangan'
     | '/admin/laporan'
     | '/admin/manajemen-admin'
+    | '/admin/pengguna'
     | '/admin/pengumuman'
     | '/admin/penyaluran'
     | '/admin/program'
@@ -518,6 +530,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/keuangan'
     | '/_authenticated/admin/laporan'
     | '/_authenticated/admin/manajemen-admin'
+    | '/_authenticated/admin/pengguna'
     | '/_authenticated/admin/pengumuman'
     | '/_authenticated/admin/penyaluran'
     | '/_authenticated/admin/program'
@@ -748,6 +761,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminManajemenAdminRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/pengguna': {
+      id: '/_authenticated/admin/pengguna'
+      path: '/pengguna'
+      fullPath: '/admin/pengguna'
+      preLoaderRoute: typeof AuthenticatedAdminPenggunaRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/pengumuman': {
       id: '/_authenticated/admin/pengumuman'
       path: '/pengumuman'
@@ -851,6 +871,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminKeuanganRoute: typeof AuthenticatedAdminKeuanganRoute
   AuthenticatedAdminLaporanRoute: typeof AuthenticatedAdminLaporanRoute
   AuthenticatedAdminManajemenAdminRoute: typeof AuthenticatedAdminManajemenAdminRoute
+  AuthenticatedAdminPenggunaRoute: typeof AuthenticatedAdminPenggunaRoute
   AuthenticatedAdminPengumumanRoute: typeof AuthenticatedAdminPengumumanRoute
   AuthenticatedAdminPenyaluranRoute: typeof AuthenticatedAdminPenyaluranRoute
   AuthenticatedAdminProgramRoute: typeof AuthenticatedAdminProgramRoute
@@ -870,6 +891,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminKeuanganRoute: AuthenticatedAdminKeuanganRoute,
   AuthenticatedAdminLaporanRoute: AuthenticatedAdminLaporanRoute,
   AuthenticatedAdminManajemenAdminRoute: AuthenticatedAdminManajemenAdminRoute,
+  AuthenticatedAdminPenggunaRoute: AuthenticatedAdminPenggunaRoute,
   AuthenticatedAdminPengumumanRoute: AuthenticatedAdminPengumumanRoute,
   AuthenticatedAdminPenyaluranRoute: AuthenticatedAdminPenyaluranRoute,
   AuthenticatedAdminProgramRoute: AuthenticatedAdminProgramRoute,
