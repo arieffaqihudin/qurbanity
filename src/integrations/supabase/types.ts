@@ -14,10 +14,70 @@ export type Database = {
   }
   public: {
     Tables: {
+      access_group_permissions: {
+        Row: {
+          group_id: string
+          permission: string
+        }
+        Insert: {
+          group_id: string
+          permission: string
+        }
+        Update: {
+          group_id?: string
+          permission?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "access_group_permissions_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "access_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      access_groups: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          is_active: boolean
+          is_system: boolean
+          name: string
+          role: Database["public"]["Enums"]["admin_role"] | null
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          id?: string
+          is_active?: boolean
+          is_system?: boolean
+          name: string
+          role?: Database["public"]["Enums"]["admin_role"] | null
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          is_active?: boolean
+          is_system?: boolean
+          name?: string
+          role?: Database["public"]["Enums"]["admin_role"] | null
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       admin_members: {
         Row: {
           created_at: string
           created_by: string | null
+          group_id: string | null
           is_active: boolean
           role: Database["public"]["Enums"]["admin_role"]
           updated_at: string
@@ -26,6 +86,7 @@ export type Database = {
         Insert: {
           created_at?: string
           created_by?: string | null
+          group_id?: string | null
           is_active?: boolean
           role: Database["public"]["Enums"]["admin_role"]
           updated_at?: string
@@ -34,6 +95,7 @@ export type Database = {
         Update: {
           created_at?: string
           created_by?: string | null
+          group_id?: string | null
           is_active?: boolean
           role?: Database["public"]["Enums"]["admin_role"]
           updated_at?: string
@@ -41,9 +103,57 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "admin_members_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "access_groups"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "admin_members_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      admin_notifications: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          kind: string
+          link: string | null
+          read_at: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          body?: string
+          created_at?: string
+          id?: string
+          kind: string
+          link?: string | null
+          read_at?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          kind?: string
+          link?: string | null
+          read_at?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -365,6 +475,7 @@ export type Database = {
           new_values: Json | null
           old_values: Json | null
           reason: string | null
+          result: string
           source: string
         }
         Insert: {
@@ -379,6 +490,7 @@ export type Database = {
           new_values?: Json | null
           old_values?: Json | null
           reason?: string | null
+          result?: string
           source?: string
         }
         Update: {
@@ -393,6 +505,7 @@ export type Database = {
           new_values?: Json | null
           old_values?: Json | null
           reason?: string | null
+          result?: string
           source?: string
         }
         Relationships: []
@@ -1109,6 +1222,14 @@ export type Database = {
         Returns: string
       }
       admin_dashboard: { Args: { p_program_id?: string }; Returns: Json }
+      admin_delete_group: {
+        Args: { p_id: string; p_reason: string }
+        Returns: undefined
+      }
+      admin_duplicate_group: {
+        Args: { p_id: string; p_reason: string }
+        Returns: string
+      }
       admin_generate_announcement: {
         Args: { p_program_id: string; p_title: string }
         Returns: string
@@ -1120,6 +1241,32 @@ export type Database = {
           balance: number
           entries: number
         }[]
+      }
+      admin_list_audit: {
+        Args: {
+          p_entity?: string
+          p_from?: string
+          p_group?: string
+          p_limit?: number
+          p_offset?: number
+          p_result?: string
+          p_search?: string
+          p_source?: string
+          p_to?: string
+          p_user?: string
+        }
+        Returns: Json
+      }
+      admin_list_groups: { Args: never; Returns: Json }
+      admin_list_users: {
+        Args: {
+          p_group?: string
+          p_limit?: number
+          p_offset?: number
+          p_search?: string
+          p_status?: string
+        }
+        Returns: Json
       }
       admin_lock_unit: { Args: { p_unit_id: string }; Returns: undefined }
       admin_participants: {
@@ -1174,6 +1321,10 @@ export type Database = {
         Args: { p: Json; p_id: string }
         Returns: string
       }
+      admin_save_group: {
+        Args: { p: Json; p_id: string; p_reason: string }
+        Returns: string
+      }
       admin_save_program: {
         Args: { p: Json; p_id: string; p_reason?: string }
         Returns: string
@@ -1210,6 +1361,20 @@ export type Database = {
           p_unit_id: string
         }
         Returns: undefined
+      }
+      admin_update_user: {
+        Args: {
+          p_active: boolean
+          p_full_name: string
+          p_group_id: string
+          p_reason: string
+          p_user_id: string
+        }
+        Returns: undefined
+      }
+      admin_user_activity: {
+        Args: { p_limit?: number; p_user_id: string }
+        Returns: Json
       }
       admin_verify_stage: {
         Args: {
@@ -1276,8 +1441,19 @@ export type Database = {
         Returns: boolean
       }
       is_staff: { Args: { _user_id: string }; Returns: boolean }
+      known_permissions: { Args: never; Returns: string[] }
       mask_name: { Args: { _n: string }; Returns: string }
       my_admin_access: { Args: never; Returns: Json }
+      notify_admins: {
+        Args: {
+          _body: string
+          _kind: string
+          _link?: string
+          _perm: string
+          _title: string
+        }
+        Returns: undefined
+      }
       post_ledger: {
         Args: {
           _amount: number
