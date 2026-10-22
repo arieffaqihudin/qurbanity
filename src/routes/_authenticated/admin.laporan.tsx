@@ -79,10 +79,10 @@ function Page() {
         ) : (
           <>
           <p className="mb-2 text-xs text-muted-foreground" role="status">Pratinjau {preview.length} dari {rows.length} baris · {cols.length} kolom.{rows.length > PREVIEW && " Unduh untuk melihat seluruh baris."} Klik judul kolom untuk mengurutkan.</p>
-          <div className="max-h-[70vh] overflow-auto rounded-lg border border-border">
-            <table className="w-full text-xs">
-              <thead className="sticky top-0 bg-card"><tr className="border-b border-border text-left">{cols.map((c) => <th key={c} scope="col" aria-sort={sort?.col === c ? (sort.dir === 1 ? "ascending" : "descending") : undefined} className="whitespace-nowrap px-2 py-1.5 font-semibold"><button type="button" className="hover:text-primary" onClick={() => setSort((s) => (s?.col === c ? (s.dir === 1 ? { col: c, dir: -1 } : null) : { col: c, dir: 1 }))}>{human(c)}{sort?.col === c ? (sort.dir === 1 ? " ↑" : " ↓") : ""}</button></th>)}</tr></thead>
-              <tbody>{preview.map((r, i) => <tr key={i} className="border-b border-border/50">{cols.map((c) => <td key={c} className="px-2 py-1 align-top">{fmt(r[c])}</td>)}</tr>)}</tbody>
+          <div className="max-h-[70vh] overflow-auto rounded-2xl border border-border bg-card">
+            <table className="w-full text-sm">
+              <thead className="sticky top-0 bg-muted/40"><tr className="border-b border-border text-left">{cols.map((c) => <th key={c} scope="col" aria-sort={sort?.col === c ? (sort.dir === 1 ? "ascending" : "descending") : undefined} className={cn("whitespace-nowrap px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground", typeof rows[0]?.[c] === "number" && "text-right")}><button type="button" className="uppercase tracking-wide hover:text-primary" onClick={() => setSort((s) => (s?.col === c ? (s.dir === 1 ? { col: c, dir: -1 } : null) : { col: c, dir: 1 }))}>{human(c)}{sort?.col === c ? (sort.dir === 1 ? " ↑" : " ↓") : ""}</button></th>)}</tr></thead>
+              <tbody>{preview.map((r, i) => <tr key={i} className="border-b border-border/60 transition-colors last:border-0 hover:bg-muted/40">{cols.map((c) => <td key={c} className={cn("px-4 py-3 align-middle", typeof r[c] === "number" && "text-right tabular-nums")}>{fmt(r[c])}</td>)}</tr>)}</tbody>
             </table>
           </div>
           </>
