@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Plus } from "lucide-react";
-import { PageHead, Panel, Guard, Loading, Failure, ProgramFilter, DataTable, Tag, Field, ConfirmAction } from "@/components/admin/ui";
+import { PageHead, Panel, Guard, Loading, Failure, ProgramFilter, DataTable, Tag, Field, ConfirmAction, RowActions } from "@/components/admin/ui";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
