@@ -22,6 +22,22 @@ function safePath(p?: string) {
   return p && p.startsWith("/") && !p.startsWith("//") ? p : "/portal";
 }
 
+/** Role-aware post-login destination. Admin roles land on /admin; everyone else on /portal.
+ * Resolves from the server-side admin_members mapping (never from editable profile fields).
+ * Fails closed: if the admin check cannot be verified, the user is treated as a participant. */
+async function resolveDestination(redirect?: string): Promise<string> {
+  const dest = safePath(redirect);
+  let admin = false;
+  try {
+    const { data } = await supabase.rpc("my_admin_access");
+    admin = !!data;
+  } catch {
+    admin = false;
+  }
+  if (admin) return dest.startsWith("/admin") ? dest : "/admin";
+  return dest.startsWith("/admin") ? "/portal" : dest;
+}
+
 function LoginPage() {
   const { redirect, verified } = Route.useSearch();
   const navigate = useNavigate();
