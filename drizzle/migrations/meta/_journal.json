@@ -29,6 +29,13 @@
       "when": 1792673952041,
       "tag": "0003_access_groups_and_permission_resolution",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792673996729,
+      "tag": "0004_notifications_and_admin_user_rpcs",
+      "breakpoints": true
     }
   ]
 }
