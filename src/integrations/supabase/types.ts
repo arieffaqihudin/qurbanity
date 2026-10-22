@@ -78,8 +78,11 @@ export type Database = {
           created_at: string
           created_by: string | null
           group_id: string | null
+          invited_at: string | null
           is_active: boolean
           role: Database["public"]["Enums"]["admin_role"]
+          setup_completed_at: string | null
+          setup_status: string
           updated_at: string
           user_id: string
         }
@@ -87,8 +90,11 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           group_id?: string | null
+          invited_at?: string | null
           is_active?: boolean
           role: Database["public"]["Enums"]["admin_role"]
+          setup_completed_at?: string | null
+          setup_status?: string
           updated_at?: string
           user_id: string
         }
@@ -96,8 +102,11 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           group_id?: string | null
+          invited_at?: string | null
           is_active?: boolean
           role?: Database["public"]["Enums"]["admin_role"]
+          setup_completed_at?: string | null
+          setup_status?: string
           updated_at?: string
           user_id?: string
         }
@@ -1221,6 +1230,10 @@ export type Database = {
         }
         Returns: string
       }
+      admin_create_user: {
+        Args: { p_group_id: string; p_reason: string; p_user_id: string }
+        Returns: undefined
+      }
       admin_dashboard: { Args: { p_program_id?: string }; Returns: Json }
       admin_delete_group: {
         Args: { p_id: string; p_reason: string }
@@ -1287,6 +1300,15 @@ export type Database = {
           contract_code: string
           requires_reconsent: boolean
         }[]
+      }
+      admin_record_activation_event: {
+        Args: {
+          p_action: string
+          p_meta?: Json
+          p_reason?: string
+          p_user_id: string
+        }
+        Returns: undefined
       }
       admin_register_document: {
         Args: {
@@ -1386,6 +1408,7 @@ export type Database = {
         }
         Returns: undefined
       }
+      complete_admin_setup: { Args: never; Returns: undefined }
       count_periods: {
         Args: {
           _freq: Database["public"]["Enums"]["payment_frequency"]
@@ -1444,6 +1467,7 @@ export type Database = {
       known_permissions: { Args: never; Returns: string[] }
       mask_name: { Args: { _n: string }; Returns: string }
       my_admin_access: { Args: never; Returns: Json }
+      my_admin_setup_state: { Args: never; Returns: string }
       notify_admins: {
         Args: {
           _body: string
