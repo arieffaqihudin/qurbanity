@@ -34,40 +34,32 @@ function Page() {
   const current = selected || q.data?.find((p) => p.status === "open")?.id || q.data?.[0]?.id || "";
   return (
     <div className="mx-auto max-w-6xl space-y-3">
-      <PageHead to="/admin/program" actions={can("program.manage") && <Button size="sm" onClick={() => setEditing("new")}><Plus className="size-4" /> Periode baru</Button>} />
+      <PageHead to="/admin/program" count={q.data?.length} actions={can("program.manage") && <Button size="sm" onClick={() => setEditing("new")}><Plus className="size-4" /> Periode baru</Button>} />
       {editing && <ProgramForm program={editing === "new" ? null : editing} onClose={() => setEditing(null)} onSaved={refresh} />}
-      <Panel title="Periode program">
-        {q.isPending ? <Loading /> : q.isError ? <Failure error={q.error} /> : q.data.length === 0 ? <Empty title="Belum ada periode" /> : (
-          <ul className="divide-y divide-border">
-            {q.data.map((p) => (
-              <li key={p.id} className="flex flex-wrap items-center gap-2 py-2 text-sm">
-                <button type="button" onClick={() => setSelected(p.id)} className={`font-bold ${current === p.id ? "text-primary underline" : "text-burgundy-dark"}`}>{p.name}</button>
-                <Tag tone={p.status === "open" ? "success" : "muted"}>{PROGRAM_STATUS_LABEL[p.status]}</Tag>
-                <span className="text-muted-foreground">Iduladha {formatDate(new Date(p.iduladha_date), { dateStyle: "medium" })} ({p.date_status === "official" ? "RESMI" : "PERKIRAAN"}) · batas {formatDate(new Date(p.payment_deadline), { dateStyle: "medium" })} · min. {formatRupiah(p.minimum_payment)} · H-{p.announcement_days}</span>
-                {can("program.manage") && (
-                  <div className="ml-auto flex gap-2">
-                    <button type="button" className="text-xs font-semibold text-primary underline" onClick={() => setEditing(p)}>Ubah</button>
-                    <StatusChanger program={p} onDone={refresh} />
-                  </div>
-                )}
-              </li>
-            ))}
-          </ul>
-        )}
-      </Panel>
+      {q.isPending ? <Panel><Loading /></Panel> : q.isError ? <Panel><Failure error={q.error} /></Panel> : (
+        <>
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Periode program · klik baris untuk melihat versi akadnya</p>
+          <DataTable rows={q.data} rowKey={(r) => r.id} empty={<Empty title="Belum ada periode" />} onRowClick={(p) => setSelected(p.id)} cols={[
+            { label: "Program", primary: true, sort: (r) => r.name.toLowerCase(), cell: (p) => <span className={`font-bold ${current === p.id ? "text-primary underline" : "text-burgundy-dark"}`}>{p.name}</span> },
+            { label: "Status", cell: (p) => <Tag tone={p.status === "open" ? "success" : "muted"}>{PROGRAM_STATUS_LABEL[p.status]}</Tag> },
+            { label: "Iduladha", cell: (p) => <>{formatDate(new Date(p.iduladha_date), { dateStyle: "medium" })} <span className="text-xs text-muted-foreground">({p.date_status === "official" ? "RESMI" : "PERKIRAAN"})</span></> },
+            { label: "Batas pelunasan", hideOnMobile: true, cell: (p) => formatDate(new Date(p.payment_deadline), { dateStyle: "medium" }) },
+            { label: "Min. pembayaran", className: "text-right tabular-nums", cell: (p) => formatRupiah(p.minimum_payment) },
+            { label: "Pengumuman", className: "text-right tabular-nums", hideOnMobile: true, cell: (p) => `H-${p.announcement_days}` },
+            { label: "Aksi", cell: (p) => <RowActions label={`Aksi untuk ${p.name}`} items={[
+              can("program.manage") && { label: "Ubah data", onSelect: () => setEditing(p) },
+              can("program.manage") && {
+                label: "Ubah status", separatorBefore: true,
+                confirm: { title: `Ubah status ${p.name}?`, confirmLabel: "Ubah status", minReason: 5, description: "Hanya satu periode boleh berstatus Dibuka. Komitmen baru hanya diterima saat Dibuka dan sebelum batas pelunasan.",
+                  fields: [{ key: "status", label: "Status baru", type: "select", value: p.status, options: Object.entries(PROGRAM_STATUS_LABEL).map(([k, v]) => ({ value: k, label: v })) }] },
+                onConfirm: async (reason, v) => { await rpc("admin_set_program_status", { p_id: p.id, p_status: v.status || p.status, p_reason: reason }); toast.success("Status periode diperbarui"); refresh(); },
+              },
+            ]} /> },
+          ]} />
+        </>
+      )}
       {current && <Contracts programId={current} />}
     </div>
-  );
-}
-
-function StatusChanger({ program, onDone }: { program: Program; onDone: () => void }) {
-  const [to, setTo] = useState<Program["status"]>(program.status);
-  return (
-    <ConfirmAction title={`Ubah status ${program.name}?`} minReason={5} confirmLabel="Ubah status"
-      description={<div className="space-y-2"><p>Hanya satu periode boleh berstatus Dibuka. Komitmen baru hanya diterima saat Dibuka dan sebelum batas pelunasan.</p>
-        <NativeSelect label="Status baru" value={to} onChange={(v) => setTo(v as Program["status"])}>{Object.entries(PROGRAM_STATUS_LABEL).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</NativeSelect></div>}
-      onConfirm={async (reason) => { await rpc("admin_set_program_status", { p_id: program.id, p_status: to, p_reason: reason }); toast.success("Status periode diperbarui"); onDone(); }}
-      trigger={(o) => <button type="button" className="text-xs font-semibold text-primary underline" onClick={o}>Status</button>} />
   );
 }
 
