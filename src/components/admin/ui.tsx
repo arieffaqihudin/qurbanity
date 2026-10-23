@@ -772,7 +772,7 @@ export function RowActions({
                     onChange={(e) => setValues({ ...values, [f.key]: e.target.value })}
                     className="h-9 w-full rounded-md border border-input bg-background px-2 text-sm"
                   >
-                    {!f.value && <option value="">Pilih…</option>}
+                    {!f.value && <option value="">{`Pilih ${f.label.toLowerCase()}`}</option>}
                     {(f.options ?? []).map((o) => (
                       <option key={o.value} value={o.value}>
                         {o.label}
@@ -795,7 +795,7 @@ export function RowActions({
                 <Label htmlFor="ra-reason" className="text-xs font-semibold">
                   Alasan tindakan (minimal {active.confirm.minReason} karakter)
                 </Label>
-                <Textarea
+                <Textarea placeholder="Jelaskan alasan tindakan ini"
                   id="ra-reason"
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
@@ -892,7 +892,7 @@ export function ConfirmAction({
           {minReason > 0 && (
             <div className="space-y-1">
               <Label htmlFor="confirm-reason">Alasan tindakan (minimal {minReason} karakter)</Label>
-              <Textarea
+              <Textarea placeholder="Jelaskan alasan tindakan ini"
                 id="confirm-reason"
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}

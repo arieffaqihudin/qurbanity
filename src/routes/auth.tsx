@@ -159,7 +159,7 @@ function LoginPage() {
               *
             </span>
           </Label>
-          <Input
+          <Input placeholder="nama@email.com"
             id="email"
             type="email"
             autoComplete="email"
@@ -185,7 +185,7 @@ function LoginPage() {
             </Link>
           </div>
           <div className="mt-1.5">
-            <PasswordInput
+            <PasswordInput placeholder="Masukkan kata sandi"
               id="password"
               autoComplete="current-password"
               value={password}

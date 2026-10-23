@@ -184,7 +184,7 @@ function CategoryForm({
     <Panel title={cat ? `Ubah ${cat.name}` : "Kategori baru"} className="mb-3">
       <div className="grid gap-3 sm:grid-cols-2">
         <Field label="Nama kategori" htmlFor="k-name" error={err.name}>
-          <Input
+          <Input placeholder="Contoh: Sapi Premium"
             id="k-name"
             value={f.name}
             onChange={(e) => setF({ ...f, name: e.target.value })}
@@ -192,7 +192,7 @@ function CategoryForm({
         </Field>
         {!cat && (
           <Field label="Kode" htmlFor="k-code" error={err.code} hint="contoh: sapi-premium">
-            <Input
+            <Input placeholder="Contoh: sapi-premium"
               id="k-code"
               value={f.code}
               onChange={(e) => setF({ ...f, code: e.target.value })}
@@ -221,7 +221,7 @@ function CategoryForm({
           />
         </Field>
         <Field label="Urutan tampil" htmlFor="k-o">
-          <Input
+          <Input placeholder="Contoh: 1"
             id="k-o"
             type="number"
             value={f.sort_order}
@@ -240,7 +240,7 @@ function CategoryForm({
         </div>
         <div className="sm:col-span-2">
           <Field label="Deskripsi" htmlFor="k-d">
-            <Textarea
+            <Textarea placeholder="Jelaskan keunggulan hewan ini"
               id="k-d"
               rows={2}
               value={f.description}

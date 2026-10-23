@@ -429,10 +429,10 @@ function AddUserDialog({
         </DialogHeader>
         <div className="space-y-3">
           <Field label="Nama Lengkap" htmlFor="u-name">
-            <Input id="u-name" value={name} onChange={(e) => setName(e.target.value)} />
+            <Input placeholder="Contoh: Ahmad Fauzi" id="u-name" value={name} onChange={(e) => setName(e.target.value)} />
           </Field>
           <Field label="Email" htmlFor="u-email" error={err ?? undefined}>
-            <Input
+            <Input placeholder="nama@email.com"
               id="u-email"
               type="email"
               value={email}
@@ -494,7 +494,7 @@ function EditUserDialog({
         </DialogHeader>
         <div className="space-y-3">
           <Field label="Nama Lengkap" htmlFor="e-name">
-            <Input id="e-name" value={name} onChange={(e) => setName(e.target.value)} />
+            <Input placeholder="Contoh: Ahmad Fauzi" id="e-name" value={name} onChange={(e) => setName(e.target.value)} />
           </Field>
           <Field label="Grup Pengguna" htmlFor="e-group">
             <NativeSelect

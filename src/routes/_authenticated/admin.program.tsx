@@ -248,11 +248,11 @@ function ProgramForm({
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {!program && (
           <Field label="Tahun Hijriah" htmlFor="p-y" error={err.hijri_year}>
-            <Input id="p-y" inputMode="numeric" value={f.hijri_year} onChange={set("hijri_year")} />
+            <Input placeholder="Contoh: 1448" id="p-y" inputMode="numeric" value={f.hijri_year} onChange={set("hijri_year")} />
           </Field>
         )}
         <Field label="Nama program" htmlFor="p-n" error={err.name}>
-          <Input id="p-n" value={f.name} onChange={set("name")} />
+          <Input placeholder="Contoh: Kurban 1448 H" id="p-n" value={f.name} onChange={set("name")} />
         </Field>
         <Field label="Tanggal Iduladha" htmlFor="p-i" error={err.iduladha_date}>
           <Input id="p-i" type="date" value={f.iduladha_date} onChange={set("iduladha_date")} />
@@ -285,7 +285,7 @@ function ProgramForm({
           />
         </Field>
         <Field label="Minimum pembayaran (Rp)" htmlFor="p-m" error={err.minimum_payment}>
-          <Input
+          <Input placeholder="Contoh: 10000"
             id="p-m"
             inputMode="numeric"
             value={f.minimum_payment}
@@ -293,7 +293,7 @@ function ProgramForm({
           />
         </Field>
         <Field label="Pengumuman H- (hari)" htmlFor="p-a" error={err.announcement_days}>
-          <Input
+          <Input placeholder="Contoh: 7"
             id="p-a"
             inputMode="numeric"
             value={f.announcement_days}
@@ -584,7 +584,7 @@ function ContractForm({
           />
         </Field>
         <Field label="Judul" htmlFor="c-title">
-          <Input
+          <Input placeholder="Contoh: Akad Kurban Tabungan 1448 H"
             id="c-title"
             value={f.title}
             onChange={(e) => setF({ ...f, title: e.target.value })}
@@ -592,14 +592,14 @@ function ContractForm({
         </Field>
       </div>
       <Field label="Ringkasan" htmlFor="c-sum">
-        <Input
+        <Input placeholder="Ringkasan singkat isi akad"
           id="c-sum"
           value={f.summary}
           onChange={(e) => setF({ ...f, summary: e.target.value })}
         />
       </Field>
       <Field label="Isi akad" htmlFor="c-body">
-        <Textarea
+        <Textarea placeholder="Tuliskan isi akad lengkap"
           id="c-body"
           rows={8}
           value={f.body}

@@ -174,7 +174,7 @@ function Wizard() {
               {names.map((n, i) => (
                 <div key={i}>
                   <Label htmlFor={`name${i}`} className="text-xs text-muted-foreground">Shahibul {i + 1}</Label>
-                  <Input id={`name${i}`} value={n} className="mt-1 h-11" aria-invalid={!!errors[`name${i}`]} onChange={(e) => { const c = [...names]; c[i] = e.target.value; setNames(c); }} />
+                  <Input placeholder="Nama orang yang berkurban" id={`name${i}`} value={n} className="mt-1 h-11" aria-invalid={!!errors[`name${i}`]} onChange={(e) => { const c = [...names]; c[i] = e.target.value; setNames(c); }} />
                   <FieldError id={`name${i}-err`} msg={errors[`name${i}`]} />
                 </div>
               ))}

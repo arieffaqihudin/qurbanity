@@ -58,13 +58,13 @@ function ProfileForm({ p }: { p: Database["public"]["Tables"]["profiles"]["Row"]
   return (
     <Card title="Data diri">
       <form onSubmit={submit} className="space-y-4" noValidate>
-        <div><Label htmlFor="full_name">Nama lengkap</Label><Input id="full_name" className="mt-1.5 h-11" value={f.full_name} onChange={(e) => setF({ ...f, full_name: e.target.value })} aria-invalid={!!errs["full_name"]} /><FieldError id="fn-err" msg={errs["full_name"]} /></div>
+        <div><Label htmlFor="full_name">Nama lengkap<span aria-hidden className="text-destructive"> *</span></Label><Input placeholder="Contoh: Ahmad Fauzi" id="full_name" className="mt-1.5 h-11" value={f.full_name} onChange={(e) => setF({ ...f, full_name: e.target.value })} aria-invalid={!!errs["full_name"]} /><FieldError id="fn-err" msg={errs["full_name"]} /></div>
         <div className="grid gap-4 sm:grid-cols-2">
-          <div><Label htmlFor="whatsapp">Nomor WhatsApp</Label><Input id="whatsapp" type="tel" className="mt-1.5 h-11" value={f.whatsapp} onChange={(e) => setF({ ...f, whatsapp: e.target.value })} aria-invalid={!!errs["whatsapp"]} /><FieldError id="wa-err" msg={errs["whatsapp"]} /></div>
+          <div><Label htmlFor="whatsapp">Nomor WhatsApp<span aria-hidden className="text-destructive"> *</span></Label><Input placeholder="Contoh: 0812 3456 7890" id="whatsapp" type="tel" className="mt-1.5 h-11" value={f.whatsapp} onChange={(e) => setF({ ...f, whatsapp: e.target.value })} aria-invalid={!!errs["whatsapp"]} /><FieldError id="wa-err" msg={errs["whatsapp"]} /></div>
           <div><Label htmlFor="email" className="flex items-center gap-1">Email <Lock className="size-3" /></Label><Input id="email" className="mt-1.5 h-11" value={p.email} disabled /></div>
         </div>
         <div><Label htmlFor="birth" className="flex items-center gap-1">Tanggal lahir <Lock className="size-3" /></Label><Input id="birth" className="mt-1.5 h-11" value={formatDate(new Date(`${p.birth_date}T00:00:00+07:00`))} disabled /><p className="mt-1 text-xs text-muted-foreground">Email dan tanggal lahir hanya dapat diubah melalui tim kami.</p></div>
-        <div><Label htmlFor="address">Alamat</Label><Textarea id="address" rows={3} className="mt-1.5" value={f.address} onChange={(e) => setF({ ...f, address: e.target.value })} aria-invalid={!!errs["address"]} /><FieldError id="ad-err" msg={errs["address"]} /></div>
+        <div><Label htmlFor="address">Alamat</Label><Textarea placeholder="Masukkan alamat lengkap" id="address" rows={3} className="mt-1.5" value={f.address} onChange={(e) => setF({ ...f, address: e.target.value })} aria-invalid={!!errs["address"]} /><FieldError id="ad-err" msg={errs["address"]} /></div>
         <Button type="submit" disabled={saving}>{saving && <Loader2 className="animate-spin" />} Simpan profil</Button>
       </form>
     </Card>

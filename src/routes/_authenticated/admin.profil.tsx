@@ -147,7 +147,7 @@ function ProfileEditor({ profile, onSaved }: { profile: AdminProfile; onSaved: (
       <Panel title="Informasi akun">
         <form onSubmit={save} className="space-y-4">
           <Field label="Nama Lengkap" htmlFor="admin-profile-name">
-            <Input
+            <Input placeholder="Contoh: Ahmad Fauzi"
               id="admin-profile-name"
               autoComplete="name"
               maxLength={120}

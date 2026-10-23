@@ -142,7 +142,7 @@ function RegisterPage() {
         {field(
           "full_name",
           "Nama Lengkap *",
-          <Input
+          <Input placeholder="Contoh: Ahmad Fauzi"
             {...aria("full_name")}
             autoComplete="name"
             className="h-11"
@@ -154,7 +154,7 @@ function RegisterPage() {
           {field(
             "email",
             "Email *",
-            <Input
+            <Input placeholder="nama@email.com"
               {...aria("email")}
               type="email"
               autoComplete="email"
@@ -197,7 +197,7 @@ function RegisterPage() {
         {field(
           "address",
           "Alamat *",
-          <Textarea
+          <Textarea placeholder="Masukkan alamat lengkap"
             {...aria("address")}
             autoComplete="street-address"
             rows={2}
@@ -209,7 +209,7 @@ function RegisterPage() {
           {field(
             "password",
             "Kata Sandi *",
-            <PasswordInput
+            <PasswordInput placeholder="Buat kata sandi"
               {...aria("password")}
               autoComplete="new-password"
               value={f.password}
@@ -220,7 +220,7 @@ function RegisterPage() {
           {field(
             "confirm",
             "Konfirmasi Kata Sandi *",
-            <PasswordInput
+            <PasswordInput placeholder="Ulangi kata sandi"
               {...aria("confirm")}
               autoComplete="new-password"
               value={f.confirm}

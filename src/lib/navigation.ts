@@ -6,7 +6,6 @@ import {
   History,
   Camera,
   FileText,
-  UserCircle,
   Users,
   CreditCard,
   XCircle,
@@ -82,12 +81,6 @@ export const PORTAL_NAV: ShellItem[] = [
     label: "Laporan",
     icon: FileText,
     description: "Laporan pelaksanaan dan distribusi kurban.",
-  },
-  {
-    slug: "akun",
-    label: "Akun & Profil",
-    icon: UserCircle,
-    description: "Data diri, keamanan akun, dan persetujuan publikasi.",
   },
 ];
 

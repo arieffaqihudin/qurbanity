@@ -154,7 +154,7 @@ function PriceForm({
     <div className="rounded-lg bg-muted/50 p-3">
       <div className="grid grid-cols-2 gap-2">
         <Field label="Harga hewan (Rp, utuh)" htmlFor={`a-${categoryId}`}>
-          <Input
+          <Input placeholder="Contoh: 25000000"
             id={`a-${categoryId}`}
             inputMode="numeric"
             value={animal}
@@ -162,7 +162,7 @@ function PriceForm({
           />
         </Field>
         <Field label="Biaya operasional (Rp, utuh)" htmlFor={`o-${categoryId}`}>
-          <Input
+          <Input placeholder="Contoh: 500000"
             id={`o-${categoryId}`}
             inputMode="numeric"
             value={ops}

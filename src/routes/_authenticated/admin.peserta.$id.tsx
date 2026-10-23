@@ -321,14 +321,14 @@ function CorrectProfile({
         Hanya data diri yang dapat dikoreksi. Harga saat akad dan isi akad tetap.
       </p>
       <Field label="Nama lengkap" htmlFor="c-name">
-        <Input
+        <Input placeholder="Contoh: Ahmad Fauzi"
           id="c-name"
           value={f.full_name}
           onChange={(e) => setF({ ...f, full_name: e.target.value })}
         />
       </Field>
       <Field label="WhatsApp" htmlFor="c-wa">
-        <Input
+        <Input placeholder="Contoh: 0812 3456 7890"
           id="c-wa"
           value={f.whatsapp}
           onChange={(e) => setF({ ...f, whatsapp: e.target.value })}
@@ -343,7 +343,7 @@ function CorrectProfile({
         />
       </Field>
       <Field label="Alamat" htmlFor="c-addr">
-        <Input
+        <Input placeholder="Masukkan alamat lengkap"
           id="c-addr"
           value={f.address}
           onChange={(e) => setF({ ...f, address: e.target.value })}
@@ -413,7 +413,7 @@ function CorrectShahibul({
       description={
         <div className="space-y-1">
           <p>Koreksi tidak mengubah harga atau akad dan tidak tersedia setelah alokasi dikunci.</p>
-          <Input
+          <Input placeholder="Nama orang yang berkurban"
             aria-label="Nama peserta kurban baru"
             value={name}
             onChange={(e) => setName(e.target.value)}

@@ -80,7 +80,7 @@ function Page() {
           <div>
             <Label htmlFor="pw">Kata sandi baru</Label>
             <div className="mt-1.5">
-              <PasswordInput
+              <PasswordInput placeholder="Buat kata sandi baru"
                 id="pw"
                 autoComplete="new-password"
                 value={pw}
@@ -97,7 +97,7 @@ function Page() {
           <div>
             <Label htmlFor="cf">Konfirmasi kata sandi</Label>
             <div className="mt-1.5">
-              <PasswordInput
+              <PasswordInput placeholder="Ulangi kata sandi baru"
                 id="cf"
                 autoComplete="new-password"
                 value={confirm}

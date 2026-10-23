@@ -404,7 +404,7 @@ function NewUnit({
     <div className="w-full space-y-2 rounded-lg bg-muted/50 p-3">
       <div className="grid gap-2 sm:grid-cols-2">
         <Field label="Kode hewan" htmlFor="u-code" hint="contoh: SR-001">
-          <Input
+          <Input placeholder="Contoh: SR-001"
             id="u-code"
             value={f.code}
             onChange={(e) => setF({ ...f, code: e.target.value })}
@@ -417,7 +417,7 @@ function NewUnit({
             value={f.category}
             onChange={(e) => setF({ ...f, category: e.target.value })}
           >
-            <option value="">Pilih…</option>
+            <option value="">Pilih kategori hewan</option>
             {cats.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.name}
@@ -426,14 +426,14 @@ function NewUnit({
           </select>
         </Field>
         <Field label="Perkiraan bobot" htmlFor="u-w">
-          <Input
+          <Input placeholder="Contoh: 300 kg"
             id="u-w"
             value={f.weight}
             onChange={(e) => setF({ ...f, weight: e.target.value })}
           />
         </Field>
         <Field label="Detail hewan" htmlFor="u-d">
-          <Input
+          <Input placeholder="Contoh: Sapi jantan, sehat, warna cokelat"
             id="u-d"
             value={f.details}
             onChange={(e) => setF({ ...f, details: e.target.value })}

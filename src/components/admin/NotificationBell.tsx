@@ -11,43 +11,43 @@ import { cn } from "@/lib/utils";
 interface Notif { id: string; kind: string; title: string; body: string; link: string | null; read_at: string | null; created_at: string }
 
 /** Lonceng notifikasi di header admin. Data asli dari tabel admin_notifications (RLS: hanya milik sendiri). */
-export function NotificationBell() {
+export function NotificationBell({ table = "admin_notifications", scope = "admin" }: { table?: "admin_notifications" | "participant_notifications"; scope?: string } = {}) {
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
 
   const unread = useQuery({
-    queryKey: ["admin", "notif", "unread"],
+    queryKey: [scope, "notif", "unread"],
     refetchInterval: 60_000,
     queryFn: async () => {
-      const r = await supabase.from("admin_notifications").select("id", { count: "exact", head: true }).is("read_at", null);
+      const r = await supabase.from(table).select("id", { count: "exact", head: true }).is("read_at", null);
       if (r.error) throw new Error(r.error.message);
       return r.count ?? 0;
     },
   });
 
   const list = useQuery({
-    queryKey: ["admin", "notif", "list"],
+    queryKey: [scope, "notif", "list"],
     enabled: open,
     placeholderData: keepPreviousData,
     queryFn: async () => {
-      const r = await supabase.from("admin_notifications").select("*").order("created_at", { ascending: false }).limit(15);
+      const r = await supabase.from(table).select("*").order("created_at", { ascending: false }).limit(15);
       if (r.error) throw new Error(r.error.message);
       return (r.data ?? []) as Notif[];
     },
   });
 
   const refresh = () => {
-    qc.invalidateQueries({ queryKey: ["admin", "notif"] });
+    qc.invalidateQueries({ queryKey: [scope, "notif"] });
   };
 
   const markRead = async (id: string) => {
-    const r = await supabase.from("admin_notifications").update({ read_at: new Date().toISOString() }).eq("id", id);
+    const r = await supabase.from(table).update({ read_at: new Date().toISOString() }).eq("id", id);
     if (r.error) throw new Error(r.error.message);
     refresh();
   };
 
   const markAll = async () => {
-    const r = await supabase.from("admin_notifications").update({ read_at: new Date().toISOString() }).is("read_at", null);
+    const r = await supabase.from(table).update({ read_at: new Date().toISOString() }).is("read_at", null);
     if (r.error) throw new Error(r.error.message);
     refresh();
   };

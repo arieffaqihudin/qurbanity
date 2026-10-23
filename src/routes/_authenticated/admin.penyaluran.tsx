@@ -282,10 +282,10 @@ function VerifyStage({
             />
           </Field>
           <Field label="Lokasi" htmlFor={`v-l-${stage}`}>
-            <Input id={`v-l-${stage}`} value={loc} onChange={(e) => setLoc(e.target.value)} />
+            <Input placeholder="Contoh: Desa Sukamaju, Garut" id={`v-l-${stage}`} value={loc} onChange={(e) => setLoc(e.target.value)} />
           </Field>
           <Field label="Catatan (opsional)" htmlFor={`v-n-${stage}`}>
-            <Input id={`v-n-${stage}`} value={notes} onChange={(e) => setNotes(e.target.value)} />
+            <Input placeholder="Tambahkan catatan jika diperlukan" id={`v-n-${stage}`} value={notes} onChange={(e) => setNotes(e.target.value)} />
           </Field>
         </div>
       }
@@ -401,7 +401,7 @@ function UploadDoc({ programId, onDone }: { programId: string; onDone: () => voi
             />
           </Field>
           <Field label="Judul" htmlFor="doc-title">
-            <Input id="doc-title" value={title} onChange={(e) => setTitle(e.target.value)} />
+            <Input placeholder="Contoh: Penyembelihan di lokasi penyaluran" id="doc-title" value={title} onChange={(e) => setTitle(e.target.value)} />
           </Field>
           <Field label="Kategori" htmlFor="doc-cat">
             <NativeSelect

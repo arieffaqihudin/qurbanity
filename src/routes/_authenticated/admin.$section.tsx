@@ -203,6 +203,7 @@ function SettingsEditor({ def }: { def: (typeof SETTINGS)[string] }) {
                 {f.kind === "textarea" ? (
                   <Textarea
                     id={id}
+                    placeholder={`Tambahkan ${f.label.toLowerCase()}`}
                     rows={3}
                     disabled={!editable}
                     value={String(v ?? "")}
@@ -211,6 +212,7 @@ function SettingsEditor({ def }: { def: (typeof SETTINGS)[string] }) {
                 ) : (
                   <Input
                     id={id}
+                    placeholder={f.kind === "number" ? `Masukkan ${f.label.toLowerCase()} (angka)` : `Masukkan ${f.label.toLowerCase()}`}
                     disabled={!editable}
                     inputMode={f.kind === "number" ? "numeric" : undefined}
                     value={String(v ?? "")}

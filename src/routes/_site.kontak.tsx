@@ -34,10 +34,10 @@ function Page() {
           </div>
           <form onSubmit={(e) => { e.preventDefault(); setSent(true); }} className="space-y-4 rounded-2xl border border-border bg-card p-5 shadow-soft md:p-7">
             <div className="grid gap-4 sm:grid-cols-2">
-              <div><Label htmlFor="nama">Nama lengkap</Label><Input id="nama" required className="mt-1.5 h-11" autoComplete="name" /></div>
-              <div><Label htmlFor="email">Email</Label><Input id="email" type="email" required className="mt-1.5 h-11" autoComplete="email" /></div>
+              <div><Label htmlFor="nama">Nama lengkap<span aria-hidden className="text-destructive"> *</span></Label><Input placeholder="Contoh: Ahmad Fauzi" id="nama" required className="mt-1.5 h-11" autoComplete="name" /></div>
+              <div><Label htmlFor="email">Email<span aria-hidden className="text-destructive"> *</span></Label><Input placeholder="nama@email.com" id="email" type="email" required className="mt-1.5 h-11" autoComplete="email" /></div>
             </div>
-            <div><Label htmlFor="pesan">Pesan</Label><Textarea id="pesan" required rows={5} className="mt-1.5" /></div>
+            <div><Label htmlFor="pesan">Pesan<span aria-hidden className="text-destructive"> *</span></Label><Textarea placeholder="Tulis pertanyaan atau pesan Anda" id="pesan" required rows={5} className="mt-1.5" /></div>
             <Button type="submit" size="lg">Kirim pesan</Button>
             {sent && <Notice kind="info">Formulir belum terhubung ke sistem. Pesanmu belum terkirim; silakan hubungi kami melalui kanal resmi setelah diumumkan.</Notice>}
           </form>

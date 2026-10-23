@@ -198,7 +198,7 @@ function Page() {
         {formError && <FormAlert kind="error">{formError}</FormAlert>}
         <div>
           <Label htmlFor="full_name">Nama Lengkap *</Label>
-          <Input {...props("full_name")} autoComplete="name" className="mt-1.5 h-11" />
+          <Input placeholder="Contoh: Ahmad Fauzi" {...props("full_name")} autoComplete="name" className="mt-1.5 h-11" />
           <FieldError id="full_name-error" msg={errors.full_name} />
         </div>
         <div>
@@ -238,7 +238,7 @@ function Page() {
         </div>
         <div>
           <Label htmlFor="address">Alamat *</Label>
-          <Textarea
+          <Textarea placeholder="Masukkan alamat lengkap"
             {...props("address")}
             autoComplete="street-address"
             rows={2}

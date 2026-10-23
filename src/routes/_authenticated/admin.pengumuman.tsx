@@ -115,7 +115,7 @@ function Page() {
                   </p>
                 )}
                 <div className="flex flex-wrap gap-2">
-                  <Input
+                  <Input placeholder="Contoh: Jadwal penyaluran kurban"
                     aria-label="Judul pengumuman"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}

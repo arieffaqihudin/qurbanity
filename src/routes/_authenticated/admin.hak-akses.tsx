@@ -304,7 +304,7 @@ function GroupDialog({
               Informasi Grup
             </legend>
             <Field label="Nama Grup Pengguna" htmlFor="g-name">
-              <Input
+              <Input placeholder="Contoh: Petugas Keuangan"
                 id="g-name"
                 value={name}
                 disabled={locked}
@@ -324,7 +324,7 @@ function GroupDialog({
             </Field>
             <div className="sm:col-span-2">
               <Field label="Deskripsi" htmlFor="g-desc">
-                <Textarea
+                <Textarea placeholder="Jelaskan tugas grup ini"
                   id="g-desc"
                   rows={2}
                   value={desc}
