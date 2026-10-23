@@ -10,7 +10,9 @@ import { authErrorMessage, passwordSchema } from "@/lib/validation";
 
 export const Route = createFileRoute("/aktivasi-akun")({
   ssr: false,
-  head: () => ({ meta: [{ title: "Aktivasi Akun Admin | qurbanity" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({
+    meta: [{ title: "Aktivasi Akun Admin | qurbanity" }, { name: "robots", content: "noindex" }],
+  }),
   component: Page,
 });
 
@@ -18,7 +20,9 @@ type Ready = "checking" | "ok" | "invalid" | "done";
 
 function isSetupLink() {
   const h = window.location.hash;
-  return /type=(invite|recovery|signup|email_change)/.test(h) || window.location.search.includes("code=");
+  return (
+    /type=(invite|recovery|signup|email_change)/.test(h) || window.location.search.includes("code=")
+  );
 }
 
 function Page() {
@@ -45,7 +49,10 @@ function Page() {
     }
     void checkPending();
     const t = setTimeout(() => setReady((r) => (r === "checking" ? "invalid" : r)), 6000);
-    return () => { data.subscription.unsubscribe(); clearTimeout(t); };
+    return () => {
+      data.subscription.unsubscribe();
+      clearTimeout(t);
+    };
   }, []);
 
   const submit = async (e: FormEvent) => {
@@ -62,33 +69,83 @@ function Page() {
     }
     const { error: doneErr } = await supabase.rpc("complete_admin_setup");
     setLoading(false);
-    if (doneErr) return setErr(doneErr.message);
+    if (doneErr) return setErr("Aktivasi belum dapat diselesaikan. Silakan coba lagi.");
     await supabase.auth.signOut();
     setReady("done");
     setTimeout(() => navigate({ to: "/auth", search: { activated: true }, replace: true }), 2500);
   };
 
   return (
-    <AuthShell title="Aktivasi akun admin" subtitle="Atur kata sandi untuk menyelesaikan aktivasi akunmu.">
-      {ready === "checking" && <p className="flex items-center gap-2 text-muted-foreground"><Loader2 className="size-4 animate-spin" /> Memeriksa tautan aktivasi…</p>}
+    <AuthShell
+      title="Aktivasi akun admin"
+      subtitle="Atur kata sandi untuk menyelesaikan aktivasi akunmu."
+    >
+      {ready === "checking" && (
+        <p className="flex items-center gap-2 text-muted-foreground">
+          <Loader2 className="size-4 animate-spin" /> Memeriksa tautan aktivasi…
+        </p>
+      )}
       {ready === "invalid" && (
         <div className="space-y-4">
-          <FormAlert kind="error">Tautan aktivasi tidak valid, sudah kedaluwarsa, atau sudah digunakan. Minta Superadmin mengaktifkan ulang akunmu.</FormAlert>
-          <Button asChild className="w-full"><Link to="/auth">Ke halaman masuk</Link></Button>
+          <FormAlert kind="error">
+            Tautan aktivasi tidak valid, sudah kedaluwarsa, atau sudah digunakan. Minta Superadmin
+            mengaktifkan ulang akunmu.
+          </FormAlert>
+          <Button asChild className="w-full">
+            <Link to="/auth">Ke halaman masuk</Link>
+          </Button>
         </div>
       )}
       {ready === "done" && (
         <div className="space-y-4">
-          <FormAlert kind="success">Akun berhasil diaktifkan. Silakan masuk menggunakan email dan kata sandi Anda.</FormAlert>
-          <Button asChild className="w-full"><Link to="/auth" search={{ activated: true }}>Masuk sekarang</Link></Button>
+          <FormAlert kind="success">
+            Akun berhasil diaktifkan. Silakan masuk menggunakan email dan kata sandi Anda.
+          </FormAlert>
+          <Button asChild className="w-full">
+            <Link to="/auth" search={{ activated: true }}>
+              Masuk sekarang
+            </Link>
+          </Button>
         </div>
       )}
       {ready === "ok" && (
         <form onSubmit={submit} className="space-y-4" noValidate>
           {err && <FormAlert kind="error">{err}</FormAlert>}
-          <div><Label htmlFor="pw">Kata Sandi Baru</Label><div className="mt-1.5"><PasswordInput id="pw" autoComplete="new-password" value={pw} onChange={(e) => { setPw(e.target.value); setFieldErr(undefined); }} /></div><p className="mt-1 text-xs text-muted-foreground">Min. 10 karakter, berisi huruf dan angka</p></div>
-          <div><Label htmlFor="cf">Konfirmasi Kata Sandi</Label><div className="mt-1.5"><PasswordInput id="cf" autoComplete="new-password" value={confirm} onChange={(e) => { setConfirm(e.target.value); setFieldErr(undefined); }} /></div><FieldError id="pw-err" msg={fieldErr} /></div>
-          <Button type="submit" size="lg" className="w-full" disabled={loading}>{loading && <Loader2 className="animate-spin" />} Aktifkan akun</Button>
+          <div>
+            <Label htmlFor="pw">Kata Sandi Baru</Label>
+            <div className="mt-1.5">
+              <PasswordInput
+                id="pw"
+                autoComplete="new-password"
+                value={pw}
+                onChange={(e) => {
+                  setPw(e.target.value);
+                  setFieldErr(undefined);
+                }}
+              />
+            </div>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Min. 10 karakter, berisi huruf dan angka
+            </p>
+          </div>
+          <div>
+            <Label htmlFor="cf">Konfirmasi Kata Sandi</Label>
+            <div className="mt-1.5">
+              <PasswordInput
+                id="cf"
+                autoComplete="new-password"
+                value={confirm}
+                onChange={(e) => {
+                  setConfirm(e.target.value);
+                  setFieldErr(undefined);
+                }}
+              />
+            </div>
+            <FieldError id="pw-err" msg={fieldErr} />
+          </div>
+          <Button type="submit" size="lg" className="w-full" disabled={loading}>
+            {loading && <Loader2 className="animate-spin" />} Aktifkan akun
+          </Button>
         </form>
       )}
     </AuthShell>

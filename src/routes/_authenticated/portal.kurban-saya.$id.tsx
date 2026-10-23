@@ -4,6 +4,9 @@ import { ArrowLeft, Lock, FileText, Receipt } from "lucide-react";
 import { Card, EmptyState, ErrorState, ExecutionBadge, ExecutionTimeline, LoadingState, PaymentBadge, ProgressBar } from "@/components/portal/StatusUI";
 import { PadangKurban } from "@/components/portal/PadangKurban";
 import { commitmentQuery, FREQ_LABEL, FREQ_UNIT, progressPct } from "@/lib/portal-data";
+import { PaymentStatusBadge } from "@/components/portal/PaymentUI";
+import { Button } from "@/components/ui/button";
+import { commitmentPaymentsQuery, methodLabel } from "@/lib/payments";
 import { formatDate, formatRupiah } from "@/lib/format";
 
 export const Route = createFileRoute("/_authenticated/portal/kurban-saya/$id")({
@@ -76,10 +79,33 @@ function Page() {
       <PadangKurban kind={c.animal_kind_snapshot} pct={pct} name={c.animal_label ?? c.category_name_snapshot} code={c.code} />
 
       <div className="grid gap-6 md:grid-cols-2">
-        <Card title="Riwayat pembayaran"><div className="flex gap-3 text-sm text-muted-foreground"><Receipt className="size-5 shrink-0" />Belum ada pembayaran. Riwayat akan tampil setelah modul pembayaran aktif.</div></Card>
+        <PaymentHistory id={c.id} />
         <Card title="Dokumen"><div className="flex gap-3 text-sm text-muted-foreground"><FileText className="size-5 shrink-0" />Sertifikat dan laporan kurban akan tersedia di sini.</div></Card>
       </div>
     </div>
+  );
+}
+
+function PaymentHistory({ id }: { id: string }) {
+  const q = useQuery(commitmentPaymentsQuery(id));
+  return (
+    <Card title="Riwayat pembayaran" action={<Button size="sm" asChild><Link to="/bayar/$id" params={{ id }}>Bayar</Link></Button>}>
+      {q.isPending ? <p className="text-sm text-muted-foreground">Memuat…</p> : q.isError ? <p role="alert" className="text-sm text-destructive">Riwayat belum dapat dimuat.</p> : q.data.length === 0 ? (
+        <div className="flex gap-3 text-sm text-muted-foreground"><Receipt className="size-5 shrink-0" />Belum ada pembayaran.</div>
+      ) : (
+        <ul className="divide-y divide-border">
+          {q.data.map((p) => (
+            <li key={p.id} className="flex items-center justify-between gap-3 py-2.5 text-sm">
+              <Link to="/pembayaran/status/$orderId" params={{ orderId: p.order_id }} className="min-w-0">
+                <b className="tabular-nums">{formatRupiah(p.amount)}</b>
+                <span className="block truncate text-xs text-muted-foreground">{formatDate(new Date(p.created_at), { dateStyle: "medium" })} · {methodLabel(p.payment_method)}</span>
+              </Link>
+              <PaymentStatusBadge payment={p} />
+            </li>
+          ))}
+        </ul>
+      )}
+    </Card>
   );
 }
 

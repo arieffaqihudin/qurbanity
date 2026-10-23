@@ -14,7 +14,11 @@ import { Route as SiteRouteImport } from './routes/_site'
 import { Route as AktivasiAkunRouteImport } from './routes/aktivasi-akun'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as DaftarRouteImport } from './routes/daftar'
+import { Route as LengkapiProfilRouteImport } from './routes/lengkapi-profil'
+import { Route as LengkapiProfil2RouteImport } from './routes/lengkapi-profil 2'
 import { Route as LupaPasswordRouteImport } from './routes/lupa-password'
+import { Route as MasukRouteImport } from './routes/masuk'
+import { Route as Masuk2RouteImport } from './routes/masuk 2'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedPortalRouteImport } from './routes/_authenticated/portal'
@@ -40,18 +44,26 @@ import { Route as AuthenticatedAdminKeuanganRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminLaporanRouteImport } from './routes/_authenticated/admin.laporan'
 import { Route as AuthenticatedAdminLogAktivitasRouteImport } from './routes/_authenticated/admin.log-aktivitas'
 import { Route as AuthenticatedAdminManajemenAdminRouteImport } from './routes/_authenticated/admin.manajemen-admin'
+import { Route as AuthenticatedAdminPembayaranRouteImport } from './routes/_authenticated/admin.pembayaran'
 import { Route as AuthenticatedAdminPenggunaRouteImport } from './routes/_authenticated/admin.pengguna'
 import { Route as AuthenticatedAdminPengumumanRouteImport } from './routes/_authenticated/admin.pengumuman'
 import { Route as AuthenticatedAdminPenyaluranRouteImport } from './routes/_authenticated/admin.penyaluran'
+import { Route as AuthenticatedAdminProfilRouteImport } from './routes/_authenticated/admin.profil'
+import { Route as AuthenticatedAdminProfil2RouteImport } from './routes/_authenticated/admin.profil 2'
 import { Route as AuthenticatedAdminProgramRouteImport } from './routes/_authenticated/admin.program'
 import { Route as AuthenticatedAdminSapiRouteImport } from './routes/_authenticated/admin.sapi'
 import { Route as AuthenticatedAdminSedekahRouteImport } from './routes/_authenticated/admin.sedekah'
+import { Route as AuthenticatedBayarIdRouteImport } from './routes/_authenticated/bayar.$id'
 import { Route as AuthenticatedPortalIndexRouteImport } from './routes/_authenticated/portal.index'
 import { Route as AuthenticatedPortalSectionRouteImport } from './routes/_authenticated/portal.$section'
+import { Route as AuthenticatedPortalAktivitasRouteImport } from './routes/_authenticated/portal.aktivitas'
 import { Route as AuthenticatedPortalAkunRouteImport } from './routes/_authenticated/portal.akun'
+import { Route as AuthenticatedPortalBayarRouteImport } from './routes/_authenticated/portal.bayar'
 import { Route as AuthenticatedPortalKurbanBaruRouteImport } from './routes/_authenticated/portal.kurban-baru'
 import { Route as AuthenticatedAdminPesertaIndexRouteImport } from './routes/_authenticated/admin.peserta.index'
 import { Route as AuthenticatedAdminPesertaIdRouteImport } from './routes/_authenticated/admin.peserta.$id'
+import { Route as AuthenticatedPembayaranKuitansiOrderIdRouteImport } from './routes/_authenticated/pembayaran.kuitansi.$orderId'
+import { Route as AuthenticatedPembayaranStatusOrderIdRouteImport } from './routes/_authenticated/pembayaran.status.$orderId'
 import { Route as AuthenticatedPortalKurbanSayaIndexRouteImport } from './routes/_authenticated/portal.kurban-saya.index'
 import { Route as AuthenticatedPortalKurbanSayaIdRouteImport } from './routes/_authenticated/portal.kurban-saya.$id'
 
@@ -78,9 +90,29 @@ const DaftarRoute = DaftarRouteImport.update({
   path: '/daftar',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LengkapiProfilRoute = LengkapiProfilRouteImport.update({
+  id: '/lengkapi-profil',
+  path: '/lengkapi-profil',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LengkapiProfil2Route = LengkapiProfil2RouteImport.update({
+  id: '/lengkapi-profil 2',
+  path: '/lengkapi-profil 2',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LupaPasswordRoute = LupaPasswordRouteImport.update({
   id: '/lupa-password',
   path: '/lupa-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MasukRoute = MasukRouteImport.update({
+  id: '/masuk',
+  path: '/masuk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Masuk2Route = Masuk2RouteImport.update({
+  id: '/masuk 2',
+  path: '/masuk 2',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -215,6 +247,12 @@ const AuthenticatedAdminManajemenAdminRoute =
     path: '/manajemen-admin',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminPembayaranRoute =
+  AuthenticatedAdminPembayaranRouteImport.update({
+    id: '/pembayaran',
+    path: '/pembayaran',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminPenggunaRoute =
   AuthenticatedAdminPenggunaRouteImport.update({
     id: '/pengguna',
@@ -231,6 +269,18 @@ const AuthenticatedAdminPenyaluranRoute =
   AuthenticatedAdminPenyaluranRouteImport.update({
     id: '/penyaluran',
     path: '/penyaluran',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminProfilRoute =
+  AuthenticatedAdminProfilRouteImport.update({
+    id: '/profil',
+    path: '/profil',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminProfil2Route =
+  AuthenticatedAdminProfil2RouteImport.update({
+    id: '/profil 2',
+    path: '/profil 2',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminProgramRoute =
@@ -250,6 +300,11 @@ const AuthenticatedAdminSedekahRoute =
     path: '/sedekah',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedBayarIdRoute = AuthenticatedBayarIdRouteImport.update({
+  id: '/bayar/$id',
+  path: '/bayar/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedPortalIndexRoute =
   AuthenticatedPortalIndexRouteImport.update({
     id: '/',
@@ -262,11 +317,23 @@ const AuthenticatedPortalSectionRoute =
     path: '/$section',
     getParentRoute: () => AuthenticatedPortalRoute,
   } as any)
+const AuthenticatedPortalAktivitasRoute =
+  AuthenticatedPortalAktivitasRouteImport.update({
+    id: '/aktivitas',
+    path: '/aktivitas',
+    getParentRoute: () => AuthenticatedPortalRoute,
+  } as any)
 const AuthenticatedPortalAkunRoute = AuthenticatedPortalAkunRouteImport.update({
   id: '/akun',
   path: '/akun',
   getParentRoute: () => AuthenticatedPortalRoute,
 } as any)
+const AuthenticatedPortalBayarRoute =
+  AuthenticatedPortalBayarRouteImport.update({
+    id: '/bayar',
+    path: '/bayar',
+    getParentRoute: () => AuthenticatedPortalRoute,
+  } as any)
 const AuthenticatedPortalKurbanBaruRoute =
   AuthenticatedPortalKurbanBaruRouteImport.update({
     id: '/kurban-baru',
@@ -284,6 +351,18 @@ const AuthenticatedAdminPesertaIdRoute =
     id: '/peserta/$id',
     path: '/peserta/$id',
     getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedPembayaranKuitansiOrderIdRoute =
+  AuthenticatedPembayaranKuitansiOrderIdRouteImport.update({
+    id: '/pembayaran/kuitansi/$orderId',
+    path: '/pembayaran/kuitansi/$orderId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPembayaranStatusOrderIdRoute =
+  AuthenticatedPembayaranStatusOrderIdRouteImport.update({
+    id: '/pembayaran/status/$orderId',
+    path: '/pembayaran/status/$orderId',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedPortalKurbanSayaIndexRoute =
   AuthenticatedPortalKurbanSayaIndexRouteImport.update({
@@ -303,7 +382,11 @@ export interface FileRoutesByFullPath {
   '/aktivasi-akun': typeof AktivasiAkunRoute
   '/auth': typeof AuthRoute
   '/daftar': typeof DaftarRoute
+  '/lengkapi-profil': typeof LengkapiProfilRoute
+  '/lengkapi-profil 2': typeof LengkapiProfil2Route
   '/lupa-password': typeof LupaPasswordRoute
+  '/masuk': typeof MasukRoute
+  '/masuk 2': typeof Masuk2Route
   '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/portal': typeof AuthenticatedPortalRouteWithChildren
@@ -327,18 +410,26 @@ export interface FileRoutesByFullPath {
   '/admin/laporan': typeof AuthenticatedAdminLaporanRoute
   '/admin/log-aktivitas': typeof AuthenticatedAdminLogAktivitasRoute
   '/admin/manajemen-admin': typeof AuthenticatedAdminManajemenAdminRoute
+  '/admin/pembayaran': typeof AuthenticatedAdminPembayaranRoute
   '/admin/pengguna': typeof AuthenticatedAdminPenggunaRoute
   '/admin/pengumuman': typeof AuthenticatedAdminPengumumanRoute
   '/admin/penyaluran': typeof AuthenticatedAdminPenyaluranRoute
+  '/admin/profil': typeof AuthenticatedAdminProfilRoute
+  '/admin/profil 2': typeof AuthenticatedAdminProfil2Route
   '/admin/program': typeof AuthenticatedAdminProgramRoute
   '/admin/sapi': typeof AuthenticatedAdminSapiRoute
   '/admin/sedekah': typeof AuthenticatedAdminSedekahRoute
+  '/bayar/$id': typeof AuthenticatedBayarIdRoute
   '/portal/$section': typeof AuthenticatedPortalSectionRoute
+  '/portal/aktivitas': typeof AuthenticatedPortalAktivitasRoute
   '/portal/akun': typeof AuthenticatedPortalAkunRoute
+  '/portal/bayar': typeof AuthenticatedPortalBayarRoute
   '/portal/kurban-baru': typeof AuthenticatedPortalKurbanBaruRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/portal/': typeof AuthenticatedPortalIndexRoute
   '/admin/peserta/$id': typeof AuthenticatedAdminPesertaIdRoute
+  '/pembayaran/kuitansi/$orderId': typeof AuthenticatedPembayaranKuitansiOrderIdRoute
+  '/pembayaran/status/$orderId': typeof AuthenticatedPembayaranStatusOrderIdRoute
   '/portal/kurban-saya/$id': typeof AuthenticatedPortalKurbanSayaIdRoute
   '/admin/peserta/': typeof AuthenticatedAdminPesertaIndexRoute
   '/portal/kurban-saya/': typeof AuthenticatedPortalKurbanSayaIndexRoute
@@ -348,7 +439,11 @@ export interface FileRoutesByTo {
   '/aktivasi-akun': typeof AktivasiAkunRoute
   '/auth': typeof AuthRoute
   '/daftar': typeof DaftarRoute
+  '/lengkapi-profil': typeof LengkapiProfilRoute
+  '/lengkapi-profil 2': typeof LengkapiProfil2Route
   '/lupa-password': typeof LupaPasswordRoute
+  '/masuk': typeof MasukRoute
+  '/masuk 2': typeof Masuk2Route
   '/reset-password': typeof ResetPasswordRoute
   '/akad-program': typeof SiteAkadProgramRoute
   '/cara-kerja': typeof SiteCaraKerjaRoute
@@ -370,18 +465,26 @@ export interface FileRoutesByTo {
   '/admin/laporan': typeof AuthenticatedAdminLaporanRoute
   '/admin/log-aktivitas': typeof AuthenticatedAdminLogAktivitasRoute
   '/admin/manajemen-admin': typeof AuthenticatedAdminManajemenAdminRoute
+  '/admin/pembayaran': typeof AuthenticatedAdminPembayaranRoute
   '/admin/pengguna': typeof AuthenticatedAdminPenggunaRoute
   '/admin/pengumuman': typeof AuthenticatedAdminPengumumanRoute
   '/admin/penyaluran': typeof AuthenticatedAdminPenyaluranRoute
+  '/admin/profil': typeof AuthenticatedAdminProfilRoute
+  '/admin/profil 2': typeof AuthenticatedAdminProfil2Route
   '/admin/program': typeof AuthenticatedAdminProgramRoute
   '/admin/sapi': typeof AuthenticatedAdminSapiRoute
   '/admin/sedekah': typeof AuthenticatedAdminSedekahRoute
+  '/bayar/$id': typeof AuthenticatedBayarIdRoute
   '/portal/$section': typeof AuthenticatedPortalSectionRoute
+  '/portal/aktivitas': typeof AuthenticatedPortalAktivitasRoute
   '/portal/akun': typeof AuthenticatedPortalAkunRoute
+  '/portal/bayar': typeof AuthenticatedPortalBayarRoute
   '/portal/kurban-baru': typeof AuthenticatedPortalKurbanBaruRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/portal': typeof AuthenticatedPortalIndexRoute
   '/admin/peserta/$id': typeof AuthenticatedAdminPesertaIdRoute
+  '/pembayaran/kuitansi/$orderId': typeof AuthenticatedPembayaranKuitansiOrderIdRoute
+  '/pembayaran/status/$orderId': typeof AuthenticatedPembayaranStatusOrderIdRoute
   '/portal/kurban-saya/$id': typeof AuthenticatedPortalKurbanSayaIdRoute
   '/admin/peserta': typeof AuthenticatedAdminPesertaIndexRoute
   '/portal/kurban-saya': typeof AuthenticatedPortalKurbanSayaIndexRoute
@@ -393,7 +496,11 @@ export interface FileRoutesById {
   '/aktivasi-akun': typeof AktivasiAkunRoute
   '/auth': typeof AuthRoute
   '/daftar': typeof DaftarRoute
+  '/lengkapi-profil': typeof LengkapiProfilRoute
+  '/lengkapi-profil 2': typeof LengkapiProfil2Route
   '/lupa-password': typeof LupaPasswordRoute
+  '/masuk': typeof MasukRoute
+  '/masuk 2': typeof Masuk2Route
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/portal': typeof AuthenticatedPortalRouteWithChildren
@@ -418,18 +525,26 @@ export interface FileRoutesById {
   '/_authenticated/admin/laporan': typeof AuthenticatedAdminLaporanRoute
   '/_authenticated/admin/log-aktivitas': typeof AuthenticatedAdminLogAktivitasRoute
   '/_authenticated/admin/manajemen-admin': typeof AuthenticatedAdminManajemenAdminRoute
+  '/_authenticated/admin/pembayaran': typeof AuthenticatedAdminPembayaranRoute
   '/_authenticated/admin/pengguna': typeof AuthenticatedAdminPenggunaRoute
   '/_authenticated/admin/pengumuman': typeof AuthenticatedAdminPengumumanRoute
   '/_authenticated/admin/penyaluran': typeof AuthenticatedAdminPenyaluranRoute
+  '/_authenticated/admin/profil': typeof AuthenticatedAdminProfilRoute
+  '/_authenticated/admin/profil 2': typeof AuthenticatedAdminProfil2Route
   '/_authenticated/admin/program': typeof AuthenticatedAdminProgramRoute
   '/_authenticated/admin/sapi': typeof AuthenticatedAdminSapiRoute
   '/_authenticated/admin/sedekah': typeof AuthenticatedAdminSedekahRoute
+  '/_authenticated/bayar/$id': typeof AuthenticatedBayarIdRoute
   '/_authenticated/portal/$section': typeof AuthenticatedPortalSectionRoute
+  '/_authenticated/portal/aktivitas': typeof AuthenticatedPortalAktivitasRoute
   '/_authenticated/portal/akun': typeof AuthenticatedPortalAkunRoute
+  '/_authenticated/portal/bayar': typeof AuthenticatedPortalBayarRoute
   '/_authenticated/portal/kurban-baru': typeof AuthenticatedPortalKurbanBaruRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/portal/': typeof AuthenticatedPortalIndexRoute
   '/_authenticated/admin/peserta/$id': typeof AuthenticatedAdminPesertaIdRoute
+  '/_authenticated/pembayaran/kuitansi/$orderId': typeof AuthenticatedPembayaranKuitansiOrderIdRoute
+  '/_authenticated/pembayaran/status/$orderId': typeof AuthenticatedPembayaranStatusOrderIdRoute
   '/_authenticated/portal/kurban-saya/$id': typeof AuthenticatedPortalKurbanSayaIdRoute
   '/_authenticated/admin/peserta/': typeof AuthenticatedAdminPesertaIndexRoute
   '/_authenticated/portal/kurban-saya/': typeof AuthenticatedPortalKurbanSayaIndexRoute
@@ -441,7 +556,11 @@ export interface FileRouteTypes {
     | '/aktivasi-akun'
     | '/auth'
     | '/daftar'
+    | '/lengkapi-profil'
+    | '/lengkapi-profil 2'
     | '/lupa-password'
+    | '/masuk'
+    | '/masuk 2'
     | '/reset-password'
     | '/admin'
     | '/portal'
@@ -465,18 +584,26 @@ export interface FileRouteTypes {
     | '/admin/laporan'
     | '/admin/log-aktivitas'
     | '/admin/manajemen-admin'
+    | '/admin/pembayaran'
     | '/admin/pengguna'
     | '/admin/pengumuman'
     | '/admin/penyaluran'
+    | '/admin/profil'
+    | '/admin/profil 2'
     | '/admin/program'
     | '/admin/sapi'
     | '/admin/sedekah'
+    | '/bayar/$id'
     | '/portal/$section'
+    | '/portal/aktivitas'
     | '/portal/akun'
+    | '/portal/bayar'
     | '/portal/kurban-baru'
     | '/admin/'
     | '/portal/'
     | '/admin/peserta/$id'
+    | '/pembayaran/kuitansi/$orderId'
+    | '/pembayaran/status/$orderId'
     | '/portal/kurban-saya/$id'
     | '/admin/peserta/'
     | '/portal/kurban-saya/'
@@ -486,7 +613,11 @@ export interface FileRouteTypes {
     | '/aktivasi-akun'
     | '/auth'
     | '/daftar'
+    | '/lengkapi-profil'
+    | '/lengkapi-profil 2'
     | '/lupa-password'
+    | '/masuk'
+    | '/masuk 2'
     | '/reset-password'
     | '/akad-program'
     | '/cara-kerja'
@@ -508,18 +639,26 @@ export interface FileRouteTypes {
     | '/admin/laporan'
     | '/admin/log-aktivitas'
     | '/admin/manajemen-admin'
+    | '/admin/pembayaran'
     | '/admin/pengguna'
     | '/admin/pengumuman'
     | '/admin/penyaluran'
+    | '/admin/profil'
+    | '/admin/profil 2'
     | '/admin/program'
     | '/admin/sapi'
     | '/admin/sedekah'
+    | '/bayar/$id'
     | '/portal/$section'
+    | '/portal/aktivitas'
     | '/portal/akun'
+    | '/portal/bayar'
     | '/portal/kurban-baru'
     | '/admin'
     | '/portal'
     | '/admin/peserta/$id'
+    | '/pembayaran/kuitansi/$orderId'
+    | '/pembayaran/status/$orderId'
     | '/portal/kurban-saya/$id'
     | '/admin/peserta'
     | '/portal/kurban-saya'
@@ -530,7 +669,11 @@ export interface FileRouteTypes {
     | '/aktivasi-akun'
     | '/auth'
     | '/daftar'
+    | '/lengkapi-profil'
+    | '/lengkapi-profil 2'
     | '/lupa-password'
+    | '/masuk'
+    | '/masuk 2'
     | '/reset-password'
     | '/_authenticated/admin'
     | '/_authenticated/portal'
@@ -555,18 +698,26 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/laporan'
     | '/_authenticated/admin/log-aktivitas'
     | '/_authenticated/admin/manajemen-admin'
+    | '/_authenticated/admin/pembayaran'
     | '/_authenticated/admin/pengguna'
     | '/_authenticated/admin/pengumuman'
     | '/_authenticated/admin/penyaluran'
+    | '/_authenticated/admin/profil'
+    | '/_authenticated/admin/profil 2'
     | '/_authenticated/admin/program'
     | '/_authenticated/admin/sapi'
     | '/_authenticated/admin/sedekah'
+    | '/_authenticated/bayar/$id'
     | '/_authenticated/portal/$section'
+    | '/_authenticated/portal/aktivitas'
     | '/_authenticated/portal/akun'
+    | '/_authenticated/portal/bayar'
     | '/_authenticated/portal/kurban-baru'
     | '/_authenticated/admin/'
     | '/_authenticated/portal/'
     | '/_authenticated/admin/peserta/$id'
+    | '/_authenticated/pembayaran/kuitansi/$orderId'
+    | '/_authenticated/pembayaran/status/$orderId'
     | '/_authenticated/portal/kurban-saya/$id'
     | '/_authenticated/admin/peserta/'
     | '/_authenticated/portal/kurban-saya/'
@@ -578,7 +729,11 @@ export interface RootRouteChildren {
   AktivasiAkunRoute: typeof AktivasiAkunRoute
   AuthRoute: typeof AuthRoute
   DaftarRoute: typeof DaftarRoute
+  LengkapiProfilRoute: typeof LengkapiProfilRoute
+  LengkapiProfil2Route: typeof LengkapiProfil2Route
   LupaPasswordRoute: typeof LupaPasswordRoute
+  MasukRoute: typeof MasukRoute
+  Masuk2Route: typeof Masuk2Route
   ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
@@ -619,11 +774,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DaftarRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/lengkapi-profil': {
+      id: '/lengkapi-profil'
+      path: '/lengkapi-profil'
+      fullPath: '/lengkapi-profil'
+      preLoaderRoute: typeof LengkapiProfilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lengkapi-profil 2': {
+      id: '/lengkapi-profil 2'
+      path: '/lengkapi-profil 2'
+      fullPath: '/lengkapi-profil 2'
+      preLoaderRoute: typeof LengkapiProfil2RouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lupa-password': {
       id: '/lupa-password'
       path: '/lupa-password'
       fullPath: '/lupa-password'
       preLoaderRoute: typeof LupaPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/masuk': {
+      id: '/masuk'
+      path: '/masuk'
+      fullPath: '/masuk'
+      preLoaderRoute: typeof MasukRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/masuk 2': {
+      id: '/masuk 2'
+      path: '/masuk 2'
+      fullPath: '/masuk 2'
+      preLoaderRoute: typeof Masuk2RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password': {
@@ -801,6 +984,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminManajemenAdminRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/pembayaran': {
+      id: '/_authenticated/admin/pembayaran'
+      path: '/pembayaran'
+      fullPath: '/admin/pembayaran'
+      preLoaderRoute: typeof AuthenticatedAdminPembayaranRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/pengguna': {
       id: '/_authenticated/admin/pengguna'
       path: '/pengguna'
@@ -820,6 +1010,20 @@ declare module '@tanstack/react-router' {
       path: '/penyaluran'
       fullPath: '/admin/penyaluran'
       preLoaderRoute: typeof AuthenticatedAdminPenyaluranRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/profil': {
+      id: '/_authenticated/admin/profil'
+      path: '/profil'
+      fullPath: '/admin/profil'
+      preLoaderRoute: typeof AuthenticatedAdminProfilRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/profil 2': {
+      id: '/_authenticated/admin/profil 2'
+      path: '/profil 2'
+      fullPath: '/admin/profil 2'
+      preLoaderRoute: typeof AuthenticatedAdminProfil2RouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/program': {
@@ -843,6 +1047,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSedekahRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/bayar/$id': {
+      id: '/_authenticated/bayar/$id'
+      path: '/bayar/$id'
+      fullPath: '/bayar/$id'
+      preLoaderRoute: typeof AuthenticatedBayarIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/portal/': {
       id: '/_authenticated/portal/'
       path: '/'
@@ -857,11 +1068,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPortalSectionRouteImport
       parentRoute: typeof AuthenticatedPortalRoute
     }
+    '/_authenticated/portal/aktivitas': {
+      id: '/_authenticated/portal/aktivitas'
+      path: '/aktivitas'
+      fullPath: '/portal/aktivitas'
+      preLoaderRoute: typeof AuthenticatedPortalAktivitasRouteImport
+      parentRoute: typeof AuthenticatedPortalRoute
+    }
     '/_authenticated/portal/akun': {
       id: '/_authenticated/portal/akun'
       path: '/akun'
       fullPath: '/portal/akun'
       preLoaderRoute: typeof AuthenticatedPortalAkunRouteImport
+      parentRoute: typeof AuthenticatedPortalRoute
+    }
+    '/_authenticated/portal/bayar': {
+      id: '/_authenticated/portal/bayar'
+      path: '/bayar'
+      fullPath: '/portal/bayar'
+      preLoaderRoute: typeof AuthenticatedPortalBayarRouteImport
       parentRoute: typeof AuthenticatedPortalRoute
     }
     '/_authenticated/portal/kurban-baru': {
@@ -884,6 +1109,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/peserta/$id'
       preLoaderRoute: typeof AuthenticatedAdminPesertaIdRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/pembayaran/kuitansi/$orderId': {
+      id: '/_authenticated/pembayaran/kuitansi/$orderId'
+      path: '/pembayaran/kuitansi/$orderId'
+      fullPath: '/pembayaran/kuitansi/$orderId'
+      preLoaderRoute: typeof AuthenticatedPembayaranKuitansiOrderIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pembayaran/status/$orderId': {
+      id: '/_authenticated/pembayaran/status/$orderId'
+      path: '/pembayaran/status/$orderId'
+      fullPath: '/pembayaran/status/$orderId'
+      preLoaderRoute: typeof AuthenticatedPembayaranStatusOrderIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/portal/kurban-saya/': {
       id: '/_authenticated/portal/kurban-saya/'
@@ -912,9 +1151,12 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminLaporanRoute: typeof AuthenticatedAdminLaporanRoute
   AuthenticatedAdminLogAktivitasRoute: typeof AuthenticatedAdminLogAktivitasRoute
   AuthenticatedAdminManajemenAdminRoute: typeof AuthenticatedAdminManajemenAdminRoute
+  AuthenticatedAdminPembayaranRoute: typeof AuthenticatedAdminPembayaranRoute
   AuthenticatedAdminPenggunaRoute: typeof AuthenticatedAdminPenggunaRoute
   AuthenticatedAdminPengumumanRoute: typeof AuthenticatedAdminPengumumanRoute
   AuthenticatedAdminPenyaluranRoute: typeof AuthenticatedAdminPenyaluranRoute
+  AuthenticatedAdminProfilRoute: typeof AuthenticatedAdminProfilRoute
+  AuthenticatedAdminProfil2Route: typeof AuthenticatedAdminProfil2Route
   AuthenticatedAdminProgramRoute: typeof AuthenticatedAdminProgramRoute
   AuthenticatedAdminSapiRoute: typeof AuthenticatedAdminSapiRoute
   AuthenticatedAdminSedekahRoute: typeof AuthenticatedAdminSedekahRoute
@@ -933,9 +1175,12 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminLaporanRoute: AuthenticatedAdminLaporanRoute,
   AuthenticatedAdminLogAktivitasRoute: AuthenticatedAdminLogAktivitasRoute,
   AuthenticatedAdminManajemenAdminRoute: AuthenticatedAdminManajemenAdminRoute,
+  AuthenticatedAdminPembayaranRoute: AuthenticatedAdminPembayaranRoute,
   AuthenticatedAdminPenggunaRoute: AuthenticatedAdminPenggunaRoute,
   AuthenticatedAdminPengumumanRoute: AuthenticatedAdminPengumumanRoute,
   AuthenticatedAdminPenyaluranRoute: AuthenticatedAdminPenyaluranRoute,
+  AuthenticatedAdminProfilRoute: AuthenticatedAdminProfilRoute,
+  AuthenticatedAdminProfil2Route: AuthenticatedAdminProfil2Route,
   AuthenticatedAdminProgramRoute: AuthenticatedAdminProgramRoute,
   AuthenticatedAdminSapiRoute: AuthenticatedAdminSapiRoute,
   AuthenticatedAdminSedekahRoute: AuthenticatedAdminSedekahRoute,
@@ -949,7 +1194,9 @@ const AuthenticatedAdminRouteWithChildren =
 
 interface AuthenticatedPortalRouteChildren {
   AuthenticatedPortalSectionRoute: typeof AuthenticatedPortalSectionRoute
+  AuthenticatedPortalAktivitasRoute: typeof AuthenticatedPortalAktivitasRoute
   AuthenticatedPortalAkunRoute: typeof AuthenticatedPortalAkunRoute
+  AuthenticatedPortalBayarRoute: typeof AuthenticatedPortalBayarRoute
   AuthenticatedPortalKurbanBaruRoute: typeof AuthenticatedPortalKurbanBaruRoute
   AuthenticatedPortalIndexRoute: typeof AuthenticatedPortalIndexRoute
   AuthenticatedPortalKurbanSayaIdRoute: typeof AuthenticatedPortalKurbanSayaIdRoute
@@ -958,7 +1205,9 @@ interface AuthenticatedPortalRouteChildren {
 
 const AuthenticatedPortalRouteChildren: AuthenticatedPortalRouteChildren = {
   AuthenticatedPortalSectionRoute: AuthenticatedPortalSectionRoute,
+  AuthenticatedPortalAktivitasRoute: AuthenticatedPortalAktivitasRoute,
   AuthenticatedPortalAkunRoute: AuthenticatedPortalAkunRoute,
+  AuthenticatedPortalBayarRoute: AuthenticatedPortalBayarRoute,
   AuthenticatedPortalKurbanBaruRoute: AuthenticatedPortalKurbanBaruRoute,
   AuthenticatedPortalIndexRoute: AuthenticatedPortalIndexRoute,
   AuthenticatedPortalKurbanSayaIdRoute: AuthenticatedPortalKurbanSayaIdRoute,
@@ -972,11 +1221,19 @@ const AuthenticatedPortalRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedPortalRoute: typeof AuthenticatedPortalRouteWithChildren
+  AuthenticatedBayarIdRoute: typeof AuthenticatedBayarIdRoute
+  AuthenticatedPembayaranKuitansiOrderIdRoute: typeof AuthenticatedPembayaranKuitansiOrderIdRoute
+  AuthenticatedPembayaranStatusOrderIdRoute: typeof AuthenticatedPembayaranStatusOrderIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedPortalRoute: AuthenticatedPortalRouteWithChildren,
+  AuthenticatedBayarIdRoute: AuthenticatedBayarIdRoute,
+  AuthenticatedPembayaranKuitansiOrderIdRoute:
+    AuthenticatedPembayaranKuitansiOrderIdRoute,
+  AuthenticatedPembayaranStatusOrderIdRoute:
+    AuthenticatedPembayaranStatusOrderIdRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -1020,7 +1277,11 @@ const rootRouteChildren: RootRouteChildren = {
   AktivasiAkunRoute: AktivasiAkunRoute,
   AuthRoute: AuthRoute,
   DaftarRoute: DaftarRoute,
+  LengkapiProfilRoute: LengkapiProfilRoute,
+  LengkapiProfil2Route: LengkapiProfil2Route,
   LupaPasswordRoute: LupaPasswordRoute,
+  MasukRoute: MasukRoute,
+  Masuk2Route: Masuk2Route,
   ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport

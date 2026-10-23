@@ -1,37 +1,47 @@
 import { ADMIN_GROUPS } from "@/lib/navigation";
 
-export interface PermEntry { key: string; label: string; sensitive?: boolean }
-export interface PermMenu { label: string; perms: PermEntry[] }
-export interface PermSection { group: string; menus: PermMenu[] }
+export interface PermEntry {
+  key: string;
+  label: string;
+  sensitive?: boolean;
+}
+export interface PermMenu {
+  label: string;
+  perms: PermEntry[];
+}
+export interface PermSection {
+  group: string;
+  menus: PermMenu[];
+}
 
 /** Indonesian labels for every real permission the backend enforces. */
 export const PERM_LABEL: Record<string, string> = {
   "*": "Semua hak akses",
-  "dashboard.view": "Lihat Dashboard",
+  "dashboard.view": "Lihat ringkasan",
   "participants.view": "Lihat Peserta",
   "participants.edit": "Koreksi Data Peserta",
-  "finance.view": "Lihat Transaksi & Keuangan",
+  "finance.view": "Lihat transaksi & keuangan",
   "finance.manage": "Verifikasi & Kelola Pembayaran",
   "payments.config": "Kelola Aturan Nominal",
   "recovery.manage": "Kelola Pemulihan Akun",
   "catalog.view": "Lihat Hewan & Harga",
   "catalog.manage": "Kelola Kategori & Harga",
-  "allocation.view": "Lihat Alokasi",
+  "allocation.view": "Lihat alokasi",
   "allocation.manage": "Kelola Alokasi",
   "allocation.lock": "Kunci Alokasi",
-  "journey.view": "Lihat Pelaksanaan",
+  "journey.view": "Lihat pelaksanaan",
   "journey.manage": "Kelola Tahap Pelaksanaan",
   "docs.upload": "Unggah Dokumentasi",
   "docs.publish": "Publikasi Dokumentasi",
-  "announcement.view": "Lihat Pengumuman",
+  "announcement.view": "Lihat pengumuman",
   "announcement.manage": "Publikasi Pengumuman",
-  "reports.view": "Lihat Laporan",
+  "reports.view": "Lihat laporan",
   "reports.export": "Ekspor Laporan",
   "audit.view": "Lihat Log Aktivitas",
   "audit.export": "Ekspor Log Aktivitas",
-  "program.view": "Lihat Program & Akad",
+  "program.view": "Lihat program & akad",
   "program.manage": "Kelola Program & Akad",
-  "settings.view": "Lihat Pengaturan",
+  "settings.view": "Lihat pengaturan",
   "settings.manage": "Kelola Identitas & Website",
   "content.manage": "Kelola Konten Website",
   "characters.manage": "Kelola Karakter Hewan",
@@ -41,12 +51,19 @@ export const PERM_LABEL: Record<string, string> = {
 };
 
 /** Permissions with elevated impact — highlighted in the matrix. */
-export const SENSITIVE_PERMS = new Set(["*", "access.manage", "users.manage", "finance.manage", "allocation.lock", "audit.export"]);
+export const SENSITIVE_PERMS = new Set([
+  "*",
+  "access.manage",
+  "users.manage",
+  "finance.manage",
+  "allocation.lock",
+  "audit.export",
+]);
 
 /** Manage/action permissions that are not visible as sidebar menu permissions, attached to their module. */
 const ACTION_PERMS: Record<string, string[]> = {
   "/admin/peserta": ["participants.edit"],
-  "/admin/verifikasi": ["finance.manage"],
+  "/admin/pembayaran": ["finance.manage"],
   "/admin/sapi": ["catalog.manage"],
   "/admin/alokasi": ["allocation.manage", "allocation.lock"],
   "/admin/penyaluran": ["journey.manage", "docs.publish"],
@@ -66,10 +83,16 @@ export function permissionSections(): PermSection[] {
     menus: g.items
       .flatMap((h) =>
         h.tabs.map((t) => {
-          const keys = [...new Set([...t.perms, ...(ACTION_PERMS[t.to] ?? [])])].filter((k) => k !== "*" && PERM_LABEL[k]);
+          const keys = [...new Set([...t.perms, ...(ACTION_PERMS[t.to] ?? [])])].filter(
+            (k) => k !== "*" && PERM_LABEL[k],
+          );
           return {
             label: h.tabs.length > 1 ? `${h.label} — ${t.label}` : t.label,
-            perms: keys.map((k) => ({ key: k, label: PERM_LABEL[k]!, sensitive: SENSITIVE_PERMS.has(k) })),
+            perms: keys.map((k) => ({
+              key: k,
+              label: PERM_LABEL[k]!,
+              sensitive: SENSITIVE_PERMS.has(k),
+            })),
           };
         }),
       )

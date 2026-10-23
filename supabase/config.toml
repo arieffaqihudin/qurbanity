@@ -1,1 +1,16 @@
 project_id = "qhoaomvcciarnbouetel"
+
+[functions.midtrans-create]
+verify_jwt = true
+
+[functions.midtrans-status]
+verify_jwt = true
+
+[functions.midtrans-notification]
+verify_jwt = false
+
+[functions.midtrans-reconcile]
+verify_jwt = false
+
+[functions.midtrans-health]
+verify_jwt = true

@@ -71,6 +71,34 @@
       "when": 1792675616397,
       "tag": "0009_fix_admin_profile_placeholders",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1792754564000,
+      "tag": "0010_google_auth_onboarding",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1792758500000,
+      "tag": "0011_midtrans_sandbox_payments",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1792758600000,
+      "tag": "0012_midtrans_payment_hardening",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1792758700000,
+      "tag": "0013_payment_reconciliation_and_receipts",
+      "breakpoints": true
     }
   ]
 }

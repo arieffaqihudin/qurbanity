@@ -83,7 +83,8 @@ function Dashboard() {
                   <div><dt className="text-muted-foreground">Saran setoran</dt><dd className="font-bold tabular-nums">{c.payment_plans ? `${formatRupiah(c.payment_plans.suggested_amount)} / ${FREQ_UNIT[c.payment_plans.frequency]}` : "-"}</dd></div>
                   <div><dt className="text-muted-foreground">Rencana</dt><dd className="font-bold">{c.payment_plans ? FREQ_LABEL[c.payment_plans.frequency] : "-"}</dd></div>
                 </dl>
-                <p className="mt-4 rounded-xl bg-muted p-3 text-xs text-muted-foreground">Progres hanya dihitung dari pembayaran yang sudah diverifikasi. Fitur pembayaran akan tersedia pada tahap berikutnya.</p>
+                <p className="mt-4 rounded-xl bg-muted p-3 text-xs text-muted-foreground">Progres hanya dihitung dari pembayaran yang sudah diverifikasi Midtrans.</p>
+                {progressPct(c) < 100 && <Button className="mt-4 w-full" asChild><Link to="/bayar/$id" params={{ id: c.id }}>Bayar Sekarang</Link></Button>}
               </Card>
               <PadangKurban kind={c.animal_kind_snapshot} pct={progressPct(c)} name={c.animal_label ?? `${c.category_name_snapshot}${c.animal_kind_snapshot === "sapi" ? ` · ${c.shares}/7 bagian` : ""}`} code={c.code} />
             </div>

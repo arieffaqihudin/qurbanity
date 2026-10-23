@@ -16,6 +16,18 @@ dist-ssr
 .nitro
 *.local
 
+# Secrets & local credentials (never commit)
+.env.*
+!.env.example
+supabase/.env
+supabase/.temp/
+supabase/.branches/
+.probe*.mjs
+
+# macOS Finder duplicate copies (e.g. "file 2.tsx")
+* [0-9].*
+* [0-9]
+
 # Wrangler / Cloudflare
 .wrangler/
 .dev.vars

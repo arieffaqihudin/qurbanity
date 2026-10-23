@@ -4,20 +4,32 @@ import { PageHead, Guard, ProgramFilter, PendingIntegration } from "@/components
 import { LedgerTable, Balances } from "@/components/admin/finance";
 
 export const Route = createFileRoute("/_authenticated/admin/sedekah")({
-  head: () => ({ meta: [{ title: "Sedekah & Kelebihan Dana | Admin qurbanity" }, { name: "robots", content: "noindex" }] }),
-  component: () => <Guard perms="finance.view"><Page /></Guard>,
+  head: () => ({
+    meta: [
+      { title: "Sedekah & Kelebihan Dana | Admin qurbanity" },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
+  component: () => (
+    <Guard perms="finance.view">
+      <Page />
+    </Guard>
+  ),
 });
 
 function Page() {
   const [program, setProgram] = useState("");
   return (
     <div className="mx-auto max-w-7xl space-y-3">
-      <PageHead to="/admin/sedekah" actions={<ProgramFilter value={program} onChange={setProgram} />} />
-      <PendingIntegration title="Alur kelebihan dana, pengembalian, dan sedekah disiapkan">
+      <PageHead
+        to="/admin/sedekah"
+        actions={<ProgramFilter value={program} onChange={setProgram} />}
+      />
+      <PendingIntegration title="Pengelolaan kelebihan dana belum tersedia">
         <ul className="list-disc space-y-0.5 pl-5">
-          <li>Kelebihan dana dan pengembalian hanya muncul setelah ada pembayaran terverifikasi.</li>
-          <li>Konversi ke sedekah hanya boleh dilakukan bila peserta menyetujui Akad 2B (SEDEKAH_TRANSFER) untuk komitmennya.</li>
-          <li>Transfer pengembalian dana tetap dilakukan di luar sistem sampai integrasi pembayaran aktif; ledger mencatat keputusannya.</li>
+          <li>Pengembalian dana hanya dihitung dari pembayaran yang telah terverifikasi.</li>
+          <li>Pengalihan ke sedekah memerlukan persetujuan peserta pada akad terkait.</li>
+          <li>Pengembalian masih dilakukan di luar aplikasi sampai pembayaran terhubung.</li>
         </ul>
       </PendingIntegration>
       <Balances program={program} only={["EXCESS", "SEDEKAH", "REFUND", "CANCEL_COST", "KUASA"]} />
