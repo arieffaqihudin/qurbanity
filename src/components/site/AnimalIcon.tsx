@@ -2,7 +2,7 @@
  * Animal head icons for kurban categories. Hand-drawn in the lucide stroke
  * style (currentColor, round caps) so they sit naturally beside lucide icons.
  */
-type IconProps = { className?: string; "aria-hidden"?: boolean };
+type IconProps = { className?: string | undefined; "aria-hidden"?: boolean | undefined };
 
 export function CowIcon(props: IconProps) {
   return (
