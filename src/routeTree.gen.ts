@@ -50,7 +50,6 @@ import { Route as AuthenticatedPortalIndexRouteImport } from './routes/_authenti
 import { Route as AuthenticatedPortalSectionRouteImport } from './routes/_authenticated/portal.$section'
 import { Route as AuthenticatedPortalAkunRouteImport } from './routes/_authenticated/portal.akun'
 import { Route as AuthenticatedPortalKurbanBaruRouteImport } from './routes/_authenticated/portal.kurban-baru'
-import { Route as ApiPublicQaActivationLinkRouteImport } from './routes/api/public/qa-activation-link'
 import { Route as AuthenticatedAdminPesertaIndexRouteImport } from './routes/_authenticated/admin.peserta.index'
 import { Route as AuthenticatedAdminPesertaIdRouteImport } from './routes/_authenticated/admin.peserta.$id'
 import { Route as AuthenticatedPortalKurbanSayaIndexRouteImport } from './routes/_authenticated/portal.kurban-saya.index'
@@ -274,12 +273,6 @@ const AuthenticatedPortalKurbanBaruRoute =
     path: '/kurban-baru',
     getParentRoute: () => AuthenticatedPortalRoute,
   } as any)
-const ApiPublicQaActivationLinkRoute =
-  ApiPublicQaActivationLinkRouteImport.update({
-    id: '/api/public/qa-activation-link',
-    path: '/api/public/qa-activation-link',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const AuthenticatedAdminPesertaIndexRoute =
   AuthenticatedAdminPesertaIndexRouteImport.update({
     id: '/peserta/',
@@ -343,7 +336,6 @@ export interface FileRoutesByFullPath {
   '/portal/$section': typeof AuthenticatedPortalSectionRoute
   '/portal/akun': typeof AuthenticatedPortalAkunRoute
   '/portal/kurban-baru': typeof AuthenticatedPortalKurbanBaruRoute
-  '/api/public/qa-activation-link': typeof ApiPublicQaActivationLinkRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/portal/': typeof AuthenticatedPortalIndexRoute
   '/admin/peserta/$id': typeof AuthenticatedAdminPesertaIdRoute
@@ -387,7 +379,6 @@ export interface FileRoutesByTo {
   '/portal/$section': typeof AuthenticatedPortalSectionRoute
   '/portal/akun': typeof AuthenticatedPortalAkunRoute
   '/portal/kurban-baru': typeof AuthenticatedPortalKurbanBaruRoute
-  '/api/public/qa-activation-link': typeof ApiPublicQaActivationLinkRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/portal': typeof AuthenticatedPortalIndexRoute
   '/admin/peserta/$id': typeof AuthenticatedAdminPesertaIdRoute
@@ -436,7 +427,6 @@ export interface FileRoutesById {
   '/_authenticated/portal/$section': typeof AuthenticatedPortalSectionRoute
   '/_authenticated/portal/akun': typeof AuthenticatedPortalAkunRoute
   '/_authenticated/portal/kurban-baru': typeof AuthenticatedPortalKurbanBaruRoute
-  '/api/public/qa-activation-link': typeof ApiPublicQaActivationLinkRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/portal/': typeof AuthenticatedPortalIndexRoute
   '/_authenticated/admin/peserta/$id': typeof AuthenticatedAdminPesertaIdRoute
@@ -484,7 +474,6 @@ export interface FileRouteTypes {
     | '/portal/$section'
     | '/portal/akun'
     | '/portal/kurban-baru'
-    | '/api/public/qa-activation-link'
     | '/admin/'
     | '/portal/'
     | '/admin/peserta/$id'
@@ -528,7 +517,6 @@ export interface FileRouteTypes {
     | '/portal/$section'
     | '/portal/akun'
     | '/portal/kurban-baru'
-    | '/api/public/qa-activation-link'
     | '/admin'
     | '/portal'
     | '/admin/peserta/$id'
@@ -576,7 +564,6 @@ export interface FileRouteTypes {
     | '/_authenticated/portal/$section'
     | '/_authenticated/portal/akun'
     | '/_authenticated/portal/kurban-baru'
-    | '/api/public/qa-activation-link'
     | '/_authenticated/admin/'
     | '/_authenticated/portal/'
     | '/_authenticated/admin/peserta/$id'
@@ -593,7 +580,6 @@ export interface RootRouteChildren {
   DaftarRoute: typeof DaftarRoute
   LupaPasswordRoute: typeof LupaPasswordRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
-  ApiPublicQaActivationLinkRoute: typeof ApiPublicQaActivationLinkRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -885,13 +871,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPortalKurbanBaruRouteImport
       parentRoute: typeof AuthenticatedPortalRoute
     }
-    '/api/public/qa-activation-link': {
-      id: '/api/public/qa-activation-link'
-      path: '/api/public/qa-activation-link'
-      fullPath: '/api/public/qa-activation-link'
-      preLoaderRoute: typeof ApiPublicQaActivationLinkRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_authenticated/admin/peserta/': {
       id: '/_authenticated/admin/peserta/'
       path: '/peserta'
@@ -1043,7 +1022,6 @@ const rootRouteChildren: RootRouteChildren = {
   DaftarRoute: DaftarRoute,
   LupaPasswordRoute: LupaPasswordRoute,
   ResetPasswordRoute: ResetPasswordRoute,
-  ApiPublicQaActivationLinkRoute: ApiPublicQaActivationLinkRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
