@@ -11,8 +11,17 @@ function origin() {
 }
 
 async function assertUsersManage(context: { supabase: SupabaseClient<Database>; userId: string }) {
-  const { data: allowed } = await context.supabase.rpc("has_permission", { _user_id: context.userId, _perm: "users.manage" });
-  if (!allowed) throw new Error("Akses ditolak: kamu tidak memiliki izin untuk tindakan ini");
+  let result = await context.supabase.rpc("has_permission", { _user_id: context.userId, _perm: "users.manage" });
+  if (result.error) {
+    // Kegagalan pengecekan (jaringan/token) bukan berarti izin ditolak: coba sekali lagi.
+    console.error("[assertUsersManage] has_permission error:", result.error.message);
+    result = await context.supabase.rpc("has_permission", { _user_id: context.userId, _perm: "users.manage" });
+  }
+  if (result.error) throw new Error("Sesi tidak dapat diverifikasi. Muat ulang halaman atau masuk kembali.");
+  if (!result.data) {
+    console.error("[assertUsersManage] izin ditolak untuk user", context.userId);
+    throw new Error("Akses ditolak: kamu tidak memiliki izin untuk tindakan ini");
+  }
 }
 
 type AdminClient = Awaited<typeof import("@/integrations/supabase/client.server")>["supabaseAdmin"];

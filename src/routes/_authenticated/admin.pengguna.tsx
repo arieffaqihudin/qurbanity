@@ -16,6 +16,7 @@ import {
   DataTable,
   RowActions,
   ConfirmAction,
+  StatusConfirm,
   NativeSelect,
   SearchBox,
   Pager,
@@ -263,23 +264,15 @@ function Page() {
             {
               label: "Aktivasi",
               cell: (r) => (
-                <ConfirmAction
-                  title={
-                    r.is_active
-                      ? `Nonaktifkan akses admin ${r.full_name}?`
-                      : `Aktifkan akun ${r.full_name}?`
+                <StatusConfirm
+                  onConfirm={() =>
+                    toggle(
+                      r,
+                      r.is_active
+                        ? "Perubahan status: dinonaktifkan oleh admin"
+                        : "Perubahan status: diaktifkan oleh admin",
+                    )
                   }
-                  description={
-                    r.is_active
-                      ? "Akses admin dicabut seketika dan sesi aktifnya diakhiri. Akun peserta dan riwayatnya tetap tersimpan."
-                      : r.setup_completed_at
-                        ? "Akses admin dipulihkan sesuai grup. Tidak perlu mengirim email baru."
-                        : "Email akan berisi tautan aman agar pengguna dapat membuat kata sandi."
-                  }
-                  confirmLabel={r.is_active ? "Nonaktifkan" : "Aktifkan"}
-                  destructive={r.is_active}
-                  minReason={5}
-                  onConfirm={(reason) => toggle(r, reason)}
                   trigger={(open) => (
                     <span
                       title={r.is_active ? "Nonaktifkan akses admin" : "Aktifkan akses admin"}

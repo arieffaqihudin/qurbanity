@@ -921,6 +921,68 @@ export function ConfirmAction({
   );
 }
 
+/** Popup konfirmasi sederhana (tanpa input teks): ikon, judul besar, teks kecil, Tidak / Ya (merah). */
+export function StatusConfirm({
+  trigger,
+  onConfirm,
+  title = "Apakah Anda Yakin Ingin Mengubah Status?",
+  description = "Perubahan status akan mempengaruhi akses pengguna",
+}: {
+  trigger: (open: () => void) => ReactNode;
+  onConfirm: () => Promise<void>;
+  title?: string;
+  description?: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const run = async () => {
+    setBusy(true);
+    setErr(null);
+    try {
+      await onConfirm();
+      setOpen(false);
+    } catch (e) {
+      setErr(friendlyDbError(e instanceof Error ? e.message : ""));
+    } finally {
+      setBusy(false);
+    }
+  };
+  return (
+    <>
+      {trigger(() => {
+        setErr(null);
+        setOpen(true);
+      })}
+      <Dialog open={open} onOpenChange={(o) => !busy && setOpen(o)}>
+        <DialogContent className="max-w-sm text-center">
+          <DialogHeader className="items-center space-y-3 sm:text-center">
+            <span className="flex size-14 items-center justify-center rounded-full bg-destructive/10 text-destructive">
+              <AlertTriangle className="size-7" aria-hidden />
+            </span>
+            <DialogTitle className="text-xl">{title}</DialogTitle>
+            <DialogDescription className="text-sm">{description}</DialogDescription>
+          </DialogHeader>
+          {err && (
+            <p role="alert" className="text-sm text-destructive">
+              {err}
+            </p>
+          )}
+          <DialogFooter className="gap-2 sm:justify-center">
+            <Button variant="outline" onClick={() => setOpen(false)} disabled={busy} className="min-w-24">
+              Tidak
+            </Button>
+            <Button variant="destructive" onClick={run} disabled={busy} className="min-w-24">
+              {busy && <Loader2 className="size-4 animate-spin" />}
+              Ya
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}
+
 export function Field({
   label,
   htmlFor,
